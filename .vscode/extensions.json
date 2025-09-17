@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-python.vscode-python-envs",
+        "charliermarsh.ruff",
+        "github.vscode-pull-request-github",
+        "davidanson.vscode-markdownlint",
+        "quarto.quarto",
+        "skellock.just",
+        "yzhang.markdown-all-in-one",
+        "redhat.vscode-yaml",
+        "kylebutts.vscode-stata"
+    ]
+}

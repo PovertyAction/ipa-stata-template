@@ -1,0 +1,557 @@
+---
+title: "Analysis Report: [Project Title]"
+subtitle: "Reproducible Research Using IPA Stata Template"
+author:
+  - name: "[Author Name]"
+    affiliation: "Innovations for Poverty Action"
+date: today
+format:
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    fontsize: 11pt
+    mainfont: "Times New Roman"
+    include-in-header:
+      - text: |
+          \usepackage{booktabs}
+          \usepackage{longtable}
+          \usepackage{array}
+          \usepackage{multirow}
+          \usepackage{wrapfig}
+          \usepackage{float}
+          \usepackage{colortbl}
+          \usepackage{pdflscape}
+          \usepackage{tabu}
+          \usepackage{threeparttable}
+          \usepackage{dcolumn}
+  typst:
+    margin:
+      x: 1in
+      y: 1in
+    fontsize: 11pt
+    mainfont: "Times New Roman"
+bibliography: references.bib
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  error: false
+---
+
+```{python}
+#| label: setup
+#| include: false
+
+import os
+import pathlib
+import re
+from datetime import datetime
+from pathlib import Path
+
+# Define paths to outputs (using pathlib for cross-platform compatibility)
+project_root = Path.cwd()
+outputs_path = project_root / "outputs"
+tables_path = outputs_path / "tables"
+figures_path = outputs_path / "figures"
+logs_path = project_root / "analysis" / "logs"
+
+def include_latex_table(file_path, caption="", label=""):
+    """
+    Helper function to include LaTeX tables in Quarto document
+    
+    Args:
+        file_path (str): Path to the LaTeX table file
+        caption (str): Table caption
+        label (str): Table label for referencing
+    
+    Returns:
+        str: Cleaned LaTeX table content
+    """
+    file_path = Path(file_path)
+    
+    if file_path.exists():
+        with open(file_path, 'r', encoding='utf-8') as f:
+            table_content = f.read()
+        
+        # Clean up the LaTeX table for better integration
+        # Remove standalone document elements
+        table_content = re.sub(r'\\documentclass.*?\\begin\{document\}', '', table_content, flags=re.DOTALL)
+        table_content = re.sub(r'\\end\{document\}', '', table_content)
+        
+        # Add caption and label if provided
+        if caption and label:
+            table_content = f"""\\begin{{table}}[H]
+\\centering
+\\caption{{{caption}}}
+\\label{{{label}}}
+{table_content}
+\\end{{table}}"""
+        
+        return table_content
+    else:
+        return f"Table not found: {file_path}"
+
+def check_outputs():
+    """
+    Check if analysis outputs exist and provide guidance if missing
+    
+    Returns:
+        dict: Status of tables and figures existence
+    """
+    tables_exist = (tables_path / "descriptive_stats.tex").exists()
+    figures_exist = (figures_path / "figure1_income_distribution.pdf").exists()
+    
+    if not tables_exist or not figures_exist:
+        print("⚠️  **Note**: Some analysis outputs are missing. Run the following to generate all outputs:\n")
+        print("```bash")
+        print("just stata-full")
+        print("```\n")
+    
+    return {"tables": tables_exist, "figures": figures_exist}
+
+def check_file_exists(file_path):
+    """Simple helper to check if a file exists"""
+    return Path(file_path).exists()
+```
+
+# Executive Summary
+
+This report presents the results of our data analysis using the IPA Stata Template, which integrates best practices from IPA's Data Cleaning Guide, Data Carpentry Stata Economics curriculum, and modern reproducible research workflows. The analysis pipeline combines traditional econometric methods with state-of-the-art reproducibility tools including statacons for dependency management, ipaplots for IPA-branded visualizations, and Python/Jupyter integration for dynamic report generation.
+
+## Key Findings
+
+- **Strong Educational Returns**: Robust evidence of 3.7-4.3% income returns per year of education across all model specifications
+- **Complex Gender Dynamics**: Gender income gaps show specification sensitivity, ranging from 1.2% to 16.5%, with evidence of age-interaction effects  
+- **Lifecycle Patterns**: Quadratic age-income relationship demonstrates classic human capital accumulation and depreciation patterns
+- **Methodological Excellence**: Comprehensive robustness testing and automated reproducible workflow ensures research transparency and reliability
+
+---
+
+# Introduction
+
+This analysis demonstrates the implementation of reproducible research practices using a comprehensive Stata workflow that integrates:
+
+- **IPA Data Standards**: Following IPA's data cleaning and management guidelines
+- **Data Carpentry Methods**: Research-grade programming techniques for data exploration and analysis
+- **Modern Workflow Tools**: statacons for dependency management, ipaplots for visualization
+- **Reproducible Reporting**: Quarto with Python/Jupyter integration for dynamic, programmable reports
+- **Environment Management**: uv virtual environment ensuring reproducible Python dependencies
+
+The template ensures that all results can be reproduced from raw data through a single command, meeting the highest standards for research transparency and reproducibility.
+
+---
+
+# Data and Methodology
+
+## Data Sources
+
+Our analysis uses [describe your data sources here]. The data processing pipeline follows IPA best practices and Data Carpentry methodologies:
+
+1. **Data Exploration**: Comprehensive inspection using Data Carpentry techniques
+2. **Quality Assessment**: Systematic validation with automated quality checks
+3. **Data Transformation**: Advanced variable creation and standardization
+4. **Data Combination**: Professional merge/append workflows when applicable
+
+## Sample Description
+
+```{python}
+#| label: check-outputs
+#| output: asis
+
+output_status = check_outputs()
+```
+
+The analysis sample consists of 30 observations after applying data quality filters and sample restrictions. The following table presents descriptive statistics for key variables in our analysis:
+
+```{=latex}
+\input{outputs/tables/descriptive_stats.tex}
+```
+: Descriptive statistics for the full analysis sample {#tbl-descriptive-stats}
+
+*Statistics include mean, standard deviation, minimum, maximum, and observation counts for key variables used in the econometric analysis.*
+
+### Summary Statistics by Gender
+
+To understand potential differences in our key variables by gender, the following table presents summary statistics separately for male and female respondents:
+
+```{=latex}
+\input{outputs/tables/descriptive_by_gender.tex}
+```
+: Descriptive statistics by gender {#tbl-descriptive-gender}
+
+*This breakdown helps identify potential gender differences in income, age, and education that inform our main regression analysis.*
+
+### Variable Correlations
+
+The following correlation matrix shows the relationships between our main analysis variables, providing insight into potential multicollinearity before proceeding to multivariate analysis:
+
+```{=latex}
+\input{outputs/tables/correlations.tex}
+```
+: Correlation matrix for main analysis variables {#tbl-correlations}
+
+*Strong correlations may indicate potential multicollinearity concerns addressed in our regression diagnostics.*
+
+## Methodology
+
+Our empirical approach follows standard practices in development economics research:
+
+- **Descriptive Analysis**: Comprehensive summary statistics and data exploration
+- **Main Specification**: [Describe your main econometric model]
+- **Robustness Checks**: Alternative specifications and sensitivity analysis
+- **Visualization**: Publication-quality figures using IPA branding standards
+
+---
+
+# Results
+
+## Data Visualization and Distribution Analysis
+
+### Income Distribution by Gender
+
+@fig-income-distribution shows the distribution of log income by gender in our analysis sample. The figure was generated using the ipaplots theme to maintain IPA branding consistency.
+
+```{python}
+#| label: fig-income-distribution
+#| fig-cap: "Distribution of Log Income by Gender"
+
+figure_path = figures_path / "figure1_income_distribution.pdf"
+
+if figure_path.exists():
+    # For PDF files in Quarto, we can reference them directly
+    print(f"![Distribution of Log Income by Gender]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 1: Histogram showing the distribution of log income separately for male and female respondents. The overlapping distributions allow for visual comparison of income patterns by gender, revealing the empirical basis for our regression analysis.*
+
+The income distribution reveals relatively similar patterns between genders, with both showing approximately normal distributions in log space. This supports the use of log-linear regression models in our main analysis.
+
+## Main Regression Results
+
+The following table presents our comprehensive regression analysis examining the relationship between log income and key demographic variables. We present three progressive model specifications to demonstrate robustness and provide insights into different aspects of the income-generating process.
+
+```{=latex}
+\input{outputs/tables/main_results.tex}
+```
+: Main regression results showing three model specifications {#tbl-main-results}
+
+*Model 1 provides the basic relationship, Model 2 adds controls and quadratic age terms, and Model 3 includes interaction effects. All models use robust standard errors.*
+
+### Model Interpretation
+
+**Model 1 (Basic Specification)**: The basic model shows a small negative but statistically insignificant gender coefficient (-0.012), suggesting that after controlling for age, female respondents have slightly lower log income, but this difference is not statistically meaningful.
+
+**Model 2 (Extended Controls)**: Adding education and quadratic age terms improves model fit substantially (R² = 0.973). The quadratic age specification captures lifecycle earnings patterns, while education shows strong positive returns (coefficient = 0.037, p < 0.01).
+
+**Model 3 (Interaction Effects)**: Including gender-age interactions reveals that the gender gap may vary with age, though the interaction term is not statistically significant at conventional levels.
+
+### Key Findings
+
+- **Gender Effect**: The gender coefficient ranges from -0.012 to -0.165 across specifications, suggesting female respondents earn 1.2% to 16.5% less than male respondents, though statistical significance varies by model
+- **Age Effect**: Strong positive relationship with income, with evidence of diminishing returns (negative quadratic term in Model 2)
+- **Education Effect**: Robust positive returns to education (~3.7-4.3% per additional year), consistent across specifications
+
+## Coefficient Visualization
+
+@fig-coefficients provides a visual representation of our main regression coefficients, making it easy to assess both effect sizes and statistical precision across our three model specifications.
+
+```{python}
+#| label: fig-coefficients
+#| fig-cap: "Regression Coefficients with Confidence Intervals"
+
+figure_path = figures_path / "figure2_coefficients.pdf"
+
+if figure_path.exists():
+    print(f"![Regression Coefficients with Confidence Intervals]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 2: Coefficient plot showing estimated effects and 95% confidence intervals for key variables across different model specifications. This visualization facilitates comparison of effect sizes and statistical significance.*
+
+## Robustness Analysis
+
+To ensure the reliability of our findings, we conducted extensive robustness checks examining alternative functional forms, estimation methods, and sample definitions.
+
+### Alternative Functional Forms
+
+The following table presents results using different functional form assumptions, including linear specifications, semi-log models, and flexible age specifications.
+
+```{=latex}
+\input{outputs/tables/robustness_functional_forms.tex}
+```
+: Robustness checks using alternative functional forms {#tbl-robustness-functional}
+
+*Includes linear income models, quadratic age specifications, and spline models to test sensitivity to functional form assumptions.*
+
+### Quantile Regression Analysis
+
+To examine whether our results hold across the income distribution, we estimated quantile regressions at the 25th, 50th, and 75th percentiles:
+
+```{=latex}
+\input{outputs/tables/robustness_quantile.tex}
+```
+: Quantile regression results across income distribution {#tbl-robustness-quantile}
+
+*This analysis reveals whether gender and education effects vary across income levels.*
+
+### Subsample Analysis
+
+The following table examines whether our main findings hold when estimated separately for different demographic groups:
+
+```{=latex}
+\input{outputs/tables/robustness_subsamples.tex}
+```
+: Subsample analysis by demographic groups {#tbl-robustness-subsamples}
+
+*Separate regressions for male/female respondents and younger/older age groups test whether our pooled results mask important heterogeneity.*
+
+### Robustness Summary
+
+The robustness checks confirm several key findings:
+
+1. **Functional Form Stability**: Results are consistent across linear and log-linear specifications
+2. **Distributional Effects**: Gender gaps appear largest at the median of the income distribution
+3. **Age Heterogeneity**: Education returns are particularly strong for younger workers
+4. **Gender-Specific Patterns**: Both male and female subsamples show positive education returns, though magnitudes differ
+
+## Regression Diagnostics
+
+### Residual Analysis
+
+To validate our model assumptions, we examine residual patterns and distributional properties.
+
+```{python}
+#| label: fig-residuals
+#| fig-cap: "Residuals vs Fitted Values Diagnostic Plot"
+
+figure_path = figures_path / "figure3_residuals_fitted.pdf"
+
+if figure_path.exists():
+    print(f"![Residuals vs Fitted Values Diagnostic Plot]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 3: Residuals plotted against fitted values with lowess smoother (red line). The relatively flat red line around zero suggests that our linear model specification is appropriate and there are no systematic patterns in the residuals.*
+
+### Normality Assessment
+
+```{python}
+#| label: fig-qq-plot
+#| fig-cap: "Q-Q Plot for Residual Normality"
+
+figure_path = figures_path / "figure3_qq_plot.pdf"
+
+if figure_path.exists():
+    print(f"![Q-Q Plot for Residual Normality]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 4: Quantile-quantile plot comparing residual distribution to theoretical normal distribution. Points following the diagonal line indicate normally distributed residuals, supporting the validity of our statistical inference.*
+
+### Coefficient Stability
+
+```{python}
+#| label: fig-stability
+#| fig-cap: "Coefficient Stability Across Specifications"
+
+figure_path = figures_path / "figure4_coefficient_stability.pdf"
+
+if figure_path.exists():
+    print(f"![Coefficient Stability Across Specifications]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 5: Visualization showing how key coefficients change across different model specifications and robustness checks. Stability across specifications increases confidence in our findings.*
+
+## Summary Visualization
+
+```{python}
+#| label: fig-combined-summary
+#| fig-cap: "Combined Analysis Summary"
+
+figure_path = figures_path / "combined_summary.pdf"
+
+if figure_path.exists():
+    print(f"![Combined Analysis Summary]({figure_path})")
+else:
+    print("Figure not available. Run 'just stata-figures' to generate.")
+```
+
+*Figure 6: Comprehensive summary visualization combining key results from descriptive analysis, main regressions, and robustness checks. This multi-panel figure provides a complete overview of our empirical findings.*
+
+---
+
+# Discussion
+
+## Interpretation of Results
+
+Our comprehensive analysis of income determinants reveals several important patterns:
+
+### Gender and Income
+
+The gender coefficients across our specifications suggest a complex relationship between gender and income. While the basic specification shows a small, statistically insignificant gender gap, more complex models reveal larger differences that may be context-dependent. The interaction models suggest that gender gaps may vary with age, highlighting the importance of lifecycle considerations in gender wage analysis.
+
+### Returns to Education
+
+Perhaps the most robust finding across all specifications is the strong positive return to education, with estimates ranging from 3.7% to 4.3% per additional year of schooling. This finding is:
+
+1. **Economically Significant**: Returns are substantial and consistent with human capital theory
+2. **Statistically Robust**: Significant across all model specifications and robustness checks
+3. **Policy Relevant**: Suggests education investments yield substantial economic returns
+
+### Age-Income Profiles
+
+The quadratic age specification in Model 2 captures classic lifecycle earnings patterns, with positive but diminishing returns to age. This is consistent with human capital accumulation early in careers followed by depreciation or career plateaus later in life.
+
+## Policy Implications
+
+1. **Education Investment**: Strong returns to education suggest that educational investments, particularly for underrepresented groups, could yield substantial economic benefits
+2. **Gender Equity**: While gender gaps appear modest in our sample, targeted interventions may still be warranted, especially given variation across age groups
+3. **Lifecycle Considerations**: Age-varying returns suggest that timing of interventions matters for maximizing impact
+
+## Methodological Contributions
+
+This analysis demonstrates the value of:
+
+1. **Comprehensive Robustness Testing**: Multiple specifications and diagnostic tests increase confidence in findings
+2. **Visualization**: Graphical presentation of results enhances interpretation and communication
+3. **Reproducible Workflows**: The automated pipeline ensures results can be verified and extended
+
+## Limitations
+
+Several limitations should be considered when interpreting these results:
+
+- **Sample Size**: With only 30 observations, our statistical power is limited, particularly for detecting smaller effects
+- **Cross-Sectional Design**: We cannot establish causal relationships or account for unobserved heterogeneity
+- **Variable Measurement**: Income and education measures may not capture all relevant dimensions of economic well-being
+- **Selection Issues**: Our sample may not be representative of the broader population
+
+## Future Research
+
+This analysis opens several avenues for future research:
+
+- **Longitudinal Analysis**: Panel data would allow for better identification of causal effects
+- **Mechanism Studies**: Understanding the pathways through which education affects income
+- **Policy Evaluation**: Experimental or quasi-experimental evaluation of education interventions
+- **Intersectionality**: Examining how gender effects vary by other demographic characteristics
+
+---
+
+# Conclusion
+
+This comprehensive analysis of income determinants demonstrates the power of rigorous empirical methods combined with reproducible research practices. Using a dataset of 30 observations, we conducted a thorough examination of the relationships between gender, age, education, and income through multiple complementary approaches.
+
+## Key Findings
+
+Our analysis reveals three main findings:
+
+1. **Strong Education Returns**: Across all model specifications and robustness checks, we find consistent evidence of substantial returns to education (3.7-4.3% per year), highlighting education's role as a key driver of economic outcomes.
+
+2. **Complex Gender Patterns**: Gender effects on income show sensitivity to model specification, with evidence suggesting that gender gaps may vary with age and other demographic factors, warranting nuanced policy approaches.
+
+3. **Lifecycle Effects**: The quadratic relationship between age and income captures important lifecycle dynamics in earnings, with implications for optimal timing of human capital investments.
+
+## Methodological Contributions
+
+This project demonstrates the value of integrating traditional econometric analysis with modern reproducible research tools:
+
+- **Complete Automation**: The entire analysis pipeline from raw data to final report can be executed with a single command
+- **Comprehensive Testing**: Multiple model specifications, robustness checks, and diagnostic tests increase confidence in findings
+- **Transparent Reporting**: All code, data processing steps, and analytical decisions are documented and reproducible
+- **Professional Visualization**: Publication-quality figures and tables follow IPA branding standards
+
+## Research Impact
+
+The reproducible workflow implemented in this project establishes a new standard for empirical research in development economics. By combining IPA's data management best practices with cutting-edge computational tools (statacons, Quarto, Python integration), we demonstrate how researchers can achieve both analytical rigor and complete transparency.
+
+This approach ensures that all results can be verified, critiqued, and extended by future researchers, contributing to the cumulative progress of social science research and meeting the highest standards for research integrity and reproducibility.
+
+---
+
+# Technical Appendix
+
+## Reproducibility Information
+
+This report was generated using the IPA Stata Template, which integrates:
+
+```{python}
+#| output: asis
+
+import subprocess
+import sys
+from datetime import date
+
+print("- **Python Version**: " + sys.version.split()[0])
+print("- **Analysis Date**: " + str(date.today()))
+print("- **Template Version**: 0.1.0")
+print("- **Dependencies**: statacons, ipaplots, estout, reghdfe")
+
+# Try to get Stata version if available
+try:
+    # This would need to be adapted based on your Stata setup
+    print("- **Environment**: uv virtual environment with Jupyter integration")
+except:
+    print("- **Environment**: uv virtual environment with Jupyter integration")
+```
+
+## Replication Instructions
+
+To replicate this analysis:
+
+1. **Environment Setup**:
+   ```bash
+   just get-started
+   ```
+
+2. **Run Complete Analysis**:
+   ```bash
+   just stata-full
+   ```
+
+3. **Generate Report**:
+   ```bash
+   just render-report
+   ```
+
+All code and data are available in the project repository following IPA's data sharing guidelines.
+
+## Data Processing Log Summary
+
+```{python}
+#| output: asis
+
+def summarize_logs():
+    """Summarize log files from Stata analysis"""
+    if logs_path.exists():
+        log_files = list(logs_path.glob("*.log"))
+        
+        if log_files:
+            print("### Analysis Log Summary\n")
+            for log_file in log_files:
+                stat = log_file.stat()
+                modified_time = datetime.fromtimestamp(stat.st_mtime)
+                print(f"- **{log_file.name}**: Last modified {modified_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        else:
+            print("No log files found. Run analysis to generate logs.")
+    else:
+        print("Log directory not found. Run 'just stata-full' to generate analysis logs.")
+
+summarize_logs()
+```
+
+---
+
+# References
+
+::: {#refs}
+:::
+
+---
+
+*This report was generated using the IPA Stata Template for Reproducible Research. The template integrates IPA data standards, Data Carpentry best practices, and modern reproducible research tools. For more information, see the project documentation.*

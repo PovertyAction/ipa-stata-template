@@ -1,0 +1,66 @@
+[project]
+name = "ipa-stata-template"
+version = "0.1.0"
+description = "Stata analysis project template for reproducible research using statacons and best practices"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pystatacons>=3.0.2",
+    "pywin32>=311",
+    "scons>=4.9.1",
+    "jupyter>=1.0.0",
+    "matplotlib>=3.5.0",
+    "pandas>=2.0.0",
+    "pathlib2>=2.3.0",
+]
+
+
+[tool.uv]
+dev-dependencies = ["codespell>=2.4.1", "pre-commit>=4.2.0", "ruff>=0.7.4"]
+
+[tool.ruff]
+line-length = 88
+fix = true
+# Assume Python 3.12
+target-version = "py312"
+
+[tool.ruff.lint]
+# docs: https://docs.astral.sh/ruff/rules/
+select = [
+    "F",   # Pyflakes
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "D",   # flake8-docstrings
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+
+ignore = [
+    # do not enable if formatting
+    # docs: https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+    "W191",   # tab indentation
+    "E111",   # indentation
+    "E114",   # indentation
+    "E117",   # over indented
+    "D206",   # indent with spaces
+    "D300",   # triple single quotes
+    "E501",   # line length regulated by formatter
+    "D105",   # missing docstring in magic method
+    "D100",   # missing docstring in public module
+    "D104",   # missing docstring in public package
+    "SIM110", # Use all instead of `for` loop
+    "TRY003", # Avoid specifying long messages outside the exception class
+    "D205",   # 1 blank line required between summary line and description
+    "D203",
+    "D213",
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
+
+[tool.codespell]
+builtin = "clear,rare,informal,usage,code,names"
+ignore-words-list = "jupyter,ipa"
+skip = "uv.lock"
