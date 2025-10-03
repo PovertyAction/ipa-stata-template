@@ -596,7 +596,6 @@ dependencies = [
     { name = "pandas" },
     { name = "pathlib2" },
     { name = "pystatacons" },
-    { name = "pywin32" },
     { name = "scons" },
 ]
 
@@ -617,7 +616,6 @@ requires-dist = [
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "pathlib2", specifier = ">=2.3.0" },
     { name = "pystatacons", specifier = ">=3.0.2" },
-    { name = "pywin32", specifier = ">=311" },
     { name = "scons", specifier = ">=4.9.1" },
 ]
 
