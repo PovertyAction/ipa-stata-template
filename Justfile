@@ -90,6 +90,7 @@ update-reqs:
 # create virtual environment
 venv:
     uv sync
+    uv run python -m nbstata.install
     uv tool install pre-commit
     uv run pre-commit install
 
