@@ -59,21 +59,21 @@ stata-config:
 stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
     @& "{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
-    @echo "Package installation complete!"
+    @echo "Check Stata installation..."
 
 # Install Stata packages from requirements file
 [linux]
 stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
     @"{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
-    @echo "Package installation complete!"
+    @echo "Check Stata installation..."
 
 # Install Stata packages from requirements file
 [macos]
 stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
     @"{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
-    @echo "Package installation complete!"
+    @echo "Check Stata installation..."
 
 # Clean venv
 clean:
