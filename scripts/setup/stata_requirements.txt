@@ -11,8 +11,8 @@ outreg2     >= 2.3.2
 winsor2     >= 1.1
 distinct    >= 1.2.0
 missings    >= 1.4.0
+repkit      >= 4.0
 
 # Github/etc requirements
 
-ipaclean	>= 1.0.0		, from(https://raw.githubusercontent.com/PovertyAction/ipaclean/main)
-# github    >=2.3.0         , from(https://raw.githubusercontent.com/haghish/github/master)
+ipaclean	>= 1.0.0, from(https://raw.githubusercontent.com/PovertyAction/ipaclean/main)

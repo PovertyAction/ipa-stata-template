@@ -4,8 +4,8 @@ clear all
 * Install required packages
 ssc install require
 require using "scripts/setup/stata_requirements.txt", install
+require github, install from("https://haghish.github.io/github/")
 github install PovertyAction/ipaplots
-ssc install stata_linter
 
 * Set a consistent scheme for graphs
 set scheme ipaplots, permanent
