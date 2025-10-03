@@ -119,7 +119,7 @@ just stata-run
 
 The default workflow follows this dependency chain:
 
-```
+```text
 data/raw/sample_data.csv
     ↓ (01_data_cleaning.do)
 data/clean/cleaned_data.dta
