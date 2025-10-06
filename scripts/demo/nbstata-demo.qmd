@@ -1,0 +1,54 @@
+---
+# docs: https://hugetim.github.io/nbstata/user_guide.html#stata-implementation-details
+title: "Stata in Quarto Notebooks"
+format: html
+execute:
+  echo: true
+  warning: false
+  error: false
+jupyter: nbstata
+---
+
+
+```{stata}
+*| include: False
+sysuse auto, clear
+```
+
+```{stata}
+regress price mpg
+```
+
+```{stata}
+sum price mpg weight foreign
+```
+
+
+```{stata}
+* %set graph_width = 8
+* %set graph_height = 5
+twoway scatter price mpg, ///
+    title("Car Price vs. Fuel Economy") ///
+    xtitle("Miles per Gallon") ///
+    ytitle("Price (USD)") ///
+    note("Data: 1978 Automobile Data")
+```
+
+```{stata}
+* %% Regression Analysis
+regress price mpg weight foreign
+```
+
+```{stata}
+* %% Export Results with etable
+qui regress price mpg weight foreign
+estimates store model1
+
+qui regress price mpg weight foreign length
+estimates store model2
+
+etable, estimates(model1 model2) ///
+    column(estimates) ///
+    showstars showstarsnote ///
+    title("Regression Results: Car Price Models")
+```

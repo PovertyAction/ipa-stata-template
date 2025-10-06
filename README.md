@@ -13,7 +13,7 @@ A comprehensive template repository for reproducible Stata analysis projects usi
 ```bash
 just stata-full     # Complete pipeline with build system
 # OR use scons directly:
-scons              # Builds entire analysis pipeline  
+scons              # Builds entire analysis pipeline
 scons data         # Builds only data cleaning/preparation
 scons analysis     # Builds only analysis outputs
 scons figures      # Builds only figures
@@ -43,6 +43,7 @@ just stata-run     # Run traditional master do-file
 #### **Technical Differences:**
 
 **SConstruct (`just stata-full`):**
+
 - ✅ **Selective rebuilding** - Only processes files that have changed or depend on changed files
 - ✅ **Automatic dependency tracking** - Updates when `functions.do` or data files change
 - ✅ **Parallel processing** - Can run independent steps simultaneously
@@ -50,6 +51,7 @@ just stata-run     # Run traditional master do-file
 - ⚠️ **Learning curve** - Requires understanding SCons concepts
 
 **00_run.do (`just stata-run`):**
+
 - ✅ **Familiar workflow** - Standard Stata master do-file approach
 - ✅ **Manual control** - Use switches to control which sections run
 - ✅ **Easy debugging** - Set switches to run specific analysis sections
@@ -157,13 +159,13 @@ This template requires Stata to be accessible from the command line. Follow the 
 
 #### Windows
 
-**Option 1: Add Stata to PATH (Recommended)**
+##### Option 1: Add Stata to PATH (Recommended)
 
 1. Find your Stata installation directory (e.g., `C:\Program Files\Stata18\`)
 2. Add this directory to your Windows PATH environment variable
 3. Use `STATA_CMD=stata-mp` (or `stata-se`, `stata`) in your `.env` file
 
-**Option 2: Use Full Path**
+##### Option 2: Use Full Path
 
 ```bash
 # In .env file - adjust path to match your installation
@@ -178,7 +180,7 @@ STATA_CMD="C:\Program Files\Stata18\StataMP-64.exe"
 
 #### macOS
 
-**Option 1: Create Command Line Tools (Recommended)**
+##### Option 1: Create Command Line Tools (Recommended)
 
 1. Open Terminal and create symlinks:
 
@@ -192,7 +194,7 @@ STATA_CMD="C:\Program Files\Stata18\StataMP-64.exe"
 
 2. Use `STATA_CMD=stata-mp` in your `.env` file
 
-**Option 2: Use Full Path**
+##### Option 2: Use Full Path
 
 ```bash
 # In .env file
@@ -201,7 +203,8 @@ STATA_CMD=/Applications/Stata/StataMP.app/Contents/MacOS/StataMP
 
 #### Linux
 
-**Option 1: Stata in PATH**
+##### Option 1: Stata in PATH
+
 If Stata was installed system-wide, use:
 
 ```bash
@@ -209,7 +212,7 @@ If Stata was installed system-wide, use:
 STATA_CMD=stata-mp  # or stata-se, stata
 ```
 
-**Option 2: Custom Installation Path**
+##### Option 2: Custom Installation Path
 
 ```bash
 # In .env file - adjust path to your installation
@@ -255,19 +258,21 @@ Expected output should show your Stata version, flavor (MP/SE/IC), and system in
 
 This template follows best practices for Stata project organization:
 
-```
+```text
 ├── data/
 │   ├── raw/           # Original, immutable data files
 │   ├── clean/         # Cleaned data (intermediate)
 │   └── final/         # Analysis-ready datasets
-├── scripts/do/        # Stata do-files
-│   ├── 00_run.do      # Master do-file
-│   ├── 01_data_cleaning.do
-│   ├── 02_data_preparation.do
-│   ├── 03_descriptive_analysis.do
-│   ├── 04_main_analysis.do
-│   ├── 05_robustness_checks.do
-│   └── 06_generate_figures.do
+├── scripts/           # Code
+│   ├── demo/            # Demo scripts
+│   └── do/            # Stata do-files
+│       ├── 00_run.do      # Master do-file
+│       ├── 01_data_cleaning.do
+│       ├── 02_data_preparation.do
+│       ├── 03_descriptive_analysis.do
+│       ├── 04_main_analysis.do
+│       ├── 05_robustness_checks.do
+│       └── 06_generate_figures.do
 ├── ado/               # User-written Stata packages
 ├── analysis/logs/     # Log files from Stata runs
 ├── outputs/
@@ -276,6 +281,8 @@ This template follows best practices for Stata project organization:
 ├── documentation/     # Project documentation
 └── SConstruct         # statacons workflow definition
 ```
+
+The `scripts/demo/nbstata-demo.qmd` file provides a Quarto notebook example for interactive Stata analysis.
 
 ## Workflow Features
 
@@ -305,6 +312,7 @@ The `SConstruct` file defines the automated build pipeline and must be updated w
 ### When to Update SConstruct
 
 **Always update `SConstruct` when you:**
+
 - Add new Stata scripts to the analysis pipeline
 - Create new output files (tables, figures, datasets)
 - Add dependencies between analysis steps
@@ -338,7 +346,7 @@ If your `standard_regression` function creates new table files, update the targe
 ```python
 main_analysis = env.StataBuild(
     target=[
-        "outputs/tables/main_results.tex", 
+        "outputs/tables/main_results.tex",
         "outputs/tables/model1.tex",
         "outputs/tables/model2.tex",
         "outputs/tables/model3.tex",
@@ -376,7 +384,7 @@ After modifying `SConstruct`:
 ```bash
 # Test individual components
 scons data          # Test data pipeline
-scons analysis      # Test analysis pipeline  
+scons analysis      # Test analysis pipeline
 scons figures       # Test figure generation
 
 # Test full pipeline
@@ -429,7 +437,7 @@ just stata-install-packages
 
 **Package Requirements File**: `scripts/setup/stata_requirements.txt` contains a list of required packages with their installation sources:
 
-```
+```text
 # Format: package_name,install_source,install_command
 estout,ssc,ssc install estout
 reghdfe,ssc,ssc install reghdfe

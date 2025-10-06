@@ -6,17 +6,19 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pystatacons>=3.0.2",
-    "pywin32>=311",
     "scons>=4.9.1",
     "jupyter>=1.0.0",
     "matplotlib>=3.5.0",
     "pandas>=2.0.0",
     "pathlib2>=2.3.0",
+    "nbstata>=0.8.3",
+    "jupyterlab-stata-highlight2>=0.1.2",
+    "ipykernel>=6.30.1",
 ]
 
 
-[tool.uv]
-dev-dependencies = ["codespell>=2.4.1", "pre-commit>=4.2.0", "ruff>=0.7.4"]
+[dependency-groups]
+dev = ["codespell>=2.4.1", "pre-commit>=4.2.0", "ruff>=0.7.4"]
 
 [tool.ruff]
 line-length = 88
@@ -62,5 +64,5 @@ docstring-code-line-length = 88
 
 [tool.codespell]
 builtin = "clear,rare,informal,usage,code,names"
-ignore-words-list = "jupyter,ipa"
+ignore-words-list = "jupyter,ipa,master,missings"
 skip = "uv.lock"

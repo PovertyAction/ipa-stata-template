@@ -1,15 +1,18 @@
-# Stata Package Requirements
-# Format: package_name,install_source,install_command
-# Sources: ssc, net, github
-estout,ssc,ssc install estout
-reghdfe,ssc,ssc install reghdfe
-ftools,ssc,ssc install ftools
-coefplot,ssc,ssc install coefplot
-ivreg2,ssc,ssc install ivreg2
-outreg2,ssc,ssc install outreg2
-winsor2,ssc,ssc install winsor2
-distinct,ssc,ssc install distinct
-missings,ssc,ssc install missings
-stata_linter,ssc,ssc install stata_linter
-ipaclean,github,github install PovertyAction/ipaclean
-ipaplots,github,github install PovertyAction/ipaplots
+# Stata requirements
+# require using requirements.txt, install
+
+# SSC requirements
+estout  >= 3.31
+reghdfe >= 6.12.3
+ftools  >= 2.49.1
+coefplot >= 1.8.8
+ivreg2  >= 4.1.12
+outreg2     >= 2.3.2
+winsor2     >= 1.1
+distinct    >= 1.2.0
+missings    >= 1.4.0
+repkit      >= 4.0
+
+# Github/etc requirements
+
+ipaclean	>= 1.0.0, from(https://raw.githubusercontent.com/PovertyAction/ipaclean/main)
