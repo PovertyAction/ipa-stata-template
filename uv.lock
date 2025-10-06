@@ -1974,11 +1974,11 @@ wheels = [
 
 [[package]]
 name = "scons"
-version = "4.9.1"
+version = "4.10.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c8/c1/30176c76c1ef723fab62e5cdb15d3c972427a146cb6f868748613d7b25af/scons-4.9.1.tar.gz", hash = "sha256:bacac880ba2e86d6a156c116e2f8f2bfa82b257046f3ac2666c85c53c615c338", size = 3252106, upload-time = "2025-03-27T20:42:19.765Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/ff/2c0bab6e1fcd837c52afd99a37e0cc16f2e1c970d313c3d4bc10b5c047f2/scons-4.10.0.tar.gz", hash = "sha256:61e2fc42e0e2c750105d61f26cc1dfebcae9f4103d3dc0e9aeb373016b0d208c", size = 3257277, upload-time = "2025-10-02T17:40:18.575Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/92/50b739021983b131dcacd57aa8b04d31c5acc2e7e0eb4ed4a362f438c6b7/scons-4.9.1-py3-none-any.whl", hash = "sha256:d2db1a22eb6039e97cbbb0106f18f435af033d0aad190299c9688378e2810a5e", size = 4131331, upload-time = "2025-03-27T20:42:16.665Z" },
+    { url = "https://files.pythonhosted.org/packages/11/36/25bcc902d714fd0c36cc67642c88126e7a139b2e4b89686450f5aa676052/scons-4.10.0-py3-none-any.whl", hash = "sha256:df6f86828035a5c03abce64d4cf2f9c5cbd0051b58af498016bc58bfc05559b0", size = 4135796, upload-time = "2025-10-02T17:40:14.997Z" },
 ]
 
 [[package]]
