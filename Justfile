@@ -1,11 +1,20 @@
-# Set the shell to use
-# set shell := ["nu", "-c"]
-# Set shell for Windows
+# ==============================================================================
+# IPA Stata Template - Justfile
+# ==============================================================================
+#
+# Quick reference:
+#   just get-started    - Setup project environment
+#   just stata-run      - Run the analysis pipeline
+#   just stata-config   - Show Stata configuration
+#   just help           - Show available commands
+#
+# For full command list: just --list
+# ==============================================================================
 
 set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
 set dotenv-load := true
 
-# Set path to virtual environment's python
+# Configuration variables
 
 venv_dir := ".venv"
 python := venv_dir + if os_family() == "windows" { "/Scripts/python.exe" } else { "/bin/python3" }
@@ -16,6 +25,10 @@ stata_cmd := env_var_or_default("STATA_CMD", "stata-se")
 stata_edition := env_var_or_default("STATA_EDITION", "se")
 stata_mode := env_var_or_default("STATA_MODE", "-e")
 stata_options := env_var_or_default("STATA_OPTIONS", "")
+
+# ==============================================================================
+# ESSENTIAL COMMANDS - Start here
+# ==============================================================================
 
 # Display system information
 system-info:
@@ -55,6 +68,43 @@ stata-config:
     @echo "Options: {{ stata_options }}"
     @echo ""
     @echo "To customize, copy .env-example to .env and modify STATA_* variables"
+
+# Run an individual Stata do-file
+[windows]
+stata-do dofile:
+    @echo "Running Stata do file..."
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "{{ dofile }}"
+
+# Run an individual Stata do-file
+[linux]
+stata-do dofile:
+    @echo "Running Stata do file..."
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "{{ dofile }}"
+
+# Run an individual Stata do-file
+[macos]
+stata-do dofile:
+    @echo "Running Stata do file..."
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "{{ dofile }}"
+
+# Run traditional Stata master do-file (the main way to run your analysis)
+[windows]
+stata-run:
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+
+# Run traditional Stata master do-file (the main way to run your analysis)
+[linux]
+stata-run:
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+
+# Run traditional Stata master do-file (the main way to run your analysis)
+[macos]
+stata-run:
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+
+# ==============================================================================
+# SETUP & INSTALLATION
+# ==============================================================================
 
 # Check Stata installation and version
 [windows]
@@ -99,36 +149,41 @@ stata-install-packages: stata-check-installation
     @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do ".config/stata/install_packages.do"
     @echo "Check Stata installation..."
 
-# launch jupyter lab
+# ==============================================================================
+# ADVANCED - Python/Jupyter integration
+# Requires: uv, Python, nbstata setup (run 'just get-started' first)
+# ==============================================================================
+
+# Launch Jupyter Lab for interactive analysis
 lab:
     uv run jupyter lab
 
-# Preview the quarto project
-preview-docs:
-    quarto preview
-
-# Build the quarto project
-build-docs:
-    quarto render
+# ==============================================================================
+# DOCUMENTATION & REPORTS
+# ==============================================================================
 
 # Render analysis report with Stata outputs
-render-report:
+render-report path:
     @echo "Rendering analysis report..."
-    quarto render reports/analysis_report.qmd
+    quarto render {{ path }}
+
+# Render report as html
+render-html path:
+    @echo "Rendering analysis report as HTML..."
+    quarto render {{ path }} --to html
 
 # Render report as PDF
-render-pdf:
+render-pdf path:
     @echo "Rendering analysis report as PDF..."
-    quarto render reports/analysis_report.qmd --to pdf
-
-# Render report as Typst
-render-typst:
-    @echo "Rendering analysis report as Typst..."
-    quarto render reports/analysis_report.qmd --to typst
+    quarto render {{ path }} --to typst
 
 # Preview analysis report
-preview-report:
-    quarto preview reports/analysis_report.qmd
+preview-report path:
+    quarto preview {{ path }}
+
+# ==============================================================================
+# CODE QUALITY & FORMATTING
+# ==============================================================================
 
 # Lint python code
 lint-py:
@@ -148,7 +203,7 @@ lint-sql:
 
 # Format all markdown and config files
 fmt-markdown:
-    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}" --fix
+    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}" "#.venv" --fix
 
 # Format a single markdown file, "f"
 fmt-md f:
@@ -156,7 +211,7 @@ fmt-md f:
 
 # Check format of all markdown files
 fmt-check-markdown:
-    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}"
+    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}" "#.venv"
 
 # Lint Stata code with stata_linter
 [windows]
@@ -217,7 +272,13 @@ stata-check-linter:
 
 fmt-all: lint-py fmt-python lint-sql fmt-markdown lint-stata
 
-# Run Stata analysis using statacons
+# ==============================================================================
+# ADVANCED - Dependency tracking with scons
+# For large projects where rebuild time matters (>5 min builds)
+# Only use if your full pipeline is genuinely slow
+# ==============================================================================
+
+# Run Stata analysis using statacons (rebuilds only changed files)
 stata-build:
     uv run scons
 
@@ -234,10 +295,6 @@ stata-figures:
 # Clean Stata outputs
 stata-clean:
     uv run scons -c
-
-# Run traditional Stata master do-file (alternative to statacons)
-stata-run:
-    {{ stata_cmd }} {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
 
 # Quick data check - show basic info about analysis data
 data-info:
@@ -265,6 +322,10 @@ stata-full:
     uv run scons figures
     @echo "Analysis complete! Check outputs/ for results"
 
+# ==============================================================================
+# HELP & UTILITIES
+# ==============================================================================
+
 # Enhanced help with better organization
 help:
     @echo "=== PROJECT COMMANDS ==="
@@ -285,6 +346,10 @@ help:
 # Run pre-commit hooks
 pre-commit-run:
     pre-commit run
+
+# ==============================================================================
+# PLATFORM-SPECIFIC INSTALLATION (called by get-started)
+# ==============================================================================
 
 [windows]
 pre-install:
