@@ -6,30 +6,19 @@ author:
     affiliation: "Innovations for Poverty Action"
 date: today
 format:
-  pdf:
-    documentclass: article
-    geometry: margin=1in
-    fontsize: 11pt
-    mainfont: "Times New Roman"
-    include-in-header:
-      - text: |
-          \usepackage{booktabs}
-          \usepackage{longtable}
-          \usepackage{array}
-          \usepackage{multirow}
-          \usepackage{wrapfig}
-          \usepackage{float}
-          \usepackage{colortbl}
-          \usepackage{pdflscape}
-          \usepackage{tabu}
-          \usepackage{threeparttable}
-          \usepackage{dcolumn}
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
   typst:
     margin:
       x: 1in
       y: 1in
     fontsize: 11pt
-    mainfont: "Times New Roman"
+    mainfont: "Arial"
 bibliography: references.bib
 jupyter: python3
 execute:
@@ -58,26 +47,26 @@ logs_path = project_root / "analysis" / "logs"
 def include_latex_table(file_path, caption="", label=""):
     """
     Helper function to include LaTeX tables in Quarto document
-    
+
     Args:
         file_path (str): Path to the LaTeX table file
         caption (str): Table caption
         label (str): Table label for referencing
-    
+
     Returns:
         str: Cleaned LaTeX table content
     """
     file_path = Path(file_path)
-    
+
     if file_path.exists():
         with open(file_path, 'r', encoding='utf-8') as f:
             table_content = f.read()
-        
+
         # Clean up the LaTeX table for better integration
         # Remove standalone document elements
         table_content = re.sub(r'\\documentclass.*?\\begin\{document\}', '', table_content, flags=re.DOTALL)
         table_content = re.sub(r'\\end\{document\}', '', table_content)
-        
+
         # Add caption and label if provided
         if caption and label:
             table_content = f"""\\begin{{table}}[H]
@@ -86,7 +75,7 @@ def include_latex_table(file_path, caption="", label=""):
 \\label{{{label}}}
 {table_content}
 \\end{{table}}"""
-        
+
         return table_content
     else:
         return f"Table not found: {file_path}"
@@ -94,19 +83,19 @@ def include_latex_table(file_path, caption="", label=""):
 def check_outputs():
     """
     Check if analysis outputs exist and provide guidance if missing
-    
+
     Returns:
         dict: Status of tables and figures existence
     """
     tables_exist = (tables_path / "descriptive_stats.tex").exists()
     figures_exist = (figures_path / "figure1_income_distribution.pdf").exists()
-    
+
     if not tables_exist or not figures_exist:
         print("⚠️  **Note**: Some analysis outputs are missing. Run the following to generate all outputs:\n")
         print("```bash")
         print("just stata-full")
         print("```\n")
-    
+
     return {"tables": tables_exist, "figures": figures_exist}
 
 def check_file_exists(file_path):
@@ -121,7 +110,7 @@ This report presents the results of our data analysis using the IPA Stata Templa
 ## Key Findings
 
 - **Strong Educational Returns**: Robust evidence of 3.7-4.3% income returns per year of education across all model specifications
-- **Complex Gender Dynamics**: Gender income gaps show specification sensitivity, ranging from 1.2% to 16.5%, with evidence of age-interaction effects  
+- **Complex Gender Dynamics**: Gender income gaps show specification sensitivity, ranging from 1.2% to 16.5%, with evidence of age-interaction effects
 - **Lifecycle Patterns**: Quadratic age-income relationship demonstrates classic human capital accumulation and depreciation patterns
 - **Methodological Excellence**: Comprehensive robustness testing and automated reproducible workflow ensures research transparency and reliability
 
@@ -540,7 +529,7 @@ def summarize_logs():
     """Summarize log files from Stata analysis"""
     if logs_path.exists():
         log_files = list(logs_path.glob("*.log"))
-        
+
         if log_files:
             print("### Analysis Log Summary\n")
             for log_file in log_files:
