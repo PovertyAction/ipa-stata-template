@@ -1,0 +1,199 @@
+---
+title: "Analysis Report"
+author: "Your Name"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: show
+    code-tools: true
+    embed-resources: true
+    theme: cosmo
+  typst:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 1.25in
+      y: 1.25in
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+This document is configured to render to both HTML and Typst formats, allowing you to produce both an interactive web version and a print-ready PDF.
+
+## Background
+
+Provide context and background information.
+
+# Data
+
+## Data Loading
+
+```{python}
+#| label: setup
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set visualization defaults
+sns.set_theme(style="whitegrid")
+```
+
+```{python}
+#| label: load-data
+
+# Load your data
+# data = pd.read_csv("path/to/data.csv")
+
+# Example data
+data = pd.DataFrame({
+    'variable1': np.random.randn(100),
+    'variable2': np.random.randn(100),
+    'group': np.random.choice(['Group A', 'Group B', 'Group C'], 100)
+})
+```
+
+## Data Overview
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary Statistics"
+#| echo: false
+
+summary = data.groupby('group').agg({
+    'variable1': ['mean', 'std', 'count'],
+    'variable2': ['mean', 'std', 'count']
+}).round(3)
+
+summary
+```
+
+# Analysis
+
+## Descriptive Statistics
+
+```{python}
+#| label: fig-boxplot
+#| fig-cap: "Distribution by Group"
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+data.boxplot(column='variable1', by='group', ax=axes[0])
+axes[0].set_title('Variable 1 by Group')
+axes[0].set_xlabel('Group')
+axes[0].set_ylabel('Variable 1')
+
+data.boxplot(column='variable2', by='group', ax=axes[1])
+axes[1].set_title('Variable 2 by Group')
+axes[1].set_xlabel('Group')
+axes[1].set_ylabel('Variable 2')
+
+plt.suptitle('')  # Remove default title
+plt.tight_layout()
+plt.show()
+```
+
+## Relationships
+
+```{python}
+#| label: fig-scatter
+#| fig-cap: "Relationship between Variables"
+
+plt.figure(figsize=(8, 6))
+for group in data['group'].unique():
+    subset = data[data['group'] == group]
+    plt.scatter(subset['variable1'], subset['variable2'],
+                label=group, alpha=0.6, s=50)
+
+plt.xlabel('Variable 1')
+plt.ylabel('Variable 2')
+plt.title('Scatter Plot by Group')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+# Results
+
+## Key Findings
+
+1. **Finding 1**: Description of first key result
+2. **Finding 2**: Description of second key result
+3. **Finding 3**: Description of third key result
+
+## Statistical Tests
+
+```{python}
+#| label: tbl-tests
+#| tbl-cap: "Statistical Test Results"
+#| echo: false
+
+# Example: Add your statistical tests here
+results = pd.DataFrame({
+    'Test': ['ANOVA Variable 1', 'ANOVA Variable 2'],
+    'Statistic': [2.45, 1.89],
+    'P-value': [0.092, 0.157],
+    'Conclusion': ['Not significant', 'Not significant']
+})
+
+results
+```
+
+# Discussion
+
+Interpret the results in context of the research question or analysis goals.
+
+## Implications
+
+Discuss what these findings mean for your domain or application.
+
+## Limitations
+
+- Limitation 1: Describe potential issues
+- Limitation 2: Describe potential issues
+- Limitation 3: Describe potential issues
+
+# Conclusion
+
+Summarize the main conclusions and suggest next steps or future work.
+
+# References {.unnumbered}
+
+::: {.content-visible when-format="html"}
+Include web-friendly references here (links work).
+:::
+
+::: {.content-visible when-format="typst"}
+Include print-friendly references here.
+:::
+
+# Appendix {.unnumbered}
+
+## Technical Details
+
+```{python}
+#| echo: false
+
+import sys
+import platform
+
+print(f"Python: {sys.version}")
+print(f"Platform: {platform.platform()}")
+print(f"Pandas: {pd.__version__}")
+print(f"NumPy: {np.__version__}")
+```
+
+## Additional Analyses
+
+Include supplementary analyses or detailed methodology here.

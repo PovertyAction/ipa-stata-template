@@ -1,0 +1,303 @@
+---
+title: "Formal Report Title"
+subtitle: "Subtitle if needed"
+author:
+  - name: "Primary Author"
+    affiliation: "Organization"
+    email: "author@example.com"
+date: today
+abstract: |
+  This is a formal report template with structured sections for professional documentation. The abstract provides a brief summary of the report contents, methods, findings, and conclusions. Keep this concise, typically 150-250 words.
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    embed-resources: true
+    theme: cosmo
+  typst:
+    toc: true
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 1in
+      y: 1in
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+# Executive Summary {.unnumbered}
+
+Provide a high-level overview for non-technical stakeholders:
+
+- **Objective**: What was the goal?
+- **Methods**: How was it approached?
+- **Key Findings**: What were the main results?
+- **Recommendations**: What actions should be taken?
+
+# Introduction
+
+## Background and Context
+
+Provide background information about the problem or question being addressed.
+
+## Objectives
+
+Clearly state the specific objectives of this analysis:
+
+1. Objective 1
+2. Objective 2
+3. Objective 3
+
+## Scope
+
+Define what is included and excluded from this analysis.
+
+# Data and Methods
+
+## Data Sources
+
+```{python}
+#| label: setup
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
+
+sns.set_theme(style="whitegrid")
+```
+
+Describe the data sources used in this analysis:
+
+- **Source 1**: Description, date range, sample size
+- **Source 2**: Description, date range, sample size
+
+```{python}
+#| label: load-data
+
+# Load and prepare data
+# data = pd.read_csv("path/to/data.csv")
+
+# Example data
+np.random.seed(42)
+data = pd.DataFrame({
+    'date': pd.date_range('2024-01-01', periods=100),
+    'metric1': np.cumsum(np.random.randn(100)) + 100,
+    'metric2': np.cumsum(np.random.randn(100)) + 50,
+    'category': np.random.choice(['Category A', 'Category B', 'Category C'], 100)
+})
+```
+
+## Methodology
+
+### Data Processing
+
+Describe how the data was cleaned and prepared:
+
+1. **Step 1**: Description
+2. **Step 2**: Description
+3. **Step 3**: Description
+
+### Analytical Approach
+
+Explain the analytical methods used:
+
+- Method 1: Purpose and justification
+- Method 2: Purpose and justification
+
+### Quality Assurance
+
+Describe quality checks performed on the data and analysis.
+
+# Results
+
+## Overview
+
+```{python}
+#| label: tbl-overview
+#| tbl-cap: "Data Overview"
+
+overview = pd.DataFrame({
+    'Metric': ['Sample Size', 'Date Range', 'Categories', 'Missing Values'],
+    'Value': [
+        len(data),
+        f"{data['date'].min().strftime('%Y-%m-%d')} to {data['date'].max().strftime('%Y-%m-%d')}",
+        len(data['category'].unique()),
+        data.isnull().sum().sum()
+    ]
+})
+overview
+```
+
+## Key Metrics
+
+### Metric 1 Analysis
+
+```{python}
+#| label: fig-metric1
+#| fig-cap: "Metric 1 Trends Over Time"
+
+plt.figure(figsize=(10, 5))
+plt.plot(data['date'], data['metric1'], linewidth=2)
+plt.xlabel('Date')
+plt.ylabel('Metric 1')
+plt.title('Metric 1 Trends')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+Key observations for Metric 1:
+
+- Observation 1
+- Observation 2
+- Observation 3
+
+### Metric 2 Analysis
+
+```{python}
+#| label: fig-metric2
+#| fig-cap: "Metric 2 by Category"
+
+category_means = data.groupby('category')['metric2'].agg(['mean', 'std']).reset_index()
+
+plt.figure(figsize=(8, 6))
+plt.bar(category_means['category'], category_means['mean'],
+        yerr=category_means['std'], capsize=5, alpha=0.7)
+plt.xlabel('Category')
+plt.ylabel('Metric 2 (Mean ± SD)')
+plt.title('Metric 2 by Category')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+```
+
+## Comparative Analysis
+
+```{python}
+#| label: tbl-comparison
+#| tbl-cap: "Comparison by Category"
+
+comparison = data.groupby('category').agg({
+    'metric1': ['mean', 'std', 'min', 'max'],
+    'metric2': ['mean', 'std', 'min', 'max']
+}).round(2)
+
+comparison
+```
+
+## Statistical Significance
+
+Present any statistical tests and their results:
+
+```{python}
+#| label: tbl-stats
+#| tbl-cap: "Statistical Test Results"
+
+# Add your statistical tests here
+stats_results = pd.DataFrame({
+    'Test': ['Comparison 1', 'Comparison 2'],
+    'Statistic': [2.34, 1.89],
+    'P-value': [0.042, 0.089],
+    'Significance': ['*', 'ns']
+})
+
+stats_results
+```
+
+Note: *p < 0.05, ** p < 0.01, *** p < 0.001, ns = not significant*
+
+# Discussion
+
+## Interpretation of Findings
+
+### Finding 1
+
+Discuss the first major finding in detail, including:
+
+- What the data shows
+- Why it matters
+- How it relates to objectives
+
+### Finding 2
+
+Discuss the second major finding.
+
+### Finding 3
+
+Discuss the third major finding.
+
+## Comparison to Previous Work
+
+Compare findings to existing knowledge or previous analyses if applicable.
+
+## Limitations
+
+Acknowledge limitations of the analysis:
+
+1. **Data Limitations**: Describe any data quality or availability issues
+2. **Methodological Limitations**: Discuss any methodological constraints
+3. **Scope Limitations**: Note what was not included and why
+
+## Implications
+
+Discuss the practical implications of these findings for stakeholders.
+
+# Conclusions and Recommendations
+
+## Conclusions
+
+Summarize the main conclusions:
+
+1. **Conclusion 1**: Summary
+2. **Conclusion 2**: Summary
+3. **Conclusion 3**: Summary
+
+## Recommendations
+
+Provide specific, actionable recommendations:
+
+1. **Recommendation 1**: Action to take, rationale, expected outcome
+2. **Recommendation 2**: Action to take, rationale, expected outcome
+3. **Recommendation 3**: Action to take, rationale, expected outcome
+
+## Next Steps
+
+Outline suggested follow-up work or areas for further investigation.
+
+# References {.unnumbered}
+
+List data sources, literature citations, or other references used.
+
+# Appendices {.unnumbered}
+
+## Appendix A: Technical Details {.unnumbered}
+
+```{python}
+#| label: technical-info
+
+import sys
+print(f"Analysis Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+print(f"Python Version: {sys.version.split()[0]}")
+print(f"Pandas Version: {pd.__version__}")
+print(f"NumPy Version: {np.__version__}")
+```
+
+## Appendix B: Additional Tables {.unnumbered}
+
+Include supplementary tables here.
+
+## Appendix C: Additional Figures {.unnumbered}
+
+Include supplementary figures here.
+
+## Appendix D: Code {.unnumbered}
+
+::: {.content-visible when-format="html"}
+Full analysis code is available in the HTML version with code folding enabled.
+:::

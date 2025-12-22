@@ -15,53 +15,53 @@ assignees: []
 ## Key Verification
 
 - [ ] **Unique identifiers defined**
-  - [ ] Key variables identified: [list key variables]
-  - [ ] Analysis unit documented: [what does each row represent?]
-  - [ ] Time period specified: [if applicable]
-  - [ ] Geographic scope defined: [if applicable]
+    - [ ] Key variables identified: [list key variables]
+    - [ ] Analysis unit documented: [what does each row represent?]
+    - [ ] Time period specified: [if applicable]
+    - [ ] Geographic scope defined: [if applicable]
 
 ## Data Cleaning Checklist
 
 - [ ] **Raw data loaded successfully**
-  - [ ] File path verified
-  - [ ] Import process documented
-  - [ ] Basic structure confirmed
+    - [ ] File path verified
+    - [ ] Import process documented
+    - [ ] Basic structure confirmed
 
 - [ ] **Key Verification (REQUIRED)**
-  - [ ] `verify_keys [key_vars]` function executed
-  - [ ] Key uniqueness confirmed
-  - [ ] No missing values in key variables
-  - [ ] Data signature created
+    - [ ] `verify_keys [key_vars]` function executed
+    - [ ] Key uniqueness confirmed
+    - [ ] No missing values in key variables
+    - [ ] Data signature created
 
 - [ ] **Variable standardization**
-  - [ ] Variable names follow IPA conventions (lowercase, underscores)
-  - [ ] Variable labels added
-  - [ ] Value labels created where appropriate
-  - [ ] Data types verified
+    - [ ] Variable names follow IPA conventions (lowercase, underscores)
+    - [ ] Variable labels added
+    - [ ] Value labels created where appropriate
+    - [ ] Data types verified
 
 - [ ] **Data quality assessment**
-  - [ ] `data_quality_report` function executed
-  - [ ] Missing data patterns analyzed
-  - [ ] Outliers identified and flagged
-  - [ ] Data inconsistencies resolved
+    - [ ] `data_quality_report` function executed
+    - [ ] Missing data patterns analyzed
+    - [ ] Outliers identified and flagged
+    - [ ] Data inconsistencies resolved
 
 - [ ] **IPA extended missing values applied**
-  - [ ] `.d` - Don't know responses
-  - [ ] `.o` - Other/Open-ended responses
-  - [ ] `.n` - Not applicable
-  - [ ] `.r` - Refused to answer
-  - [ ] `.s` - Skipped by design
+    - [ ] `.d` - Don't know responses
+    - [ ] `.o` - Other/Open-ended responses
+    - [ ] `.n` - Not applicable
+    - [ ] `.r` - Refused to answer
+    - [ ] `.s` - Skipped by design
 
 ## Defensive Programming
 
 - [ ] **Assert statements added**
-  - [ ] Data structure assertions
-  - [ ] Value range checks
-  - [ ] Logic consistency checks
+    - [ ] Data structure assertions
+    - [ ] Value range checks
+    - [ ] Logic consistency checks
 - [ ] **Error handling implemented**
-  - [ ] Graceful handling of missing files
-  - [ ] Clear error messages
-  - [ ] Recovery procedures documented
+    - [ ] Graceful handling of missing files
+    - [ ] Clear error messages
+    - [ ] Recovery procedures documented
 
 ## Output Requirements
 
@@ -72,13 +72,13 @@ assignees: []
 ## Quality Control
 
 - [ ] **Code review completed**
-  - [ ] `just lint-stata-file scripts/do/01_data_cleaning.do` passes
-  - [ ] Code follows IPA standards (based on Gentzkow & Shapiro principles)
-  - [ ] Documentation is complete
+    - [ ] `just lint-stata-file scripts/do/01_data_cleaning.do` passes
+    - [ ] Code follows IPA standards (based on Gentzkow & Shapiro principles)
+    - [ ] Documentation is complete
 - [ ] **Validation completed**
-  - [ ] Cleaned data matches expectations
-  - [ ] Key verification succeeds
-  - [ ] Data quality report reviewed
+    - [ ] Cleaned data matches expectations
+    - [ ] Key verification succeeds
+    - [ ] Data quality report reviewed
 
 ## Documentation Requirements
 

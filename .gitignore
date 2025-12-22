@@ -207,6 +207,7 @@ marimo/_lsp/
 __marimo__/
 
 # Generated Data Files
+data/*/*
 data/clean/
 data/final/
 data/temp/
@@ -224,7 +225,8 @@ figures/
 *.smcl
 *~
 *.gph
-*signature*.dta
+*signature
+*.dta
 
 # Stata Log Files
 *.log
@@ -241,5 +243,9 @@ figures/
 .sconsign.dblite
 *.typ
 
-CLAUDE.md
-.claude/
+.claude/settings.local.json
+
+**/*.quarto_ipynb
+
+scripts/demo/*.html
+scripts/demo/nbstata-demo_files/

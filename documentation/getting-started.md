@@ -38,9 +38,13 @@ This provides professional, IPA-branded graph themes that will be automatically 
 
 ### 3. Add Your Data
 
-- Place your raw data files in `data/raw/`
-- Update the sample CSV file or replace it with your actual data
-- Ensure your data file names match those referenced in the do-files
+Link to your data via do files.
+
+> [!WARNING]
+> NEVER COMMIT DATA FILES TO GITHUB.
+> NEVER USE AI ASSISTANTS WITH PERSONALLY IDENTIFIABLE DATA.
+> YOU ARE REQUIRED TO REMOVE IDENTIFIING INFORMATION **BEFORE** CONNECTING AI
+> ASSISTANTS OR STORING IN ANY UNENCRYPTED LOCATION.
 
 ### 4. Customize the Analysis
 
@@ -131,14 +135,14 @@ outputs/tables/*.tex & outputs/figures/*.pdf
 
 ## Best Practices
 
-### 1. Research-Grade Standards
+### 1. Research and Data Standards
 
 - **IPA Data Standards**: Follow IPA Data Cleaning Guide principles
 - **Data Carpentry Methods**: Use research-grade programming techniques
-  - Comprehensive data exploration and quality assessment
-  - Advanced data transformation and combination techniques
-  - Loop-based programming for efficiency
-  - Modular programming with reusable code
+    - Comprehensive data exploration and quality assessment
+    - Advanced data transformation and combination techniques
+    - Loop-based programming for efficiency
+    - Modular programming with reusable code
 - **Extended missing values**: Use IPA conventions (.d/.o/.n/.r/.s)
 - **Variable naming**: Implement descriptive prefixes (e.g., `inc_`, `educ_`)
 - **Defensive programming**: Use assert statements and validation checks
@@ -177,8 +181,8 @@ outputs/tables/*.tex & outputs/figures/*.pdf
 ### Common Issues
 
 1. **"Command scons not found"**
-   - Make sure you've activated the virtual environment: `uv shell`
    - Ensure dependencies installed: `just get-started`
+   - Make sure you've activated the virtual environment `.venv/Scripts/activate.ps1` or `source .venv/bin/activate`
 
 2. **Stata cannot find do-files**
    - Check that you're running from the project root directory

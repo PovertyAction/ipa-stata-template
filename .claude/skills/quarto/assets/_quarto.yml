@@ -1,0 +1,37 @@
+project:
+  type: default
+  output-dir: _output
+# Default format options
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-tools: true
+    code-copy: true
+    number-sections: true
+    html-math-method: katex
+    embed-resources: false
+  typst:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    papersize: us-letter
+    margin:
+      x: 1.25in
+      y: 1.25in
+    mainfont: "Latin Modern Roman"
+    fontsize: 11pt
+# Execution options
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  cache: false
+  freeze: false
+# Editor options
+
+editor: source

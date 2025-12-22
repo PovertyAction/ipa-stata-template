@@ -166,6 +166,7 @@ The analysis sample consists of 30 observations after applying data quality filt
 ```{=latex}
 \input{outputs/tables/descriptive_stats.tex}
 ```
+
 : Descriptive statistics for the full analysis sample {#tbl-descriptive-stats}
 
 *Statistics include mean, standard deviation, minimum, maximum, and observation counts for key variables used in the econometric analysis.*
@@ -177,6 +178,7 @@ To understand potential differences in our key variables by gender, the followin
 ```{=latex}
 \input{outputs/tables/descriptive_by_gender.tex}
 ```
+
 : Descriptive statistics by gender {#tbl-descriptive-gender}
 
 *This breakdown helps identify potential gender differences in income, age, and education that inform our main regression analysis.*
@@ -188,6 +190,7 @@ The following correlation matrix shows the relationships between our main analys
 ```{=latex}
 \input{outputs/tables/correlations.tex}
 ```
+
 : Correlation matrix for main analysis variables {#tbl-correlations}
 
 *Strong correlations may indicate potential multicollinearity concerns addressed in our regression diagnostics.*
@@ -235,6 +238,7 @@ The following table presents our comprehensive regression analysis examining the
 ```{=latex}
 \input{outputs/tables/main_results.tex}
 ```
+
 : Main regression results showing three model specifications {#tbl-main-results}
 
 *Model 1 provides the basic relationship, Model 2 adds controls and quadratic age terms, and Model 3 includes interaction effects. All models use robust standard errors.*
@@ -282,6 +286,7 @@ The following table presents results using different functional form assumptions
 ```{=latex}
 \input{outputs/tables/robustness_functional_forms.tex}
 ```
+
 : Robustness checks using alternative functional forms {#tbl-robustness-functional}
 
 *Includes linear income models, quadratic age specifications, and spline models to test sensitivity to functional form assumptions.*
@@ -293,6 +298,7 @@ To examine whether our results hold across the income distribution, we estimated
 ```{=latex}
 \input{outputs/tables/robustness_quantile.tex}
 ```
+
 : Quantile regression results across income distribution {#tbl-robustness-quantile}
 
 *This analysis reveals whether gender and education effects vary across income levels.*
@@ -304,6 +310,7 @@ The following table examines whether our main findings hold when estimated separ
 ```{=latex}
 \input{outputs/tables/robustness_subsamples.tex}
 ```
+
 : Subsample analysis by demographic groups {#tbl-robustness-subsamples}
 
 *Separate regressions for male/female respondents and younger/older age groups test whether our pooled results mask important heterogeneity.*
@@ -505,16 +512,19 @@ except:
 To replicate this analysis:
 
 1. **Environment Setup**:
+
    ```bash
    just get-started
    ```
 
 2. **Run Complete Analysis**:
+
    ```bash
    just stata-full
    ```
 
 3. **Generate Report**:
+
    ```bash
    just render-report
    ```
