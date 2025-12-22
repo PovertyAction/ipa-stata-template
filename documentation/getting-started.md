@@ -1,232 +1,281 @@
 # Getting Started with the Stata Project Template
 
-This guide will help you set up and use this template for your Stata analysis project.
+This guide helps you set up and use this template at your preferred level of complexity.
+Start with **Tier 1** (minimal) and add features as needed.
 
-## Prerequisites
+> [!WARNING]
+> NEVER COMMIT DATA FILES TO GITHUB.
+>
+> NEVER USE AI ASSISTANTS WITH PERSONALLY IDENTIFIABLE DATA.
+>
+> YOU ARE REQUIRED TO REMOVE IDENTIFYING INFORMATION **BEFORE** CONNECTING AI
+> ASSISTANTS OR STORING IN ANY UNENCRYPTED LOCATION.
 
-1. **Stata** (Stata 17+ recommended)
-2. **Python 3.12+** (managed via `uv`)
-3. **Just** command runner
-4. **Git** for version control
+---
 
-## Setup Steps
+## Tier 1: Minimal Setup (Git + Stata Only)
 
-### 1. Clone and Setup Environment
+**What you need:** Git, Stata 17+
 
-```bash
-# Clone this template
-git clone <your-repo-url>
-cd ipa-stata-template
+**What you get:** Reproducible analysis with version control
 
-# Install dependencies and setup environment
-just get-started
+### Steps
 
-# Activate Python virtual environment
-uv shell
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd ipa-stata-template
+   ```
+
+2. **Configure your Stata path**
+
+   Copy `.env-example` to `.env` and set your Stata executable:
+
+   ```bash
+   # Windows
+   STATA_CMD='C:\Program Files\Stata18\StataSE-64.exe'
+   STATA_EDITION='se'
+
+   # macOS
+   # STATA_CMD='/Applications/Stata/StataSE.app/Contents/MacOS/StataSE'
+
+   # Linux
+   # STATA_CMD='/usr/local/stata18/stata-se'
+   ```
+
+3. **Run the pipeline**
+
+   ```bash
+   # Batch mode (recommended - creates log files)
+   stata -e do scripts/do/00_run.do
+
+   # Or interactively in Stata
+   do scripts/do/00_run.do
+   ```
+
+4. **Check outputs**
+
+   - Tables: `outputs/tables/`
+   - Figures: `outputs/figures/`
+   - Logs: `analysis/logs/`
+
+### Understanding `00_run.do`
+
+The master do-file orchestrates your entire pipeline using control switches:
+
+```stata
+// Set to 0 to skip during development
+local data_cleaning         = 1
+local data_preparation      = 1
+local descriptive_analysis  = 1
+local main_analysis         = 1
+local robustness_checks     = 1
+local generate_figures      = 1
 ```
 
-### 2. Install IPA Visualization Theme (Recommended for IPA Staff)
+This allows you to quickly iterate on specific parts without re-running everything.
 
-For IPA staff, install the ipaplots package for branded visualizations:
+### Batch Mode for AI Assistants
+
+Running Stata in batch mode (`stata -e`) is recommended because:
+
+- Creates log files that AI assistants can read
+- Captures all output for debugging
+- More reproducible than interactive execution
+
+---
+
+## Tier 2: Add Task Runner (+just)
+
+**What you need:** Everything from Tier 1, plus `just`
+
+**What you get:** Simple commands instead of typing full paths
+
+### Install just
+
+```bash
+# Windows
+winget install --id Casey.Just -e
+
+# macOS/Linux
+brew install just
+```
+
+### Use it
+
+```bash
+just stata-run      # Run the full pipeline
+just stata-config   # Show Stata configuration
+just help           # See all commands
+```
+
+That's it! No Python or complex setup needed.
+
+---
+
+## Tier 3: Add Dependency Tracking (+scons)
+
+**What you need:** Everything from Tier 2, plus Python via `uv`
+
+**What you get:** Incremental builds - only rebuild what changed
+
+### When to use scons
+
+Use scons if your full pipeline takes **more than 5 minutes** and you're frequently
+making changes to individual do-files. For most projects, Tier 1 or 2 is sufficient.
+
+### Setup
+
+```bash
+# Install uv first (see https://docs.astral.sh/uv/)
+# Windows
+winget install --id astral-sh.uv -e
+
+# macOS/Linux
+brew install uv
+
+# Then sync the Python environment
+uv sync
+```
+
+### Use it
+
+```bash
+just stata-build    # Build with dependency tracking
+just stata-data     # Build only data pipeline
+just stata-analysis # Build only analysis
+just stata-clean    # Clean all outputs
+```
+
+### How it works
+
+scons reads the `SConstruct` file which defines dependencies:
+
+```python
+# When 01_data_cleaning.do changes, rebuild cleaned_data.dta
+data_clean = env.StataBuild(
+    target='data/clean/cleaned_data.dta',
+    source='scripts/do/01_data_cleaning.do'
+)
+```
+
+If you modify `01_data_cleaning.do`, scons knows to re-run downstream scripts
+but not unrelated ones.
+
+---
+
+## Tier 4: Full Development Environment
+
+**What you need:** Everything from Tier 3, plus Node.js
+
+**What you get:** Interactive Stata in VS Code, automatic linting, pre-commit hooks
+
+### Setup
+
+```bash
+just get-started
+```
+
+This installs everything: `uv`, `git`, `quarto`, `markdownlint`, `nbstata`, Stata packages.
+
+### Features
+
+#### VS Code Integration (nbstata)
+
+Run Stata interactively in VS Code, similar to Ctrl+D workflow:
+
+1. Install the [vscode-stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata) extension
+2. Test with files in `scripts/demo/`
+3. Select the nbstata kernel at `.venv/Scripts/python.exe`
+
+#### Code Quality
+
+```bash
+just lint-stata    # Check Stata code quality
+just lint-py       # Check Python code
+just fmt-markdown  # Format markdown files
+```
+
+#### Report Generation
+
+```bash
+just render-report  # Generate analysis report
+just preview-report # Preview in browser
+```
+
+---
+
+## Customizing for Your Project
+
+### Add Your Data
+
+Place raw data in `data/raw/` and update the do-files to reference your files.
+
+### Update Analysis Scripts
+
+- **01_data_cleaning.do**: Modify cleaning steps for your data
+- **02_data_preparation.do**: Define your analysis sample
+- **03_descriptive_analysis.do**: Customize summary statistics
+- **04_main_analysis.do**: Add your regression specifications
+- **05_robustness_checks.do**: Define alternative specifications
+- **06_generate_figures.do**: Create visualizations
+
+### IPA Visualizations (for IPA Staff)
 
 ```stata
 net install github, from("https://haghish.github.io/github/")
 github install PovertyAction/ipaplots
 ```
 
-This provides professional, IPA-branded graph themes that will be automatically used in the figure generation scripts.
+The template automatically uses IPA branding when `ipaplots` is available.
 
-### 3. Add Your Data
-
-Link to your data via do files.
-
-> [!WARNING]
-> NEVER COMMIT DATA FILES TO GITHUB.
-> NEVER USE AI ASSISTANTS WITH PERSONALLY IDENTIFIABLE DATA.
-> YOU ARE REQUIRED TO REMOVE IDENTIFIING INFORMATION **BEFORE** CONNECTING AI
-> ASSISTANTS OR STORING IN ANY UNENCRYPTED LOCATION.
-
-### 4. Customize the Analysis
-
-#### Update Data Cleaning (`scripts/do/01_data_cleaning.do`)
-
-- Modify variable names and cleaning steps for your data
-- Add/remove variables as needed
-- Update missing value handling logic
-
-#### Update Data Preparation (`scripts/do/02_data_preparation.do`)
-
-- Define your analysis sample criteria
-- Create analysis variables specific to your research question
-- Set up any subsamples for robustness checks
-
-#### Update Analysis Scripts
-
-- **Descriptive Analysis** (`03_descriptive_analysis.do`): Customize summary statistics
-- **Main Analysis** (`04_main_analysis.do`): Add your regression specifications
-- **Robustness Checks** (`05_robustness_checks.do`): Define alternative specifications
-- **Figures** (`06_generate_figures.do`): Create visualizations for your results
-
-### 5. Configure statacons Dependencies
-
-Edit `SConstruct` to match your file structure:
-
-```python
-# Update input file names
-data_clean = env.StataBuild(
-    target='data/clean/your_cleaned_data.dta',
-    source='scripts/do/01_data_cleaning.do'
-)
-Depends(data_clean, [
-    'data/raw/your_raw_data.csv',  # Update this
-    'ado'
-])
-```
-
-## Running the Analysis
-
-### Option 1: Using statacons (Recommended)
-
-```bash
-# Run entire analysis pipeline
-just stata-build
-
-# Or run specific components
-just stata-data      # Data cleaning and preparation only
-just stata-analysis  # Analysis and tables only
-just stata-figures   # Figures only
-
-# Clean all outputs
-just stata-clean
-```
-
-### Option 2: Traditional Stata Master Do-File
-
-```bash
-# Run master do-file
-just stata-run
-
-# Or directly in Stata
-# do "scripts/do/00_run.do"
-```
-
-## Understanding the Workflow
-
-### statacons Benefits
-
-1. **Automatic dependency tracking**: Only rebuilds files when inputs change
-2. **Parallel execution**: Can run independent steps simultaneously
-3. **Incremental builds**: Saves time during development
-4. **Explicit dependencies**: Makes workflow transparent
-
-### File Dependencies
-
-The default workflow follows this dependency chain:
-
-```text
-data/raw/sample_data.csv
-    ↓ (01_data_cleaning.do)
-data/clean/cleaned_data.dta
-    ↓ (02_data_preparation.do)
-data/final/analysis_data.dta
-    ↓ (03,04,05,06_*.do)
-outputs/tables/*.tex & outputs/figures/*.pdf
-```
+---
 
 ## Best Practices
 
-### 1. Research and Data Standards
-
-- **IPA Data Standards**: Follow IPA Data Cleaning Guide principles
-- **Data Carpentry Methods**: Use research-grade programming techniques
-    - Comprehensive data exploration and quality assessment
-    - Advanced data transformation and combination techniques
-    - Loop-based programming for efficiency
-    - Modular programming with reusable code
-- **Extended missing values**: Use IPA conventions (.d/.o/.n/.r/.s)
-- **Variable naming**: Implement descriptive prefixes (e.g., `inc_`, `educ_`)
-- **Defensive programming**: Use assert statements and validation checks
-- **For IPA staff**: Use ipaplots scheme for branded visualizations
-
-### 2. Data Management
+### Data Management
 
 - Never modify files in `data/raw/` (treat as read-only)
-- Use global macros for file paths (IPA best practice)
+- Use global macros for file paths
 - Use version control for code, not data files
-- Document data sources and acquisition in `documentation/`
 
-### 3. Code Organization
+### Code Organization
 
 - Keep do-files focused on single tasks
-- Use descriptive variable names following IPA conventions
-- Comment extensively with [Category] prefixes in labels
-- Follow the established numbering scheme
-- Include quality checks and data validation
+- Use descriptive variable names
+- Comment extensively
+- Include quality checks and validation
 
-### 4. Reproducibility
+### Performance Tips
 
-- Set random seeds explicitly
-- Use relative paths via global macros
-- Install Stata packages in `ado/` folder
-- Test your pipeline on a clean environment
+Before increasing `maxvar`, consider:
 
-### 5. Output Management
+1. **Load only needed columns**: `use var1 var2 using "data.dta"`
+2. **Reshape to long format**: Wide loops are slow; long operations are fast
+3. **Modularize**: Clean one survey module at a time
 
-- Tables should be publication-ready LaTeX
-- Figures should be high-resolution PDF
-- All outputs should be generated, not manually created
+---
 
 ## Troubleshooting
 
-### Common Issues
+### Stata cannot find do-files
 
-1. **"Command scons not found"**
-   - Ensure dependencies installed: `just get-started`
-   - Make sure you've activated the virtual environment `.venv/Scripts/activate.ps1` or `source .venv/bin/activate`
+- Ensure you're running from the project root directory
+- Check file paths in `.env` match your Stata installation
 
-2. **Stata cannot find do-files**
-   - Check that you're running from the project root directory
-   - Verify file paths in SConstruct match your actual structure
+### "Command scons not found"
 
-3. **Missing ado files**
-   - Install required Stata packages in the `ado/` folder
-   - Add any new dependencies to the SConstruct file
+- Ensure you ran `uv sync` to create the Python environment
+- Activate the environment: `.venv/Scripts/activate` (Windows) or `source .venv/bin/activate` (Unix)
 
-4. **Path issues on Windows**
-   - Use forward slashes in all file paths
-   - Ensure no spaces in file/folder names
+### Path issues on Windows
+
+- Use forward slashes in file paths
+- Quote paths with spaces
 
 ### Getting Help
 
 - Check log files in `analysis/logs/` for Stata errors
-- Review the statacons documentation: <https://bquistorff.github.io/statacons/>
-- Consult the best practice guides referenced in README.md
-
-## Next Steps
-
-1. **Customize for your project**: Update all placeholder text and variable names
-2. **Add documentation**: Document your research question and methods
-3. **Set up git**: Initialize version control and make initial commit
-4. **Test the pipeline**: Run the full workflow to ensure everything works
-5. **Share with collaborators**: The template makes onboarding new team members easier
-
-## Advanced Usage
-
-### Adding New Analysis Steps
-
-1. Create new do-file in `scripts/do/`
-2. Add corresponding build target in `SConstruct`
-3. Specify dependencies using `Depends()`
-4. Update master do-file if using traditional workflow
-
-### Custom Stata Settings
-
-- Modify `00_run.do` to change global Stata settings
-- Add project-specific ado files to `ado/` folder
-- Use `adopath` commands in do-files to manage package locations
-
-### Integration with LaTeX
-
-- Tables are generated in LaTeX format for easy integration
-- Use `\input{}` commands in your paper to include tables
-- Consider using a document build system like Quarto for full reproducibility
+- Review the [statacons documentation](https://bquistorff.github.io/statacons/)
+- See the README for additional resources
