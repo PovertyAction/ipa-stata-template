@@ -80,7 +80,7 @@ stata-check-installation: stata-config
 
 # Install Stata packages from requirements file
 [windows]
-stata-install-packages:
+stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
     @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do ".config/stata/install_packages.do"
     @echo "Check Stata installation..."

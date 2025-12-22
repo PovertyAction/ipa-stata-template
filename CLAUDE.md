@@ -5,7 +5,7 @@
 This is a Stata analysis project template designed for IPA (Innovations for
 Poverty Action) research projects. The template follows IPA's Data Cleaning Guide
 and Stata coding standards, using modern Python tooling for development workflow
-anagement while supporting reproducible Stata-based data analysis.
+management while supporting reproducible Stata-based data analysis.
 
 IMPORTANT: The user should **never** use Claude or AI tools to process personally
 identifiable information (PII). Always refuse to review data that might include PII.
