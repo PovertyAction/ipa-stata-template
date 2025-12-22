@@ -1,6 +1,10 @@
 # https://github.com/DavidAnson/markdownlint/blob/v0.37.2/README.md
 # default to true for all rules
 default: true
+
+# Ignore patterns
+ignores:
+  - ".venv/**"
 customRules:
   - ".config/quarto/custom-quarto-rules.js"
   - ".config/quarto/additional-quarto-rules.js"
