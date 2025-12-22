@@ -12,38 +12,40 @@ python := venv_dir + if os_family() == "windows" { "/Scripts/python.exe" } else 
 
 # Stata configuration - loads from .env file or uses defaults
 
-stata_cmd := env_var_or_default("STATA_CMD", "stata-se" })
-stata_mode := env_var_or_default("STATA_MODE", "-b")
+stata_cmd := env_var_or_default("STATA_CMD", "stata-se")
+stata_edition := env_var_or_default("STATA_EDITION", "se")
+stata_mode := env_var_or_default("STATA_MODE", "-e")
 stata_options := env_var_or_default("STATA_OPTIONS", "")
 
 # Display system information
 system-info:
     @echo "CPU architecture: {{ arch() }}"
     @echo "Operating system type: {{ os_family() }}"
-    @echo "Operating system: {{ os() }}"
     @echo "Stata command: {{ stata_cmd }}"
     @echo "Stata options: {{ stata_options }}"
 
-# Check Stata installation and version
-[windows]
-stata-check-installation:
-    @echo "Checking Stata installation..."
-    @echo "Command: {{ stata_cmd }}"
-    @{{ if os_family() == "windows" { "& \"" + stata_cmd + "\"" } else { stata_cmd } }} {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+# Clean venv
+clean:
+    rm -rf .venv
 
-# Check Stata installation and version
-[linux]
-stata-check-installation:
-    @echo "Checking Stata installation..."
-    @echo "Command: {{ stata_cmd }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+# Setup environment
+get-started: pre-install venv stata-install-packages
+    @echo "Project setup complete! Virtual environment created and Stata packages installed."
+    @echo "To start working, activate the virtual environment:"
+    @echo "{{ if os_family() == "windows" { ".venv\\Scripts\\activate" } else { "source .venv/bin/activate" } }}"
 
-# Check Stata installation and version
-[macos]
-stata-check-installation:
-    @echo "Checking Stata installation..."
-    @echo "Command: {{ stata_cmd }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+# Update project software versions in requirements
+update-reqs:
+    uv lock
+    pre-commit autoupdate
+
+# create virtual environment
+venv:
+    uv sync
+    uv run python -m nbstata.install --sys-prefix
+    uv run python -c "import re;from pathlib import Path;c=Path('.venv/etc/nbstata.conf');d=str(Path(r'{{ stata_cmd }}').parent);e='{{ stata_edition }}';t=re.sub(r'^stata_dir =.*$',lambda m:'stata_dir = '+d,c.read_text(),flags=re.MULTILINE);c.write_text(re.sub(r'^edition =.*$',lambda m:'edition = '+e,t,flags=re.MULTILINE))"
+    uv tool install pre-commit
+    uv run pre-commit install
 
 # Show Stata configuration
 stata-config:
@@ -54,48 +56,48 @@ stata-config:
     @echo ""
     @echo "To customize, copy .env-example to .env and modify STATA_* variables"
 
+# Check Stata installation and version
+[windows]
+stata-check-installation: stata-config
+    @echo "Checking Stata installation..."
+    @'display "Stata version: " c(version)', 'display "Stata flavor: " c(flavor)', 'display "Stata edition: " c(edition_real)', 'display "System: " c(os) " " c(machine_type)' | Set-Content "_stata_check.do"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "_stata_check.do"
+    @Start-Sleep -Seconds 2
+    @Get-Content "_stata_check.log" | Select-String -Pattern "^Stata (version|flavor|edition)|^System:"
+    @Remove-Item "_stata_check.do", "_stata_check.log" -ErrorAction SilentlyContinue; $null
+
+# Check Stata installation and version
+[linux]
+stata-check-installation: stata-config
+    @echo "Checking Stata installation..."
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(edition_real); display \"System: \" c(os) \" \" c(machine_type)"
+
+# Check Stata installation and version
+[macos]
+stata-check-installation: stata-config
+    @echo "Checking Stata installation..."
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(edition_real); display \"System: \" c(os) \" \" c(machine_type)"
+
 # Install Stata packages from requirements file
 [windows]
-stata-install-packages: stata-check-installation
+stata-install-packages:
     @echo "Installing Stata packages from requirements..."
-    @& "{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do ".config/stata/install_packages.do"
     @echo "Check Stata installation..."
 
 # Install Stata packages from requirements file
 [linux]
 stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
-    @"{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do ".config/stata/install_packages.do"
     @echo "Check Stata installation..."
 
 # Install Stata packages from requirements file
 [macos]
 stata-install-packages: stata-check-installation
     @echo "Installing Stata packages from requirements..."
-    @"{{ stata_cmd }}" {{ stata_options }} do "scripts/setup/install_packages.do"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do ".config/stata/install_packages.do"
     @echo "Check Stata installation..."
-
-# Clean venv
-clean:
-    rm -rf .venv
-
-# Setup environment
-get-started: pre-install venv
-
-# Update project software versions in requirements
-update-reqs:
-    uv lock
-    pre-commit autoupdate
-
-# create virtual environment
-venv:
-    uv sync
-    uv run python -m nbstata.install
-    uv tool install pre-commit
-    uv run pre-commit install
-
-activate-venv:
-    uv shell
 
 # launch jupyter lab
 lab:
@@ -124,12 +126,6 @@ render-typst:
     @echo "Rendering analysis report as Typst..."
     quarto render reports/analysis_report.qmd --to typst
 
-# Generate complete analysis and report
-# full-analysis-report: stata-full render-report
-#     @echo "Complete analysis and report generation finished!"
-#     @echo "Stata outputs: outputs/"
-#     @echo "Report: reports/analysis_report.pdf"
-
 # Preview analysis report
 preview-report:
     quarto preview reports/analysis_report.qmd
@@ -152,72 +148,72 @@ lint-sql:
 
 # Format all markdown and config files
 fmt-markdown:
-    markdownlint --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}" --fix
+    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}" --fix
 
 # Format a single markdown file, "f"
 fmt-md f:
-    markdownlint --config {{ justfile_directory() }}/.markdownlint.yaml {{ f }} --fix
+    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml {{ f }} --fix
 
 # Check format of all markdown files
 fmt-check-markdown:
-    markdownlint --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}"
+    markdownlint-cli2 --config {{ justfile_directory() }}/.markdownlint.yaml "**/*.{md,qmd}"
 
 # Lint Stata code with stata_linter
 [windows]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @& "{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
     @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
 
 # Lint Stata code with stata_linter
 [linux]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @"{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
     @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
 
 # Lint Stata code with stata_linter
 [macos]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @"{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
     @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
 
 # Lint specific Stata file
 [windows]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @& "{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Lint specific Stata file
 [linux]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Lint specific Stata file
 [macos]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Check if stata_linter is installed and provide installation instructions
 [windows]
 stata-check-linter:
     @echo "Checking for stata_linter installation..."
-    @& "{{ stata_cmd }}" {{ stata_options }} -e "capture which stata_linter; if _rc != 0 { di as error `\"stata_linter not installed`\"; di `\"Install with: just stata-install-packages`\" } else { di as result `\"stata_linter is installed and ready to use!`\" }"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "capture which stata_linter; if _rc != 0 { di as error `\"stata_linter not installed`\"; di `\"Install with: just stata-install-packages`\" } else { di as result `\"stata_linter is installed and ready to use!`\" }"
 
 # Check if stata_linter is installed and provide installation instructions
 [linux]
 stata-check-linter:
     @echo "Checking for stata_linter installation..."
-    @"{{ stata_cmd }}" {{ stata_options }} -e "capture which stata_linter; if _rc != 0 { di as error \"stata_linter not installed\"; di \"Install with: just stata-install-packages\" } else { di as result \"stata_linter is installed and ready to use!\" }"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "capture which stata_linter; if _rc != 0 { di as error \"stata_linter not installed\"; di \"Install with: just stata-install-packages\" } else { di as result \"stata_linter is installed and ready to use!\" }"
 
 # Check if stata_linter is installed and provide installation instructions
 [macos]
 stata-check-linter:
     @echo "Checking for stata_linter installation..."
-    @"{{ stata_cmd }}" {{ stata_options }} -e "capture which stata_linter; if _rc != 0 { di as error \"stata_linter not installed\"; di \"Install with: just stata-install-packages\" } else { di as result \"stata_linter is installed and ready to use!\" }"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "capture which stata_linter; if _rc != 0 { di as error \"stata_linter not installed\"; di \"Install with: just stata-install-packages\" } else { di as result \"stata_linter is installed and ready to use!\" }"
 
 fmt-all: lint-py fmt-python lint-sql fmt-markdown lint-stata
 
@@ -241,16 +237,7 @@ stata-clean:
 
 # Run traditional Stata master do-file (alternative to statacons)
 stata-run:
-    {{ stata_cmd }} {{ stata_options }} do "scripts/do/00_run.do"
-
-# # View analysis summary from log files
-# # stata-summary:
-# #     @echo "=== STATA ANALYSIS SUMMARY ==="
-# #     @echo "Last modified files in outputs:"
-# #     @ls -lt outputs/tables/*.tex outputs/figures/*.pdf 2>/dev/null | head -10 || echo "No output files found"
-# #     @echo ""
-# #     @echo "Recent log file sizes:"
-# #     @ls -lh analysis/logs/*.log 2>/dev/null | tail -5 || echo "No log files found"
+    {{ stata_cmd }} {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
 
 # Quick data check - show basic info about analysis data
 data-info:
@@ -260,7 +247,7 @@ data-info:
 # Run data quality checks
 data-check:
     @echo "Running data quality checks..."
-    @{{ stata_cmd }} {{ stata_options }} do "scripts/do/01_data_cleaning.do"
+    @{{ stata_cmd }} {{ stata_options }} {{ stata_mode }} do "scripts/do/01_data_cleaning.do"
     @echo "Check analysis/logs/01_data_cleaning.log for results"
 
 # Generate only tables (no figures)
@@ -301,14 +288,14 @@ pre-commit-run:
 
 [windows]
 pre-install:
-    winget install Casey.Just astral-sh.uv GitHub.cli Posit.Quarto OpenJS.NodeJS
-    npm install -g markdownlint-cli
+    winget install Casey.Just astral-sh.uv Git.Git GitHub.cli Posit.Quarto OpenJS.NodeJS
+    npm install -g markdownlint-cli2
 
 [linux]
 pre-install:
-    brew install just uv gh markdownlint-cli
+    brew install just uv gh markdownlint-cli2
 
 [macos]
 pre-install:
-    brew install just uv gh markdownlint-cli
+    brew install just uv gh markdownlint-cli2
     brew install --cask quarto
