@@ -100,7 +100,7 @@ def create_quarto_document(
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(content)
 
-    print(f"✓ Created Quarto document: {output_path}")
+    print(f"[OK] Created Quarto document: {output_path}")
     print(f"  Template: {template_type}")
     if title:
         print(f"  Title: {title}")
@@ -111,6 +111,7 @@ def create_quarto_document(
 
 
 def main():
+    """Parse arguments and create a Quarto document."""
     parser = argparse.ArgumentParser(
         description="Create a new Quarto document from a template",
         formatter_class=argparse.RawDescriptionHelpFormatter,

@@ -84,7 +84,7 @@ def validate_quarto_document(file_path: Path, verbose: bool = False) -> bool:
 
     """
     if not file_path.exists():
-        print(f"✗ {file_path}: File not found")
+        print(f"[FAIL] {file_path}: File not found")
         return False
 
     # Read file
@@ -92,14 +92,14 @@ def validate_quarto_document(file_path: Path, verbose: bool = False) -> bool:
         with open(file_path, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
-        print(f"✗ {file_path}: Error reading file: {e}")
+        print(f"[FAIL] {file_path}: Error reading file: {e}")
         return False
 
     # Extract YAML front matter
     yaml_string, start_line, end_line = extract_yaml_frontmatter(content)
 
     if yaml_string is None:
-        print(f"✗ {file_path}: No YAML front matter found")
+        print(f"[FAIL] {file_path}: No YAML front matter found")
         if verbose:
             print("  Expected front matter between --- delimiters at start of file")
         return False
@@ -112,7 +112,7 @@ def validate_quarto_document(file_path: Path, verbose: bool = False) -> bool:
     is_valid, error_msg = validate_yaml(yaml_string)
 
     if not is_valid:
-        print(f"✗ {file_path}: Invalid YAML syntax")
+        print(f"[FAIL] {file_path}: Invalid YAML syntax")
         if verbose:
             print(f"  Error: {error_msg}")
         return False
@@ -121,7 +121,7 @@ def validate_quarto_document(file_path: Path, verbose: bool = False) -> bool:
     try:
         yaml_content = yaml.safe_load(yaml_string)
     except Exception as e:
-        print(f"✗ {file_path}: Error parsing YAML: {e}")
+        print(f"[FAIL] {file_path}: Error parsing YAML: {e}")
         return False
 
     # Check common fields
@@ -145,12 +145,12 @@ def validate_quarto_document(file_path: Path, verbose: bool = False) -> bool:
     missing = check_required_fields(yaml_content, recommended)
 
     if missing and verbose:
-        print(f"  ⚠ Recommended fields missing: {', '.join(missing)}")
+        print(f"  [WARN] Recommended fields missing: {', '.join(missing)}")
 
     if verbose:
-        print("  ✓ YAML is valid")
+        print("  [OK] YAML is valid")
     else:
-        print(f"✓ {file_path}")
+        print(f"[OK] {file_path}")
 
     return True
 
@@ -161,6 +161,7 @@ def find_quarto_files(pattern: str, base_path: Path = Path.cwd()) -> list[Path]:
 
 
 def main():
+    """Parse arguments and validate Quarto document YAML."""
     parser = argparse.ArgumentParser(
         description="Validate YAML front matter in Quarto documents",
         formatter_class=argparse.RawDescriptionHelpFormatter,

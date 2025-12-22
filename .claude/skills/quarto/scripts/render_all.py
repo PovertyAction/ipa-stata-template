@@ -55,18 +55,18 @@ def render_document(
         print(f"Rendering: {file_path}...", end=" ", flush=True)
 
     try:
-        result = subprocess.run(
+        subprocess.run(
             cmd,
             check=True,
             capture_output=not verbose,
             text=True,
         )
         if not verbose:
-            print("✓")
+            print("[OK]")
         return True
     except subprocess.CalledProcessError as e:
         if not verbose:
-            print("✗")
+            print("[FAIL]")
         print(f"Error rendering {file_path}:")
         if e.stderr:
             print(e.stderr)
@@ -80,6 +80,7 @@ def render_document(
 
 
 def main():
+    """Parse arguments and batch render Quarto documents."""
     parser = argparse.ArgumentParser(
         description="Batch render multiple Quarto documents",
         formatter_class=argparse.RawDescriptionHelpFormatter,
