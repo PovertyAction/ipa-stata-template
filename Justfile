@@ -12,7 +12,7 @@ python := venv_dir + if os_family() == "windows" { "/Scripts/python.exe" } else 
 
 # Stata configuration - loads from .env file or uses defaults
 
-stata_cmd := env_var_or_default("STATA_CMD", if os_family() == "windows" { "stata-se" } else { "stata-se" })
+stata_cmd := env_var_or_default("STATA_CMD", "stata-se" })
 stata_mode := env_var_or_default("STATA_MODE", "-b")
 stata_options := env_var_or_default("STATA_OPTIONS", "")
 
