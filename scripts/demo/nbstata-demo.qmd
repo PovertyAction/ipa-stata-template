@@ -15,6 +15,24 @@ jupyter: nbstata
 sysuse auto, clear
 ```
 
+Browse the dataset: `%browse [-h] [varlist] [if] [in] [, nolabel noformat]`
+
+```{stata}
+%browse
+```
+
+View the first 10 observations: `%*%head [-h] [N] [varlist] [if] [, nolabel noformat]`
+
+```{stata}
+%head 10
+```
+
+View the last 5 observations: `%*%tail [-h] [N] [varlist] [if] [, nolabel noformat]`
+
+```{stata}
+%tail 5
+```
+
 ```{stata}
 regress price mpg
 ```
@@ -22,7 +40,6 @@ regress price mpg
 ```{stata}
 sum price mpg weight foreign
 ```
-
 
 ```{stata}
 * %set graph_width = 8

@@ -8,10 +8,26 @@
 * %%
 sysuse auto, clear
 
+* %%[markdown]
+* Browse the dataset: `%browse [-h] [varlist] [if] [in] [, nolabel noformat]`
+
+* %%
+%browse
+
+* %%[markdown]
+* View the first 10 observations: `%*%head [-h] [N] [varlist] [if] [, nolabel noformat]`
+
+* %%
+%head 10
+
+* %%[markdown]
+* View the last 5 observations: `%*%tail [-h] [N] [varlist] [if] [, nolabel noformat]`
+
+* %%
+%tail 5
 
 * %%
 regress price mpg
-
 
 * %%
 sum price mpg weight foreign

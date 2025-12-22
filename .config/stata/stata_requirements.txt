@@ -1,0 +1,19 @@
+# Stata requirements
+# require using requirements.txt, install
+
+# SSC requirements
+estout  >= 3.31
+reghdfe >= 6.12.3
+ftools  >= 2.49.1
+coefplot >= 1.8.8
+ivreg2  >= 4.1.12
+outreg2     >= 2.3.2
+winsor2     >= 1.1
+distinct    >= 1.2.0
+missings    >= 1.4.0
+repkit      >= 4.0
+setroot >= 1.0
+
+# Github/etc requirements
+
+ipaclean	>= 1.0.0, from(https://raw.githubusercontent.com/PovertyAction/ipaclean/main)

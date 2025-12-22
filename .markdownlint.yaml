@@ -1,24 +1,76 @@
-# docs: https://github.com/DavidAnson/markdownlint/blob/v0.32.1/README.md
-
+# https://github.com/DavidAnson/markdownlint/blob/v0.37.2/README.md
 # default to true for all rules
 default: true
+customRules:
+  - ".config/quarto/custom-quarto-rules.js"
+  - ".config/quarto/additional-quarto-rules.js"
+  - ".config/quarto/quarto-image-rules.js"
 
-# MD007/unordered-list-indent
-MD007:
-  indent: 2
+# Disable rules that conflict with Quarto syntax
+MD033: false # Allow inline HTML
+MD041: false # Allow content before first heading (for YAML frontmatter)
+MD013: false # Disable line length restrictions
+MD045: false # Disable standard image alt text rule, prefer our custom Quarto version
+# Configure rules for better Quarto compatibility
 
-# MD033/no-inline-html
-MD033: false
+MD007: # Unordered list indentation
+  indent: 4
+MD010: # No hard tabs
+  code_blocks: false # Allow tabs in code blocks
+MD022: # Headers should be surrounded by blank lines
+  lines_above: 1
+  lines_below: 1
+MD024: false
+MD025: false # Single title/h1 header
+# front_matter_title: "^title:" # Exclude YAML front matter title
 
-# MD041/first-line-h1
-MD041: false
-
-# MD013/line-length
-MD013: false
-
-# MD024/no-duplicate-heading
-MD024:
-  # Allow when nested under different parents e.g. CHANGELOG.md
-  siblings_only: true
-
+MD029: false # Ordered list item prefixes
+MD031: # Blank lines around fenced code blocks
+  list_items: false # Allow code blocks without blank lines in lists
+MD034: false # Bare URL used
 MD038: false
+MD040: # Fenced code blocks should have a language specified
+  allowed_languages:
+    - bash
+    - r
+    - '{r}'
+    - python
+    - '{python}'
+    - '{julia}'
+    - yaml
+    - json
+    - jsonc
+    - toml
+    - html
+    - css
+    - javascript
+    - '{ojs}'
+    - markdown
+    - sql
+    - text
+    - mermaid
+    - '{mermaid}'
+    - dot
+    - graphviz
+    - stata
+    - '{stata}'
+    - latex
+    - '{latex}'
+MD046: # Code block style
+  style: fenced # Use fenced code blocks (```) rather than indented
+MD047: false # new line at the end of file
+MD048: # Code fence style
+  style: backtick # Use backticks for code fences
+
+# Options for Quarto-specific content
+quarto-callout-blocks: true
+quarto-callout-title: true
+quarto-collapsible-callout: true
+quarto-callout-appearance: true
+quarto-callout-crossref: true
+quarto-div-span: true
+quarto-code-block: true
+quarto-diagram: true
+quarto-cross-reference: true
+quarto-footnote: true
+quarto-image-alt-text: true

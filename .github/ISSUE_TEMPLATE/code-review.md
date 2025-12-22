@@ -61,14 +61,14 @@ assignees: []
 ### Stata-Specific Standards
 
 - [ ] **IPA coding standards followed**
-  - [ ] Lowercase variable names with underscores
-  - [ ] Global macros used for file paths
-  - [ ] Proper use of extended missing values
+    - [ ] Lowercase variable names with underscores
+    - [ ] Global macros used for file paths
+    - [ ] Proper use of extended missing values
 - [ ] **stata_linter passes** (`just lint-stata-file [filename]`)
 - [ ] **Defensive programming implemented**
-  - [ ] Assert statements for data integrity
-  - [ ] Error handling for edge cases
-  - [ ] Input validation
+    - [ ] Assert statements for data integrity
+    - [ ] Error handling for edge cases
+    - [ ] Input validation
 
 ### Performance and Efficiency
 

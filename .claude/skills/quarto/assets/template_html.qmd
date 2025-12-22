@@ -1,0 +1,153 @@
+---
+title: "Analysis Report"
+author: "Your Name"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: show
+    code-tools: true
+    code-copy: true
+    embed-resources: true
+    theme: cosmo
+    html-math-method: katex
+    fig-width: 8
+    fig-height: 6
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+Describe the purpose and scope of this analysis.
+
+## Background
+
+Provide context and background information.
+
+# Data
+
+## Data Loading
+
+```{python}
+#| label: setup
+#| echo: true
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set visualization defaults
+sns.set_theme(style="whitegrid")
+plt.rcParams['figure.dpi'] = 100
+```
+
+```{python}
+#| label: load-data
+#| echo: true
+
+# Load your data
+# data = pd.read_csv("path/to/data.csv")
+
+# Example data
+data = pd.DataFrame({
+    'x': np.random.randn(100),
+    'y': np.random.randn(100),
+    'category': np.random.choice(['A', 'B', 'C'], 100)
+})
+```
+
+## Data Description
+
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary Statistics"
+#| echo: false
+
+data.describe()
+```
+
+# Analysis
+
+## Exploratory Analysis
+
+```{python}
+#| label: fig-distribution
+#| fig-cap: "Distribution of Variables"
+#| echo: true
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+axes[0].hist(data['x'], bins=20, edgecolor='black')
+axes[0].set_title('Distribution of X')
+axes[0].set_xlabel('X')
+axes[0].set_ylabel('Frequency')
+
+axes[1].hist(data['y'], bins=20, edgecolor='black')
+axes[1].set_title('Distribution of Y')
+axes[1].set_xlabel('Y')
+axes[1].set_ylabel('Frequency')
+
+plt.tight_layout()
+plt.show()
+```
+
+## Main Results
+
+```{python}
+#| label: fig-scatter
+#| fig-cap: "Relationship between X and Y"
+#| echo: true
+
+plt.figure(figsize=(8, 6))
+sns.scatterplot(data=data, x='x', y='y', hue='category', alpha=0.6)
+plt.title('Scatter Plot of X vs Y')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend(title='Category')
+plt.show()
+```
+
+# Discussion
+
+Interpret the results and discuss implications.
+
+## Key Findings
+
+- Finding 1: Describe important result
+- Finding 2: Describe important result
+- Finding 3: Describe important result
+
+## Limitations
+
+Discuss any limitations of the analysis.
+
+# Conclusion
+
+Summarize main conclusions and next steps.
+
+# References {.unnumbered}
+
+List any references or data sources used.
+
+# Appendix {.unnumbered}
+
+## Additional Information
+
+Include supplementary materials here.
+
+```{python}
+#| label: session-info
+#| echo: false
+
+import sys
+print(f"Python version: {sys.version}")
+print(f"Pandas version: {pd.__version__}")
+print(f"NumPy version: {np.__version__}")
+```

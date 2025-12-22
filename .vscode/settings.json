@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    ".env-example": "dotenv"
+  },
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "jupyter.notebookFileRoot": "${workspaceFolder}/scripts/notebooks"
+}

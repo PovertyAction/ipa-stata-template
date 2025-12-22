@@ -13,53 +13,53 @@ Brief description of the analysis task
 ## Data Requirements
 
 - [ ] **Raw data files identified**
-  - [ ] Data source documented
-  - [ ] Data dictionary available
-  - [ ] Data access confirmed
+    - [ ] Data source documented
+    - [ ] Data dictionary available
+    - [ ] Data access confirmed
 - [ ] **Data quality verified**
-  - [ ] Unique identifiers confirmed
-  - [ ] Missing data patterns assessed
-  - [ ] Outliers and data issues flagged
+    - [ ] Unique identifiers confirmed
+    - [ ] Missing data patterns assessed
+    - [ ] Outliers and data issues flagged
 
 ## Analysis Steps
 
 - [ ] **Data cleaning completed**
-  - [ ] Key verification passed (`verify_keys` function)
-  - [ ] Data quality report generated
-  - [ ] Cleaning script documented
+    - [ ] Key verification passed (`verify_keys` function)
+    - [ ] Data quality report generated
+    - [ ] Cleaning script documented
 - [ ] **Analysis script written**
-  - [ ] Uses standardized functions from `functions.do`
-  - [ ] Follows IPA coding standards
-  - [ ] Includes defensive programming checks
+    - [ ] Uses standardized functions from `functions.do`
+    - [ ] Follows IPA coding standards
+    - [ ] Includes defensive programming checks
 - [ ] **Results generated**
-  - [ ] Tables exported to `outputs/tables/`
-  - [ ] Figures saved to `outputs/figures/`
-  - [ ] All outputs reproducible
+    - [ ] Tables exported to `outputs/tables/`
+    - [ ] Figures saved to `outputs/figures/`
+    - [ ] All outputs reproducible
 
 ## Expected Outputs
 
 - [ ] **Tables generated**:
-  - [ ] [Specify table names]
+    - [ ] [Specify table names]
 - [ ] **Figures created**:
-  - [ ] [Specify figure names]
+    - [ ] [Specify figure names]
 - [ ] **Results documented**
-  - [ ] Analysis interpretation written
-  - [ ] Results validated by PI
+    - [ ] Analysis interpretation written
+    - [ ] Results validated by PI
 
 ## Quality Checks
 
 - [ ] **Code quality verified**
-  - [ ] `just lint-stata` passes without errors
-  - [ ] Code follows style guidelines
-  - [ ] Functions abstracted where appropriate
+    - [ ] `just lint-stata` passes without errors
+    - [ ] Code follows style guidelines
+    - [ ] Functions abstracted where appropriate
 - [ ] **Pipeline testing completed**
-  - [ ] `just stata-full` runs successfully
-  - [ ] All outputs generated correctly
-  - [ ] Results are reproducible
+    - [ ] `just stata-full` runs successfully
+    - [ ] All outputs generated correctly
+    - [ ] Results are reproducible
 - [ ] **Peer review completed**
-  - [ ] Code reviewed by team member
-  - [ ] Results validated by PI
-  - [ ] Documentation complete
+    - [ ] Code reviewed by team member
+    - [ ] Results validated by PI
+    - [ ] Documentation complete
 
 ## Deliverables
 
