@@ -38,7 +38,7 @@ display .a < .z          // Returns 1 (true)
 IPA uses the following standardized coding system:
 
 | Raw Code | Stata Missing | Meaning | Description |
-|----------|--------------|---------|-------------|
+| ---------- | -------------- | --------- | ------------- |
 | -99 | .d | Don't know | Respondent doesn't know the answer |
 | -98 | .r | Refused | Respondent refused to answer |
 | -97 | .n | Not applicable | Question not applicable to respondent |

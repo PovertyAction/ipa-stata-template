@@ -48,8 +48,9 @@ clear all
 set more off
 version 17.0  // Use project's minimum Stata version
 
-* Set memory (if needed for large datasets)
-set maxvar 32767
+* Set maxvar conservatively - increase only if genuinely needed
+* High defaults can mask inefficient code patterns
+set maxvar 5000
 
 * Define global paths (set in master do-file)
 * global root     "C:/Users/username/project" (Recommended: set as environmental variable, either .env or PATH)
@@ -90,11 +91,11 @@ Variable names should be:
 - Lowercase with underscores: `household_income`, `resp_age`
 - Descriptive and consistent across datasets
 - Prefixed by category when helpful:
-  - `hh_*` for household variables
-  - `ind_*` for individual variables
-  - `bl_*` for baseline, `el_*` for endline
-  - `d_*` for dummy/indicator variables
-  - `n_*` for count variables
+    - `hh_*` for household variables
+    - `ind_*` for individual variables
+    - `bl_*` for baseline, `el_*` for endline
+    - `d_*` for dummy/indicator variables
+    - `n_*` for count variables
 
 ```stata
 * Good variable naming
@@ -443,7 +444,7 @@ gen temp_var = ...
 Use extended missing values to preserve information:
 
 | Code | Meaning | Stata |
-|------|---------|-------|
+| ------ | --------- | ------- |
 | -99 | Don't know | .d |
 | -98 | Refused | .r |
 | -97 | Not applicable | .n |
@@ -463,6 +464,37 @@ foreach var of varlist income expenditure {
 ```
 
 ## Performance Optimization
+
+### Working with Wide Data Efficiently
+
+Before increasing `maxvar`, consider these alternatives:
+
+1. **Load only needed columns**: Don't load entire surveys with 20k variables
+2. **Reshape to long format**: Wide loops are slow; long operations are fast
+3. **Modularize**: Clean one survey module at a time, not the entire survey
+
+```stata
+* GOOD: Load only the variables you need
+use hhid income age education using "$data/raw/survey.dta", clear
+
+* GOOD: Reshape to long before manipulating repeat groups
+reshape long crop_yield crop_area, i(hhid) j(crop_id)
+replace crop_yield = . if crop_yield < 0  // Fast: operates on single column
+
+* BAD: Looping across wide repeat groups
+forvalues i = 1/50 {
+    replace crop_yield`i' = . if crop_yield`i' < 0  // Slow: 50 separate operations
+}
+```
+
+When you truly need more variables (e.g., merging multiple wide datasets):
+
+```stata
+* Increase maxvar only in the specific do-file that needs it
+set maxvar 10000  // Document why this is needed
+```
+
+### General Performance Tips
 
 ```stata
 * Suppress output for faster execution
