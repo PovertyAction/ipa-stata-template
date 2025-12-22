@@ -225,7 +225,8 @@ figures/
 *.smcl
 *~
 *.gph
-*signature*.dta
+*signature
+*.dta
 
 # Stata Log Files
 *.log
