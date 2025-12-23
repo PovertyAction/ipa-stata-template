@@ -3,10 +3,12 @@
 # ==============================================================================
 #
 # Quick reference:
-#   just get-started    - Setup project environment
-#   just stata-run      - Run the analysis pipeline
-#   just stata-config   - Show Stata configuration
-#   just help           - Show available commands
+#   just get-started           - Setup project environment
+#   just stata-setup           - One-time Stata setup (install setroot + packages)
+#   just stata-run             - Run the full analysis pipeline
+#   just stata-script <name>   - Run a single script (e.g., 01_data_cleaning)
+#   just stata-config          - Show Stata configuration
+#   just help                  - Show available commands
 #
 # For full command list: just --list
 # ==============================================================================
@@ -101,6 +103,48 @@ stata-run:
 [macos]
 stata-run:
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+
+# Run one-time project setup (install setroot and packages)
+[windows]
+stata-setup:
+    @echo "Running one-time project setup..."
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
+
+# Run one-time project setup (install setroot and packages)
+[linux]
+stata-setup:
+    @echo "Running one-time project setup..."
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
+
+# Run one-time project setup (install setroot and packages)
+[macos]
+stata-setup:
+    @echo "Running one-time project setup..."
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
+
+# Run a specific analysis script via the runner pattern
+
+# Usage: just stata-script 01_data_cleaning
+[windows]
+stata-script script:
+    @echo "Running script: {{ script }}"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
+
+# Run a specific analysis script via the runner pattern
+
+# Usage: just stata-script 01_data_cleaning
+[linux]
+stata-script script:
+    @echo "Running script: {{ script }}"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
+
+# Run a specific analysis script via the runner pattern
+
+# Usage: just stata-script 01_data_cleaning
+[macos]
+stata-script script:
+    @echo "Running script: {{ script }}"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
 
 # ==============================================================================
 # SETUP & INSTALLATION
@@ -330,16 +374,18 @@ stata-full:
 help:
     @echo "=== PROJECT COMMANDS ==="
     @echo "just get-started          - Initial setup (install tools + create venv)"
-    @echo "just stata-help           - Show Stata-specific commands"
+    @echo "just stata-setup          - One-time Stata setup (install setroot + packages)"
     @echo "just stata-config         - Show Stata configuration"
     @echo "just system-info          - Display system information"
     @echo ""
-    @echo "=== QUICK STARTS ==="
-    @echo "just stata-full           - Complete Stata analysis pipeline"
-    @echo "just full-analysis-report - Complete analysis + report generation"
-    @echo "just render-report        - Generate report from existing outputs"
-    @echo "just data-info            - Quick data check"
-    @echo "just show-outputs         - View results"
+    @echo "=== STATA ANALYSIS ==="
+    @echo "just stata-run            - Run full analysis pipeline"
+    @echo "just stata-script <name>  - Run single script (e.g., 01_data_cleaning)"
+    @echo "just stata-do <file>      - Run any do-file directly"
+    @echo ""
+    @echo "=== ADVANCED (scons) ==="
+    @echo "just stata-full           - Complete Stata analysis with dependency tracking"
+    @echo "just stata-build          - Build with scons (only rebuilds changed files)"
     @echo ""
     @echo "For complete command list, see: just --list"
 

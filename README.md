@@ -45,23 +45,47 @@ Get started with just **Git** and **Stata** - no additional tools required.
    # STATA_CMD='/usr/local/stata18/stata-se'
    ```
 
-3. **Run the analysis pipeline**
+3. **One-time setup** (install `setroot` package)
 
    ```bash
-   # From command line (batch mode - recommended for reproducibility)
-   stata -e do scripts/do/00_run.do
+   # From command line - run once to install dependencies
+   just stata-setup
 
-   # Or open Stata and run interactively
-   do scripts/do/00_run.do
+   # Or from Stata directly:
+   do setup.do
    ```
 
-4. **Check outputs**
+4. **Run the analysis pipeline**
+
+   ```bash
+   # Full pipeline
+   just stata-run
+
+   # Or run a single script
+   just stata-script 01_data_cleaning
+
+   # Or open Stata and run directly (works from any directory!)
+   do scripts/do/00_run.do
+   do scripts/do/00_run.do "01_data_cleaning"  // single script
+   ```
+
+5. **Check outputs**
 
    - Tables: `outputs/tables/`
    - Figures: `outputs/figures/`
    - Logs: `analysis/logs/`
 
 That's it! You now have a reproducible Stata workflow.
+
+### How Path Resolution Works
+
+The template uses `setroot` to automatically find the project root by looking for
+a `.here` marker file. This means:
+
+- **No `c(pwd)` dependency** - scripts work regardless of where Stata is launched
+- **No user-specific `if c(user)` blocks** - paths resolve automatically
+- **Full adopath isolation** - only BASE + local `ado/` for reproducibility
+- **Runner pattern** - run individual scripts with proper environment setup
 
 > [!TIP]
 > **Want more automation?** See [Advanced Setup](#advanced-setup) below for:
@@ -76,19 +100,22 @@ That's it! You now have a reproducible Stata workflow.
 ## Project Structure
 
 ```text
+├── .here              # Project root marker (for setroot)
+├── setup.do           # One-time setup script
 ├── data/
 │   ├── raw/           # Original, immutable data files
 │   ├── clean/         # Cleaned data (intermediate)
 │   └── final/         # Analysis-ready datasets
 ├── scripts/
 │   └── do/            # Stata do-files
-│       ├── 00_run.do      # Master do-file (controls pipeline)
+│       ├── 00_run.do      # Master do-file (controls pipeline + runner)
 │       ├── 01_data_cleaning.do
 │       ├── 02_data_preparation.do
 │       ├── 03_descriptive_analysis.do
 │       ├── 04_main_analysis.do
 │       ├── 05_robustness_checks.do
-│       └── 06_generate_figures.do
+│       ├── 06_generate_figures.do
+│       └── functions.do   # Reusable helper functions
 ├── ado/               # Local Stata packages (for reproducibility)
 ├── analysis/logs/     # Log files from Stata runs
 ├── outputs/
@@ -140,9 +167,11 @@ brew install just
 Now you can run:
 
 ```bash
-just stata-run          # Run the full pipeline
-just stata-config       # Show your Stata configuration
-just help               # See available commands
+just stata-setup                    # One-time setup (install setroot + packages)
+just stata-run                      # Run the full pipeline
+just stata-script 01_data_cleaning  # Run a single script
+just stata-config                   # Show your Stata configuration
+just help                           # See available commands
 ```
 
 ### Option B: Full Development Environment

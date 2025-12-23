@@ -9,39 +9,23 @@ Description: Robustness checks and sensitivity analysis
 Input:       data/final/analysis_data.dta
 Output:      outputs/tables/robustness_results.tex
 
-Notes:       - Alternative specifications and estimation methods
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "05_robustness_checks"
+             - Alternative specifications and estimation methods
              - Subsample analysis and sensitivity tests
              - Addresses potential concerns about main results
 
 ==============================================================================*/
 
-// Boilerplate code
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
-
 // Start log file
 capture log close
-log using "analysis/logs/05_robustness_checks.log", replace
+log using "${logs}/05_robustness_checks.log", replace
 
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
-use "data/final/analysis_data.dta", clear
+use "${data_final}/analysis_data.dta", clear
 
 // Verify data integrity and key structure
 datasignature confirm
@@ -205,7 +189,7 @@ estimates store exclude_outliers_5pct
 ------------------------------------------------------------------------------*/
 
 // Include observations previously excluded (less restrictive)
-use "data/final/analysis_data.dta", clear
+use "${data_final}/analysis_data.dta", clear
 
 // Relax some sample restrictions
 generate expanded_sample = 1
@@ -222,7 +206,7 @@ estimates store expanded_sample_model
 
 // Export alternative functional forms
 esttab linear_income semilog_income quadratic_age spline_age ///
-    using "outputs/tables/robustness_functional_forms.tex", ///
+    using "${outputs}/tables/robustness_functional_forms.tex", ///
     replace ///
     b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
@@ -236,7 +220,7 @@ esttab linear_income semilog_income quadratic_age spline_age ///
 
 // Export quantile regression results
 esttab qreg_25 qreg_50 qreg_75 ///
-    using "outputs/tables/robustness_quantile.tex", ///
+    using "${outputs}/tables/robustness_quantile.tex", ///
     replace ///
     b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
@@ -250,14 +234,14 @@ esttab qreg_25 qreg_50 qreg_75 ///
 
 // Export subsample analysis
 esttab male_only female_only young_workers older_workers ///
-    using "outputs/tables/robustness_subsamples.tex", ///
+    using "${outputs}/tables/robustness_subsamples.tex", ///
     replace ///
     b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
     label ///
     booktabs ///
     title("Subsample Analysis") ///
-    mtitles("Male only" "Female only" "Age<40" "Age≥40") ///
+    mtitles("Male only" "Female only" "Age<40" "Age>=40") ///
     scalars("N Observations" "r2 R-squared") ///
     sfmt(0 3) ///
     note("Robust standard errors in parentheses.")
@@ -302,7 +286,7 @@ di "  - Alternative functional forms: 4"
 di "  - Quantile regression: 3 quantiles"
 di "  - Subsample analysis: 4 subsamples"
 di "  - Outlier sensitivity: 2 tests"
-di "Results saved to outputs/tables/robustness_*.tex"
+di "Results saved to ${outputs}/tables/robustness_*.tex"
 di "{hline 60}"
 
 // Close log

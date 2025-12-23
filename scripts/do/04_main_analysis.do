@@ -9,39 +9,23 @@ Description: Main regression analysis and hypothesis testing
 Input:       data/final/analysis_data.dta
 Output:      outputs/tables/main_results.tex
 
-Notes:       - Main regression specifications
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "04_main_analysis"
+             - Main regression specifications
              - Follows best practices for econometric analysis
              - Uses reghdfe for fixed effects estimation when appropriate
 
 ==============================================================================*/
 
-// Boilerplate code
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
-
 // Start log file
 capture log close
-log using "analysis/logs/04_main_analysis.log", replace
+log using "${logs}/04_main_analysis.log", replace
 
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
-use "data/final/analysis_data.dta", clear
+use "${data_final}/analysis_data.dta", clear
 
 // Verify data integrity and key structure
 datasignature confirm
@@ -150,7 +134,7 @@ capture {
 ==============================================================================*/
 
 // Export main regression results
-esttab model1 model2 model3 using "outputs/tables/main_results.tex", ///
+esttab model1 model2 model3 using "${outputs}/tables/main_results.tex", ///
     replace ///
     b(3) se(3) ///
     star(* 0.10 ** 0.05 *** 0.01) ///
@@ -254,7 +238,7 @@ di "Number of observations: " _N
 di "Number of models estimated: 3"
 di "Primary outcome: Log income"
 di "Key explanatory variable: Female"
-di "Results saved to: outputs/tables/main_results.tex"
+di "Results saved to: ${outputs}/tables/main_results.tex"
 di "{hline 60}"
 
 // Close log

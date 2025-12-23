@@ -9,26 +9,15 @@ Description: Advanced data transformation using Data Carpentry best practices
 Input:       data/clean/cleaned_data.dta
 Output:      data/clean/transformed_data.dta
 
-Notes:       - Implements Data Carpentry transformation techniques
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "02a_data_transformation"
+             - Implements Data Carpentry transformation techniques
              - Includes variable creation, filtering, and aggregation
-             - Demonstrates loop-based programming for efficiency
 
 References:
 - Data Carpentry Stata Economics: https://datacarpentry.github.io/stata-economics/
 
 ==============================================================================*/
-
-// Boilerplate code
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility
-global project_path "`c(pwd)'"
-global data_clean "${project_path}/data/clean"
-global logs "${project_path}/analysis/logs"
 
 // Start log file
 capture log close
@@ -191,7 +180,7 @@ di "  - Created derived variables"
 di "  - Generated group statistics"
 di "  - Applied loop-based standardization"
 di "  - Created interaction terms"
-di "Output saved to: data/clean/transformed_data.dta"
+di "Output saved to: ${data_clean}/transformed_data.dta"
 di "{hline 60}"
 
 // Close log

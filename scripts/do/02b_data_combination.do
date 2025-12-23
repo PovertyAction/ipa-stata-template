@@ -9,27 +9,15 @@ Description: Demonstrate data combination using Data Carpentry best practices
 Input:       Multiple datasets for merging and appending examples
 Output:      data/final/combined_data.dta
 
-Notes:       - Implements Data Carpentry merge and append techniques
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "02b_data_combination"
+             - Implements Data Carpentry merge and append techniques
              - Demonstrates best practices for data combination
-             - Includes validation and error checking
 
 References:
 - Data Carpentry Stata Economics: https://datacarpentry.github.io/stata-economics/
 
 ==============================================================================*/
-
-// Boilerplate code following IPA guidelines
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility
-global project_path "`c(pwd)'"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global logs "${project_path}/analysis/logs"
 
 // Start log file
 capture log close
@@ -316,7 +304,7 @@ di "  - Many-to-one merging (adding variables)"
 di "  - Merge validation and error checking"
 di "  - Advanced combination with aggregation"
 di "  - Loop-based combination workflows"
-di "Output saved to: data/final/combined_data.dta"
+di "Output saved to: ${data_final}/combined_data.dta"
 di "{hline 60}"
 
 // Close log

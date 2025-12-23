@@ -16,7 +16,9 @@ For basic usage with just Git and Stata:
 
 ```bash
 # Configure Stata path in .env, then run:
-just stata-do scripts/do/00_run.do
+just stata-setup                    # One-time: install setroot + packages
+just stata-run                      # Run full pipeline
+just stata-script 01_data_cleaning  # Run single script
 ```
 
 Outputs appear in `outputs/tables/` and `outputs/figures/`.
@@ -59,10 +61,22 @@ source .venv/bin/activate  # Activate on bash
 ### Essential Commands
 
 ```bash
-just stata-run      # Run the analysis pipeline (main command)
-just stata-config   # Show Stata configuration
-just help           # See available commands
+just stata-setup                    # One-time setup (install setroot + packages)
+just stata-run                      # Run full analysis pipeline
+just stata-script 01_data_cleaning  # Run a single script via runner pattern
+just stata-config                   # Show Stata configuration
+just help                           # See available commands
 ```
+
+### Path Resolution
+
+The project uses `setroot` to find the project root via the `.here` marker file.
+This enables:
+
+- Scripts work from any directory (no `c(pwd)` dependency)
+- No user-specific `if c(user)` blocks needed
+- Full adopath isolation (only BASE + local `ado/`) for reproducibility
+- Runner pattern for individual script execution with proper environment
 
 ### Code Quality and Formatting
 

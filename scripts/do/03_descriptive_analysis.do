@@ -9,39 +9,23 @@ Description: Generate descriptive statistics and summary tables
 Input:       data/final/analysis_data.dta
 Output:      outputs/tables/descriptive_stats.tex
 
-Notes:       - Creates publication-ready descriptive statistics tables
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "03_descriptive_analysis"
+             - Creates publication-ready descriptive statistics tables
              - Follows best practices for table formatting
              - Uses estout/esttab for LaTeX output
 
 ==============================================================================*/
 
-// Boilerplate code
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
-
 // Start log file
 capture log close
-log using "analysis/logs/03_descriptive_analysis.log", replace
+log using "${logs}/03_descriptive_analysis.log", replace
 
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
-use "data/final/analysis_data.dta", clear
+use "${data_final}/analysis_data.dta", clear
 
 // Verify data integrity and key structure
 datasignature confirm
@@ -128,7 +112,7 @@ capture {
 ==============================================================================*/
 
 // Export summary statistics table
-esttab summary_all using "outputs/tables/descriptive_stats.tex", ///
+esttab summary_all using "${outputs}/tables/descriptive_stats.tex", ///
     replace ///
     cells("mean(fmt(2)) sd(fmt(2)) min(fmt(0)) max(fmt(0)) count(fmt(0))") ///
     label ///
@@ -139,7 +123,7 @@ esttab summary_all using "outputs/tables/descriptive_stats.tex", ///
 
 // Export summary by gender (if applicable)
 capture {
-    esttab summary_male summary_female using "outputs/tables/descriptive_by_gender.tex", ///
+    esttab summary_male summary_female using "${outputs}/tables/descriptive_by_gender.tex", ///
         replace ///
         cells("mean(fmt(2)) sd(fmt(2)) count(fmt(0))") ///
         label ///
@@ -151,7 +135,7 @@ capture {
 
 // Export correlation table
 capture {
-    esttab correlations using "outputs/tables/correlations.tex", ///
+    esttab correlations using "${outputs}/tables/correlations.tex", ///
         replace ///
         not ///
         unstack ///
@@ -171,12 +155,12 @@ capture {
     histogram age if analysis_sample == 1, ///
         title("Distribution of Age") ///
         note("Analysis sample only") ///
-        saving("outputs/figures/hist_age.gph", replace)
+        saving("${outputs}/figures/hist_age.gph", replace)
 
     histogram log_income if analysis_sample == 1, ///
         title("Distribution of Log Income") ///
         note("Analysis sample only") ///
-        saving("outputs/figures/hist_income.gph", replace)
+        saving("${outputs}/figures/hist_income.gph", replace)
 }
 
 // Quantile analysis
@@ -201,7 +185,7 @@ di "{hline 60}"
 
 // Reload full dataset for comparison
 preserve
-use "data/clean/cleaned_data.dta", clear
+use "${data_clean}/cleaned_data.dta", clear
 
 capture {
     ttest age, by(analysis_sample)
@@ -213,7 +197,7 @@ restore
 
 di _n(2) "{hline 60}"
 di "DESCRIPTIVE ANALYSIS COMPLETED"
-di "Tables saved to outputs/tables/"
+di "Tables saved to ${outputs}/tables/"
 di "Number of observations: " _N
 di "{hline 60}"
 
