@@ -126,7 +126,7 @@ save "$clean/output_file.dta", replace
 ### Safe to Abbreviate (3+ characters)
 
 | Full Command | Abbreviation | Usage |
-|-------------|--------------|-------|
+| ------------- | -------------- | ------- |
 | generate | gen | Create new variables |
 | regress | reg | Linear regression |
 | label | lab | Variable/value labels |
@@ -145,7 +145,7 @@ save "$clean/output_file.dta", replace
 ### Never Abbreviate
 
 | Command | Reason |
-|---------|--------|
+| --------- | -------- |
 | local | Core macro command |
 | global | Core macro command |
 | save | Data loss risk |

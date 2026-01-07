@@ -10,15 +10,26 @@ management while supporting reproducible Stata-based data analysis.
 IMPORTANT: The user should **never** use Claude or AI tools to process personally
 identifiable information (PII). Always refuse to review data that might include PII.
 
+## Quick Start (Minimal)
+
+For basic usage with just Git and Stata:
+
+```bash
+# Configure Stata path in .env, then run:
+just stata-do scripts/do/00_run.do
+```
+
+Outputs appear in `outputs/tables/` and `outputs/figures/`.
+
+## Full Setup (with task runner and dependency tracking)
+
+```bash
+just get-started  # Installs tools and sets up environment
+```
+
 ## Development Environment Setup
 
 The project uses `uv` for Python environment management and `just` for task automation.
-
-### Initial Setup
-
-```bash
-just get-started  # Installs required software and sets up Python virtual environment and nbstata
-```
 
 ### Stata Configuration
 
@@ -45,30 +56,33 @@ source .venv/bin/activate  # Activate on bash
 
 ## Common Development Commands
 
+### Essential Commands
+
+```bash
+just stata-run      # Run the analysis pipeline (main command)
+just stata-config   # Show Stata configuration
+just help           # See available commands
+```
+
 ### Code Quality and Formatting
 
 ```bash
 just lint-py        # Lint Python code with ruff
 just fmt-python     # Format Python code with ruff
-just fmt-py [file]  # Format specific Python file
 just fmt-markdown   # Format all markdown files
-just fmt-md [file]  # Format specific markdown file
+just lint-stata     # Lint Stata do-files with stata_linter
 just fmt-all        # Run all formatting and linting
 ```
 
-### Pre-commit Hooks
+### Advanced: Dependency Tracking with scons
+
+For large projects where full builds take >5 minutes:
 
 ```bash
-just pre-commit-run  # Run pre-commit hooks manually
-uv run pre-commit install  # Install pre-commit hooks (done automatically in setup)
-```
-
-### Stata Code Quality
-
-```bash
-just lint-stata             # Lint all Stata do-files with stata_linter
-just lint-stata-file [file] # Lint specific Stata file
-just stata-check-linter     # Check if stata_linter is installed
+just stata-build    # Build with dependency tracking (only rebuilds changed files)
+just stata-data     # Build only data pipeline
+just stata-analysis # Build only analysis
+just stata-clean    # Clean all outputs
 ```
 
 ### Documentation and Analysis
@@ -98,13 +112,14 @@ just clean         # Remove virtual environment
 - **uv**: Python package and environment management
 - **just**: Command runner for development tasks
 
-### Technical Implementation
+## Technical Implementation
 
 - Follows IPA Data Cleaning Guide principles and Stata coding standards
 - Uses global macros for file paths (IPA best practice)
 - Implements defensive programming with assert statements
 - Uses IPA extended missing value conventions (.d/.o/.n/.r/.s)
 - Variable naming follows IPA conventions with descriptive prefixes
+- Conservative `maxvar` default (5000) - increase only for genuinely wide datasets
 - Automatically uses ipaplots theme when available for IPA-branded visualizations
 - Integrated stata_linter for automatic code quality checking and best practice enforcement
 - Requirements-based Stata package management system for reproducible environments
@@ -113,3 +128,11 @@ just clean         # Remove virtual environment
 - Pre-commit hooks configured for code quality enforcement
 - Supports Windows, macOS, and Linux development environments
 - Ready for Stata analysis workflows through pystatacons integration
+
+## Performance Tips
+
+Before increasing `maxvar`, consider:
+
+1. **Load only needed columns**: `use var1 var2 using "data.dta"`
+2. **Reshape to long format**: Wide loops are slow; long operations are fast
+3. **Modularize**: Clean one survey module at a time, not entire survey

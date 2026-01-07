@@ -36,7 +36,10 @@ set more off
 set seed 123456789
 
 // Set maximum variables and memory
-set maxvar 32000
+// Conservative maxvar - increase only if needed for genuinely wide datasets.
+// If you hit the limit, consider: (1) loading only needed columns with
+// `use var1 var2 using "data.dta"`, or (2) reshaping to long format first.
+set maxvar 5000
 set matsize 11000
 
 // Configure Stata settings for reproducibility
