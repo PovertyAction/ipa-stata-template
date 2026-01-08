@@ -29,7 +29,7 @@ repos:
         exclude: ^\.claude/
 
   - repo: https://github.com/fastai/nbdev
-    rev: 2.4.7
+    rev: 2.4.10
     hooks:
       - id: nbdev_clean
 
