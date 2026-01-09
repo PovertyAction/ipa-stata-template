@@ -62,6 +62,16 @@ set type double
 setroot
 global project_path "$root"
 
+// Verify we found the correct project root
+capture confirm file "${project_path}/.here"
+if _rc != 0 {
+    display as error "WARNING: .here marker not found at ${project_path}"
+    display as error "setroot may have detected wrong project root"
+    display as error "Expected: project root with .here file"
+    display as error "Found: ${project_path}"
+    display as text "Continuing anyway (setroot may have used .git marker)..."
+}
+
 /*==============================================================================
                             ISOLATE ADOPATH
 ==============================================================================*/

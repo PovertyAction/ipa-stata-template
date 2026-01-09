@@ -231,6 +231,12 @@ figures/
 # Stata Log Files
 *.log
 
+# Stata Packages - populated by setup.do
+# Packages are installed to ado/ folder which is gitignored
+# to keep repository small and avoid version conflicts
+ado/*
+!ado/.gitkeep
+
 # Quarto Rendering Output
 /_site/
 /.quarto/

@@ -78,6 +78,24 @@ This enables:
 - Full adopath isolation (only BASE + local `ado/`) for reproducibility
 - Runner pattern for individual script execution with proper environment
 
+### Package Management
+
+Packages are managed for reproducibility:
+
+- **Installation location**: `ado/` folder (gitignored)
+- **Package source**: `.config/stata/stata_requirements.txt`
+- **Bootstrap tool**: `setroot` installed to user's PLUS directory via `setup.do`
+- **Project packages**: Installed to local `ado/` with adopath isolation during installation
+- **Runtime isolation**: Only BASE + local `ado/` available during analysis (no user packages)
+
+**Technical details:**
+
+- `setup.do` installs `setroot` to user's PLUS directory (bootstrap dependency)
+- `install_packages.do` manipulates adopath during installation to force packages into `./ado`
+- `00_run.do` isolates adopath at runtime to ensure reproducibility
+- The `ado/` folder is gitignored to keep repository small and avoid version conflicts
+- Users run `just stata-setup` once to populate their local `ado/` folder
+
 ### Code Quality and Formatting
 
 ```bash

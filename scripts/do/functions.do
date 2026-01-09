@@ -230,8 +230,13 @@ program define validate_paths
         if _rc != 0 {
             di as error "Missing directory: `dir'"
             di "Creating directory..."
-            shell mkdir "${project_path}/`dir'"
-            di as result "Created: `dir'"
+            capture mkdir "${project_path}/`dir'"
+            if _rc == 0 {
+                di as result "Created: `dir'"
+            }
+            else {
+                di as error "Failed to create: `dir' (error code " _rc ")"
+            }
         }
         else {
             di as result "Exists: `dir'"
@@ -277,7 +282,8 @@ program define validate_pipeline
         capture which `pkg'
         if _rc != 0 {
             di as error "WARNING: Package `pkg' not installed"
-            di "Consider running: just stata-setup"
+            di as text "Run setup to install all packages: just stata-setup"
+            di as text "Or run manually: do setup.do"
         }
         else {
             di as result "Package available: `pkg'"

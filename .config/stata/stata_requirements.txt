@@ -1,5 +1,7 @@
 # Stata requirements
 # require using requirements.txt, install
+# Note: setroot is NOT in this file - it's a bootstrap dependency
+#       installed directly via setup.do to user's PLUS directory
 
 # SSC requirements
 estout  >= 3.31
@@ -12,7 +14,6 @@ winsor2     >= 1.1
 distinct    >= 1.2.0
 missings    >= 1.4.0
 repkit      >= 4.0
-setroot >= 1.0
 
 # Github/etc requirements
 

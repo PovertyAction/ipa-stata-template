@@ -1,0 +1,12 @@
+# Stata Package Directory
+#
+# This folder contains Stata packages installed by setup.do
+# The ado/ folder is gitignored to keep the repository small
+#
+# To populate this folder, run:
+#   just stata-setup
+# or
+#   do setup.do
+#
+# Packages are installed from .config/stata/stata_requirements.txt
+# This ensures all users have identical package versions for reproducibility

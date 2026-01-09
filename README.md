@@ -87,6 +87,22 @@ a `.here` marker file. This means:
 - **Full adopath isolation** - only BASE + local `ado/` for reproducibility
 - **Runner pattern** - run individual scripts with proper environment setup
 
+### Package Management
+
+Packages are automatically managed to ensure reproducibility:
+
+- **Packages install to `ado/` folder** (gitignored to keep repo small)
+- **Run `just stata-setup` once** to install all dependencies
+- **Identical versions for all users** from `.config/stata/stata_requirements.txt`
+- **Automatic adopath isolation** ensures only project packages are used
+
+**Troubleshooting:**
+
+- "setroot not found" → Run `just stata-setup` first
+- "packages not found" → Run `just stata-setup` to install dependencies
+- "wrong project root" → Verify `.here` file exists in project root
+- Package installation fails → Check internet connection and try again
+
 > [!TIP]
 > **Want more automation?** See [Advanced Setup](#advanced-setup) below for:
 >
