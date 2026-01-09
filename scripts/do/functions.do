@@ -11,7 +11,7 @@ Description: Reusable functions implementing IPA best practices
              - Data quality checks and reporting
              - Error handling and defensive programming
 
-Notes:       - Load this file at start of analysis pipeline
+Notes:       - Loaded automatically by 00_run.do
              - All functions follow abstraction principles
              - Implements IPA and Data Carpentry best practices
 
@@ -60,7 +60,7 @@ program define verify_keys
         exit 459
     }
     else {
-        di as result "✓ Key uniqueness verified"
+        di as result "Key uniqueness verified"
     }
 
     // Test 2: No missing values in keys
@@ -73,7 +73,7 @@ program define verify_keys
             exit 459
         }
         else {
-            di as result "✓ No missing values in `var'"
+            di as result "No missing values in `var'"
         }
     }
 
@@ -88,7 +88,7 @@ program define verify_keys
 
     // Create data signature for reproducibility
     datasignature set, reset saving("${logs}/key_signature_`c(current_date)'.dta", replace)
-    di as result "✓ Data signature saved for reproducibility"
+    di as result "Data signature saved for reproducibility"
 
     di "{hline 60}" _n
 end
@@ -147,7 +147,7 @@ program define data_quality_report
         di as error "Variables with no variation: `no_variation_vars'"
     }
     else {
-        di as result "✓ All variables have variation"
+        di as result "All variables have variation"
     }
 
     di "{hline 60}" _n
@@ -195,7 +195,7 @@ program define standard_regression
             addtext("Controls", "`controls'") ///
             ctitle("") ///
             label
-        di as result "✓ Table exported to: outputs/tables/`tablename'.tex"
+        di as result "Table exported to: ${outputs}/tables/`tablename'.tex"
     }
     else {
         di as error "WARNING: outreg2 not installed - table not exported"
@@ -231,10 +231,10 @@ program define validate_paths
             di as error "Missing directory: `dir'"
             di "Creating directory..."
             shell mkdir "${project_path}/`dir'"
-            di as result "✓ Created: `dir'"
+            di as result "Created: `dir'"
         }
         else {
-            di as result "✓ Exists: `dir'"
+            di as result "Exists: `dir'"
         }
     }
 
@@ -266,7 +266,7 @@ program define validate_pipeline
             exit 601
         }
         else {
-            di as result "✓ Found: `file'"
+            di as result "Found: `file'"
         }
     }
 
@@ -277,10 +277,10 @@ program define validate_pipeline
         capture which `pkg'
         if _rc != 0 {
             di as error "WARNING: Package `pkg' not installed"
-            di "Consider running: just stata-install-packages"
+            di "Consider running: just stata-setup"
         }
         else {
-            di as result "✓ Package available: `pkg'"
+            di as result "Package available: `pkg'"
         }
     }
 

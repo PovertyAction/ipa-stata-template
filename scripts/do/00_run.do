@@ -8,7 +8,13 @@ Date:        `c(current_date)'
 Description: Master do-file that runs entire analysis pipeline
              Based on Sean Higgins Stata Guide and DIME Analytics best practices
 
-Notes:       - This file should be run from the project root directory
+Usage:
+  Full pipeline:    do 00_run.do
+  Single script:    do 00_run.do "01_data_cleaning"
+  Via just:         just stata-run
+                    just stata-script 01_data_cleaning
+
+Notes:       - Uses setroot to find project root from any directory
              - All file paths use global macros (best practice)
              - Follows programming principles
              - Uses statacons for dependency management (run 'scons' instead)
@@ -47,8 +53,31 @@ set linesize 255
 set varabbrev off
 set type double
 
-// Define global paths for reproducibility
-global project_path "`c(pwd)'"
+/*==============================================================================
+                            FIND PROJECT ROOT
+==============================================================================*/
+
+// Uses setroot to find .here or .git marker from any directory
+// Install setroot first: ssc install setroot (or run setup.do)
+setroot
+global project_path "$root"
+
+/*==============================================================================
+                            ISOLATE ADOPATH
+==============================================================================*/
+
+// Only use BASE + local ado for reproducibility
+// This ensures all users run with identical packages
+adopath - PLUS
+adopath - PERSONAL
+adopath - SITE
+adopath - OLDPLACE
+adopath + "${project_path}/ado"
+
+/*==============================================================================
+                            DEFINE PATHS
+==============================================================================*/
+
 global data_raw "${project_path}/data/raw"
 global data_clean "${project_path}/data/clean"
 global data_final "${project_path}/data/final"
@@ -56,10 +85,10 @@ global scripts "${project_path}/scripts/do"
 global outputs "${project_path}/outputs"
 global logs "${project_path}/analysis/logs"
 
-// Set PLUS directory to local ado folder for package reproducibility
-adopath + "${project_path}/ado"
+/*==============================================================================
+                            LOAD FUNCTIONS
+==============================================================================*/
 
-// Load standard functions
 do "${scripts}/functions.do"
 
 // Validate project structure and dependencies
@@ -69,7 +98,23 @@ validate_pipeline
 // Display system information
 di "Stata version: `c(stata_version)'"
 di "Today's date: `c(current_date)'"
-di "Working directory: `c(pwd)'"
+di "Project root: ${project_path}"
+
+/*==============================================================================
+                            RUNNER PATTERN
+==============================================================================*/
+
+// Accept optional argument for single-script execution
+// Usage: do 00_run.do "01_data_cleaning"
+args script_to_run
+
+if "`script_to_run'" != "" {
+    di _n(2) "{hline 60}"
+    di "RUNNING SINGLE SCRIPT: `script_to_run'.do"
+    di "{hline 60}"
+    do "${scripts}/`script_to_run'.do"
+    exit
+}
 
 /*==============================================================================
                             CONTROL SWITCHES
@@ -110,7 +155,7 @@ if `data_cleaning' {
     di _n(2) "{hline 80}"
     di "RUNNING: Data Cleaning"
     di "{hline 80}"
-    do "scripts/do/01_data_cleaning.do"
+    do "${scripts}/01_data_cleaning.do"
 }
 
 if `data_transformation' {
@@ -142,28 +187,28 @@ if `descriptive_analysis' {
     di _n(2) "{hline 80}"
     di "RUNNING: Descriptive Analysis"
     di "{hline 80}"
-    do "scripts/do/03_descriptive_analysis.do"
+    do "${scripts}/03_descriptive_analysis.do"
 }
 
 if `main_analysis' {
     di _n(2) "{hline 80}"
     di "RUNNING: Main Analysis"
     di "{hline 80}"
-    do "scripts/do/04_main_analysis.do"
+    do "${scripts}/04_main_analysis.do"
 }
 
 if `robustness_checks' {
     di _n(2) "{hline 80}"
     di "RUNNING: Robustness Checks"
     di "{hline 80}"
-    do "scripts/do/05_robustness_checks.do"
+    do "${scripts}/05_robustness_checks.do"
 }
 
 if `generate_figures' {
     di _n(2) "{hline 80}"
     di "RUNNING: Generate Figures"
     di "{hline 80}"
-    do "scripts/do/06_generate_figures.do"
+    do "${scripts}/06_generate_figures.do"
 }
 
 /*==============================================================================

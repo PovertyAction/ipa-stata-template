@@ -9,31 +9,14 @@ Description: Generate publication-ready figures and visualizations
 Input:       data/final/analysis_data.dta
 Output:      outputs/figures/ (PDF format)
 
-Notes:       - Creates high-quality figures for publication using IPA theme
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "06_generate_figures"
+             - Creates high-quality figures for publication using IPA theme
              - Uses ipaplots scheme for IPA-branded visualizations
              - Follows IPA data visualization best practices
              - Exports in PDF format for LaTeX integration
 
 ==============================================================================*/
-
-// Boilerplate code following IPA guidelines
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global outputs_figures "${project_path}/outputs/figures"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
 
 // Start log file
 capture log close
@@ -112,7 +95,7 @@ twoway (histogram log_income if female == 0, ///
     graphregion(color(white)) ///
     plotregion(color(white))
 
-graph export "${outputs_figures}/figure1_income_distribution.pdf", replace
+graph export "${outputs}/figures/figure1_income_distribution.pdf", replace
 
 /*------------------------------------------------------------------------------
                             Box Plot by Education Level
@@ -130,7 +113,7 @@ capture {
         graphregion(color(white)) ///
         plotregion(color(white))
 
-    graph export "${outputs_figures}/figure1_income_by_education.pdf", replace
+    graph export "${outputs}/figures/figure1_income_by_education.pdf", replace
 }
 
 /*==============================================================================
@@ -164,7 +147,7 @@ capture {
         msymbol(circle) ///
         mcolor(`color_accent')
 
-    graph export "${outputs_figures}/figure2_coefficients.pdf", replace
+    graph export "${outputs}/figures/figure2_coefficients.pdf", replace
 }
 
 /*------------------------------------------------------------------------------
@@ -189,7 +172,7 @@ capture {
         plot1opts(color(`color_main') lwidth(thick)) ///
         ci1opts(color(`color_main'%30))
 
-    graph export "outputs/figures/figure2_marginal_effects.pdf", replace
+    graph export "${outputs}/figures/figure2_marginal_effects.pdf", replace
 }
 
 /*==============================================================================
@@ -223,7 +206,7 @@ twoway (scatter residuals fitted_values, ///
     graphregion(color(white)) ///
     plotregion(color(white))
 
-graph export "outputs/figures/figure3_residuals_fitted.pdf", replace
+graph export "${outputs}/figures/figure3_residuals_fitted.pdf", replace
 
 /*------------------------------------------------------------------------------
                             Q-Q Plot for Normality
@@ -241,7 +224,7 @@ capture {
         mcolor(`color_main') ///
         msymbol(circle_hollow)
 
-    graph export "outputs/figures/figure3_qq_plot.pdf", replace
+    graph export "${outputs}/figures/figure3_qq_plot.pdf", replace
 }
 
 /*==============================================================================
@@ -286,7 +269,7 @@ capture {
     replace lb = coef - 1.96*se
     replace ub = coef + 1.96*se
 
-    label define spec_lbl 1 "Basic" 2 "+ Education" 3 "+ Age²"
+    label define spec_lbl 1 "Basic" 2 "+ Education" 3 "+ Age squared"
     label values spec spec_lbl
 
     // Plot coefficient stability
@@ -309,7 +292,7 @@ capture {
         graphregion(color(white)) ///
         plotregion(color(white))
 
-    graph export "outputs/figures/figure4_coefficient_stability.pdf", replace
+    graph export "${outputs}/figures/figure4_coefficient_stability.pdf", replace
 }
 
 /*==============================================================================
@@ -317,7 +300,7 @@ capture {
 ==============================================================================*/
 
 // Reload data for any additional combined plots
-use "data/final/analysis_data.dta", clear
+use "${data_final}/analysis_data.dta", clear
 keep if analysis_sample == 1
 
 /*------------------------------------------------------------------------------
@@ -379,7 +362,7 @@ capture {
         graphregion(color(white)) ///
         plotregion(color(white))
 
-    graph export "outputs/figures/combined_summary.pdf", replace
+    graph export "${outputs}/figures/combined_summary.pdf", replace
 }
 
 /*==============================================================================
@@ -398,7 +381,7 @@ di "  - figure3_residuals_fitted.pdf"
 di "  - figure3_qq_plot.pdf"
 di "  - figure4_coefficient_stability.pdf"
 di "  - combined_summary.pdf"
-di "All figures saved to: outputs/figures/"
+di "All figures saved to: ${outputs}/figures/"
 di "{hline 60}"
 
 // Close log

@@ -9,7 +9,9 @@ Description: Advanced Stata programming using Data Carpentry best practices
 Input:       data/final/analysis_data.dta
 Output:      Various outputs demonstrating advanced techniques
 
-Notes:       - Demonstrates Data Carpentry advanced programming
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "07_advanced_programming"
+             - Demonstrates Data Carpentry advanced programming
              - Includes loops, macros, and modular programming
              - Shows temporary variables and file management
              - Implements error handling and defensive programming
@@ -18,19 +20,6 @@ References:
 - Data Carpentry Stata Economics: https://datacarpentry.github.io/stata-economics/
 
 ==============================================================================*/
-
-// Boilerplate code following IPA and Data Carpentry guidelines
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (Data Carpentry best practice)
-global project_path "`c(pwd)'"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
 
 // Start log file
 capture log close
@@ -104,10 +93,10 @@ foreach group_var of local group_vars {
                 (`group_var' == `level') * `cont_var'
 
             // Label the interaction term
-            local label_text "Interaction: `group_var'=`level' × `cont_var'"
+            local label_text "Interaction: `group_var'=`level' x `cont_var'"
             label variable `interaction_`group_var'_`cont_var'_`level'' "`label_text'"
 
-            di "  Created: `group_var'=`level' × `cont_var'"
+            di "  Created: `group_var'=`level' x `cont_var'"
         }
     }
 }

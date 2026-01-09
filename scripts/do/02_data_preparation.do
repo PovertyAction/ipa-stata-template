@@ -9,38 +9,22 @@ Description: Prepare cleaned data for analysis by creating variables and samples
 Input:       data/clean/cleaned_data.dta
 Output:      data/final/analysis_data.dta
 
-Notes:       - Creates analysis variables and sample restrictions
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "02_data_preparation"
+             - Creates analysis variables and sample restrictions
              - Follows best practices for variable creation and labeling
 
 ==============================================================================*/
 
-// Boilerplate code
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
-
 // Start log file
 capture log close
-log using "analysis/logs/02_data_preparation.log", replace
+log using "${logs}/02_data_preparation.log", replace
 
 /*==============================================================================
                             LOAD CLEANED DATA
 ==============================================================================*/
 
-use "data/clean/cleaned_data.dta", clear
+use "${data_clean}/cleaned_data.dta", clear
 
 // Verify data integrity and key structure
 datasignature confirm
@@ -77,7 +61,7 @@ capture {
 
         generate female_x_income = female * log_income if !missing(female, log_income)
         label variable female_x_income "Female × Log income interaction"
-        
+
         // Create polynomial terms for analysis
         generate age_squared = age^2
         label variable age_squared "[Derived] Age squared for quadratic models"
@@ -198,7 +182,7 @@ datasignature set, reset
 sort id
 
 // Save final analysis dataset
-save "data/final/analysis_data.dta", replace
+save "${data_final}/analysis_data.dta", replace
 
 // Create codebook for documentation
 capture {
@@ -208,7 +192,7 @@ capture {
 di _n(2) "{hline 60}"
 di "DATA PREPARATION COMPLETED"
 di "Final analysis sample: " `analysis_n' " observations"
-di "Output saved to: data/final/analysis_data.dta"
+di "Output saved to: ${data_final}/analysis_data.dta"
 di "{hline 60}"
 
 // Close log

@@ -9,38 +9,16 @@ Description: Clean raw data and prepare for analysis
 Input:       data/raw/sample_data.csv
 Output:      data/clean/cleaned_data.dta
 
-Notes:       - Follows IPA Data Cleaning Guide and Stata coding standards
-             - Implements IPA best practices for raw data management
+Notes:       - Assumes globals are set by 00_run.do
+             - Can be run standalone via: do 00_run.do "01_data_cleaning"
+             - Follows IPA Data Cleaning Guide and Stata coding standards
              - Uses IPA extended missing value conventions
-             - All variable names use lowercase with underscores
 
 ==============================================================================*/
 
-// Boilerplate code following IPA guidelines
-version 17
-clear all
-macro drop _all
-set more off
-set varabbrev off
-
-// Define global paths for reproducibility (IPA best practice)
-global project_path "`c(pwd)'"
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
-global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
-
-// Load standard functions
-do "${project_path}/scripts/do/functions.do"
-
-// Validate project structure and dependencies
-validate_paths
-validate_pipeline
-
 // Start log file
 capture log close
-log using "analysis/logs/01_data_cleaning.log", replace
+log using "${logs}/01_data_cleaning.log", replace
 
 /*==============================================================================
                             LOAD RAW DATA
