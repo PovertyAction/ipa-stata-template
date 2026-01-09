@@ -1,6 +1,6 @@
 ---
 name: markdownlint
-description: This skill should be used when users need to format, clean, lint, or validate Markdown files using the markdownlint-cli2 command-line tool. Use this skill for tasks involving Markdown file quality checks, automatic formatting fixes, enforcing Markdown style rules, or identifying Markdown syntax issues.
+description: This skill should be used when users need to format, clean, lint, or validate Markdown files using the markdownlint-cli2 command-line tool. Use this skill for tasks involving Markdown (including Quarto Markdown `.qmd`) file quality checks, automatic formatting fixes, enforcing Markdown style rules, or identifying Markdown syntax issues.
 ---
 
 # Markdownlint Skill
