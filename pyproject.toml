@@ -5,7 +5,7 @@ description = "Stata analysis project template for reproducible research using s
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pystatacons>=3.0.2",
+    "pystatacons>=3.0.4",
     "scons>=4.10.1",
     "jupyter>=1.0.0",
     "matplotlib>=3.10.8",
@@ -23,7 +23,7 @@ dependencies = [
 dev = [
     "codespell>=2.4.1",
     "pre-commit>=4.5.1",
-    "ruff>=0.14.10",
+    "ruff>=0.14.11",
     "sqlfluff>=3.5.0",
 ]
 
