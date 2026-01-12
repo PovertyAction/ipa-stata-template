@@ -1744,15 +1744,15 @@ wheels = [
 
 [[package]]
 name = "pystatacons"
-version = "3.0.2"
+version = "3.0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pywin32", marker = "sys_platform == 'win32'" },
     { name = "scons" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a8/2c/d9ca8f459b66b760076c2d8f7f92c7a40b90079646f7e55e950045810719/pystatacons-3.0.2.tar.gz", hash = "sha256:2673173bd5a6fe453bc868ee02219038f759e4bef9acbfc63c43a1e99d8600c4", size = 18649, upload-time = "2024-02-22T11:52:48.101Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fc/e0/721191a40eda47570e77b20236ef25a8b6baaff7942f710eeec6effc9ea7/pystatacons-3.0.4.tar.gz", hash = "sha256:40f7b952bf13db438c50a1d55e415708cbb9af05dc2e426064b59cdd79899799", size = 19045, upload-time = "2025-11-11T22:20:01.412Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f2/ef/3e94aa7b6663e1c262da189cc7b84d2fa843223e7ce019b1236f47aff12a/pystatacons-3.0.2-py3-none-any.whl", hash = "sha256:e2cbb1bcbbfd8215012b2bce95ba33f0dbd6dae24e5037e1ba428613bb21c8d0", size = 20039, upload-time = "2024-02-22T11:52:46.51Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/2a/42d4c34dcafe30584f4e372165444a89f1784a0e5ff39a81d09bf306588d/pystatacons-3.0.4-py3-none-any.whl", hash = "sha256:6c5b9b7d943736a3d531ba243ebab179f7236c36f3b352cb9d33f1cacf6e63ca", size = 20438, upload-time = "2025-11-11T22:20:00.136Z" },
 ]
 
 [[package]]
