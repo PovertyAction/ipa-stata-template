@@ -251,3 +251,4 @@ scripts/demo/*.html
 scripts/demo/nbstata-demo_files/
 reports/*.html
 reports/**/**_files/
+ado/
