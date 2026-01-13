@@ -19,10 +19,12 @@ References:
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/02a_data_transformation.log", replace
 
+* %%
 /*==============================================================================
                             LOAD CLEANED DATA
 ==============================================================================*/
@@ -37,6 +39,7 @@ di "DATA TRANSFORMATION"
 di "{hline 60}"
 di "Starting observations: " _N
 
+* %%
 /*==============================================================================
                     FILTERING DATA
 ==============================================================================*/
@@ -50,7 +53,7 @@ count
 local original_n = r(N)
 
 // Use filtering approach
-keep if !missing(age) & !missing(inc_total) & !missing(educ_years)
+keep if !missing(age) & !missing(income) & !missing(education)
 
 count
 local filtered_n = r(N)
@@ -59,6 +62,7 @@ local dropped = `original_n' - `filtered_n'
 di "Dropped " `dropped' " observations with missing key variables"
 di "Remaining observations: " `filtered_n'
 
+* %%
 /*==============================================================================
                     VARIABLE CREATION
 ==============================================================================*/
@@ -83,12 +87,13 @@ label values age_group_detailed age_detail_lbl
 label variable age_group_detailed "[Derived] Detailed age categories"
 
 // 3. Income transformations
-generate inc_log = log(inc_total) if inc_total > 0
+generate inc_log = log(income) if income > 0
 label variable inc_log "[Derived] Log of total income"
 
-generate inc_per_educ_year = inc_total / educ_years if educ_years > 0
+generate inc_per_educ_year = income / education if education > 0
 label variable inc_per_educ_year "[Derived] Income per year of education"
 
+* %%
 /*==============================================================================
                     AGGREGATION USING EGEN
 ==============================================================================*/
@@ -98,10 +103,10 @@ di "DATA AGGREGATION WITH EGEN"
 di "{hline 40}"
 
 // Calculate group statistics by gender and education level
-egen inc_mean_by_gender = mean(inc_total), by(female)
+egen inc_mean_by_gender = mean(income), by(female)
 label variable inc_mean_by_gender "[Derived] Mean income by gender"
 
-egen inc_mean_by_educ = mean(inc_total), by(educ_level)
+egen inc_mean_by_educ = mean(income), by(educ_level)
 label variable inc_mean_by_educ "[Derived] Mean income by education level"
 
 // Count observations by group
@@ -109,10 +114,12 @@ egen n_by_age_group = count(id), by(age_group_detailed)
 label variable n_by_age_group "[Derived] Count of observations by age group"
 
 // Create percentile ranks
-egen inc_rank = rank(inc_total), unique
-egen inc_percentile = cut(inc_rank), group(100)
-label variable inc_percentile "[Derived] Income percentile (0-99)"
+egen inc_rank = rank(income), unique
+local ngroups = min(100, _N)
+egen inc_percentile = cut(inc_rank), group(`ngroups')
+label variable inc_percentile "[Derived] Income percentile (0-`=`ngroups'-1')"
 
+* %%
 /*==============================================================================
                     LOOP-BASED PROGRAMMING
 ==============================================================================*/
@@ -123,7 +130,7 @@ di "{hline 40}"
 
 // Using loops for efficient programming
 // Create standardized versions of multiple variables
-local vars_to_standardize "age inc_total educ_years"
+local vars_to_standardize "age income education"
 
 foreach var of local vars_to_standardize {
     // Create z-scores (standardized variables)
@@ -144,6 +151,7 @@ forvalues i = 1/4 {
     label variable female_x_age_group`i' "[Derived] Female × Age group `i' interaction"
 }
 
+* %%
 /*==============================================================================
                     FINAL DATA CHECKS AND SAVE
 ==============================================================================*/
@@ -164,6 +172,7 @@ foreach var of varlist *_std *_pctile {
     }
 }
 
+* %%
 // Summary of transformation results
 count
 di "Final dataset has " r(N) " observations and " c(k) " variables"
@@ -183,6 +192,7 @@ di "  - Created interaction terms"
 di "Output saved to: ${data_clean}/transformed_data.dta"
 di "{hline 60}"
 
+* %%
 // Close log
 log close
 

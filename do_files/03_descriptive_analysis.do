@@ -17,16 +17,19 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/03_descriptive_analysis.log", replace
 
+* %%
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
 use "${data_final}/analysis_data.dta", clear
 
+* %%
 // Verify data integrity and key structure
 datasignature confirm
 verify_keys id  // Adjust key variables as needed for your data
@@ -37,11 +40,14 @@ data_quality_report "Analysis Dataset for Descriptive Statistics"
 // Restrict to analysis sample
 keep if analysis_sample == 1
 
+* %%
+
 di _n(2) "{hline 60}"
 di "DESCRIPTIVE ANALYSIS"
 di "{hline 60}"
 di "Analysis sample: " _N " observations"
 
+* %%
 /*==============================================================================
                             BASIC DESCRIPTIVE STATISTICS
 ==============================================================================*/
@@ -49,11 +55,13 @@ di "Analysis sample: " _N " observations"
 // Display summary statistics
 summarize age income female education_level, detail
 
+* %%
 // Frequency tables for categorical variables
 tab female, missing
 tab age_cat, missing
 tab education_level, missing
 
+* %%
 /*==============================================================================
                             SUMMARY STATISTICS TABLE
 ==============================================================================*/
@@ -79,6 +87,7 @@ capture {
     estimates store summary_female
 }
 
+* %%
 /*==============================================================================
                             CORRELATION TABLE
 ==============================================================================*/
@@ -90,6 +99,7 @@ capture {
     estimates store correlations
 }
 
+* %%
 /*==============================================================================
                             BALANCE/COMPARISON TABLES
 ==============================================================================*/
@@ -107,6 +117,7 @@ capture {
     tab age_cat female if analysis_sample == 1, chi2
 }
 
+* %%
 /*==============================================================================
                             EXPORT TABLES
 ==============================================================================*/
@@ -145,6 +156,7 @@ capture {
         note("Sample restricted to analysis sample.")
 }
 
+* %%
 /*==============================================================================
                             ADDITIONAL DESCRIPTIVE ANALYSIS
 ==============================================================================*/
@@ -174,6 +186,7 @@ capture {
     di "90th: " r(r5)
 }
 
+* %%
 /*==============================================================================
                             SAMPLE REPRESENTATIVENESS
 ==============================================================================*/
@@ -195,12 +208,14 @@ capture {
 
 restore
 
+* %%
 di _n(2) "{hline 60}"
 di "DESCRIPTIVE ANALYSIS COMPLETED"
 di "Tables saved to ${outputs}/tables/"
 di "Number of observations: " _N
 di "{hline 60}"
 
+* %%
 // Close log
 log close
 

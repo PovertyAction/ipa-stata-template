@@ -310,7 +310,7 @@ winsor2 income, cuts(1 99) replace
 * Variable labels
 label var resp_age "Respondent age in years"
 label var hh_income_monthly "Household monthly income (USD)"
-label var income_log "Log of monthly income"
+label var log_income "Log of monthly income"
 label var d_employed "=1 if currently employed"
 label var n_children "Number of children in household"
 ```

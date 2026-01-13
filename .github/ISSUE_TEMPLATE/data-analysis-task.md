@@ -63,7 +63,7 @@ Brief description of the analysis task
 
 ## Deliverables
 
-- [ ] Analysis script(s): `scripts/do/[script_name].do`
+- [ ] Analysis script(s): `do_files/[script_name].do`
 - [ ] Output tables: `outputs/tables/[table_files]`
 - [ ] Output figures: `outputs/figures/[figure_files]`
 - [ ] Documentation: [Brief summary or report section]

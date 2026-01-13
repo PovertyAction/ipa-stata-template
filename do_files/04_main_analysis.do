@@ -17,16 +17,19 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/04_main_analysis.log", replace
 
+* %%
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
 use "${data_final}/analysis_data.dta", clear
 
+* %%
 // Verify data integrity and key structure
 datasignature confirm
 verify_keys id  // Adjust key variables as needed for your data
@@ -34,11 +37,13 @@ verify_keys id  // Adjust key variables as needed for your data
 // Restrict to analysis sample
 keep if analysis_sample == 1
 
+* %%
 di _n(2) "{hline 60}"
 di "MAIN ANALYSIS"
 di "{hline 60}"
 di "Analysis sample: " _N " observations"
 
+* %%
 /*==============================================================================
                             REGRESSION ANALYSIS
 ==============================================================================*/
@@ -55,20 +60,23 @@ di "Analysis sample: " _N " observations"
 regress log_income female age, robust
 estimates store model1_manual
 
+* %%
 // Use standardized regression function
 standard_regression log_income "female" "age" "model1" "Basic Income Regression"
 
 /*------------------------------------------------------------------------------
                             Model 2: Extended Controls
 ------------------------------------------------------------------------------*/
-
+* %%
 // Manual regression for analyst review and comparison
 regress log_income female age age_squared education, robust
 estimates store model2_manual
 
+* %%
 // Use standardized regression function with extended controls
 standard_regression log_income "female" "age age_squared education" "model2" "Extended Income Regression"
 
+* %%
 /*------------------------------------------------------------------------------
                             Model 3: With Interactions
 ------------------------------------------------------------------------------*/
@@ -77,9 +85,11 @@ standard_regression log_income "female" "age age_squared education" "model2" "Ex
 regress log_income female age education female_x_age, robust
 estimates store model3_manual
 
+* %%
 // Use standardized regression function with interactions
 standard_regression log_income "female female_x_age" "age education" "model3" "Income Regression with Interactions"
 
+* %%
 /*------------------------------------------------------------------------------
                             Model 4: Clustered Standard Errors
 ------------------------------------------------------------------------------*/
@@ -90,6 +100,7 @@ capture {
     estimates store model4
 }
 
+* %%
 /*==============================================================================
                     COMPARISON: MANUAL vs STANDARDIZED RESULTS
 ==============================================================================*/
@@ -98,12 +109,14 @@ di _n(2) "{hline 60}"
 di "COMPARING MANUAL AND STANDARDIZED REGRESSION RESULTS"
 di "{hline 60}"
 
+* %%
 // Display manual results for comparison
 di _n "MANUAL REGRESSION RESULTS:"
 estimates table model1_manual model2_manual model3_manual, ///
     b(%9.4f) se(%9.4f) stats(N r2) ///
     title("Manual Regression Results")
 
+* %%
 // Display standardized results
 di _n "STANDARDIZED FUNCTION RESULTS:"
 estimates table model1 model2 model3, ///
@@ -113,6 +126,7 @@ estimates table model1 model2 model3, ///
 di _n "Note: Both sets should be identical - this validates the standard_regression function"
 di "{hline 60}" _n
 
+* %%
 /*==============================================================================
                             HYPOTHESIS TESTING
 ==============================================================================*/
@@ -129,6 +143,7 @@ capture {
     marginsplot, title("Effect of Gender by Education Level")
 }
 
+* %%
 /*==============================================================================
                             EXPORT MAIN RESULTS TABLE
 ==============================================================================*/
@@ -146,6 +161,7 @@ esttab model1 model2 model3 using "${outputs}/tables/main_results.tex", ///
     sfmt(0 3) ///
     note("Robust standard errors in parentheses. *** p<0.01, ** p<0.05, * p<0.10")
 
+* %%
 /*==============================================================================
                             ROBUSTNESS CHECKS (PREVIEW)
 ==============================================================================*/
@@ -177,6 +193,7 @@ capture {
     estimates store old_sample_model
 }
 
+* %%
 /*==============================================================================
                             DIAGNOSTIC TESTS
 ==============================================================================*/
@@ -202,6 +219,7 @@ capture {
     estat vif
 }
 
+* %%
 /*==============================================================================
                             EFFECT SIZES AND INTERPRETATION
 ==============================================================================*/
@@ -212,6 +230,7 @@ estimates restore model2
 // Marginal effects at means
 margins, dydx(female age education) atmeans
 
+* %%
 // Predicted values for typical individuals
 margins, at(female=0 age=30 education=12) ///
          at(female=1 age=30 education=12)
@@ -227,6 +246,7 @@ local female_pct = (exp(`female_coef') - 1) * 100
 di "Female coefficient: " %6.3f `female_coef'
 di "Interpreted as: " %5.1f `female_pct' "% difference in income"
 
+* %%
 /*==============================================================================
                             SUMMARY AND CONCLUSIONS
 ==============================================================================*/
@@ -241,6 +261,7 @@ di "Key explanatory variable: Female"
 di "Results saved to: ${outputs}/tables/main_results.tex"
 di "{hline 60}"
 
+* %%
 // Close log
 log close
 

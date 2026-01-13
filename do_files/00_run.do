@@ -29,6 +29,7 @@ References:
 
 ==============================================================================*/
 
+* %%
 // Set Stata version for reproducibility
 version 17
 
@@ -57,22 +58,11 @@ set type double
                             FIND PROJECT ROOT
 ==============================================================================*/
 
+* %%
 // Uses setroot to find .here or .git marker from any directory
 // Install setroot first: ssc install setroot (or run setup.do)
 setroot
 global project_path "$root"
-
-/*==============================================================================
-                            ISOLATE ADOPATH
-==============================================================================*/
-
-// Only use BASE + local ado for reproducibility
-// This ensures all users run with identical packages
-adopath - PLUS
-adopath - PERSONAL
-adopath - SITE
-adopath - OLDPLACE
-adopath + "${project_path}/ado"
 
 /*==============================================================================
                             DEFINE PATHS
@@ -81,10 +71,11 @@ adopath + "${project_path}/ado"
 global data_raw "${project_path}/data/raw"
 global data_clean "${project_path}/data/clean"
 global data_final "${project_path}/data/final"
-global scripts "${project_path}/scripts/do"
+global scripts "${project_path}/do_files"
 global outputs "${project_path}/outputs"
-global logs "${project_path}/analysis/logs"
+global logs "${project_path}/logs"
 
+* %%
 /*==============================================================================
                             LOAD FUNCTIONS
 ==============================================================================*/
@@ -100,6 +91,7 @@ di "Stata version: `c(stata_version)'"
 di "Today's date: `c(current_date)'"
 di "Project root: ${project_path}"
 
+* %%
 /*==============================================================================
                             RUNNER PATTERN
 ==============================================================================*/
@@ -116,6 +108,7 @@ if "`script_to_run'" != "" {
     exit
 }
 
+* %%
 /*==============================================================================
                             CONTROL SWITCHES
 ==============================================================================*/
@@ -147,6 +140,7 @@ di "Robustness checks: " cond(`robustness_checks', "YES", "NO")
 di "Generate figures: " cond(`generate_figures', "YES", "NO")
 di "{hline 60}"
 
+* %%
 /*==============================================================================
                             DATA PIPELINE
 ==============================================================================*/
@@ -158,6 +152,7 @@ if `data_cleaning' {
     do "${scripts}/01_data_cleaning.do"
 }
 
+* %%
 if `data_transformation' {
     di _n(2) "{hline 80}"
     di "RUNNING: Data Transformation (Data Carpentry Methods)"
@@ -165,6 +160,7 @@ if `data_transformation' {
     do "${scripts}/02a_data_transformation.do"
 }
 
+* %%
 if `data_combination' {
     di _n(2) "{hline 80}"
     di "RUNNING: Data Combination (Data Carpentry Methods)"
@@ -172,6 +168,7 @@ if `data_combination' {
     do "${scripts}/02b_data_combination.do"
 }
 
+* %%
 if `data_preparation' {
     di _n(2) "{hline 80}"
     di "RUNNING: Data Preparation"
@@ -179,6 +176,7 @@ if `data_preparation' {
     do "${scripts}/02_data_preparation.do"
 }
 
+* %%
 /*==============================================================================
                             ANALYSIS PIPELINE
 ==============================================================================*/
@@ -190,6 +188,7 @@ if `descriptive_analysis' {
     do "${scripts}/03_descriptive_analysis.do"
 }
 
+* %%
 if `main_analysis' {
     di _n(2) "{hline 80}"
     di "RUNNING: Main Analysis"
@@ -197,6 +196,7 @@ if `main_analysis' {
     do "${scripts}/04_main_analysis.do"
 }
 
+* %%
 if `robustness_checks' {
     di _n(2) "{hline 80}"
     di "RUNNING: Robustness Checks"
@@ -204,6 +204,7 @@ if `robustness_checks' {
     do "${scripts}/05_robustness_checks.do"
 }
 
+* %%
 if `generate_figures' {
     di _n(2) "{hline 80}"
     di "RUNNING: Generate Figures"
@@ -211,6 +212,7 @@ if `generate_figures' {
     do "${scripts}/06_generate_figures.do"
 }
 
+* %%
 /*==============================================================================
                             COMPLETION MESSAGE
 ==============================================================================*/
@@ -220,5 +222,5 @@ di "ANALYSIS PIPELINE COMPLETED SUCCESSFULLY!"
 di "Generated files can be found in:"
 di "  - outputs/tables/ (regression tables)"
 di "  - outputs/figures/ (figures)"
-di "  - analysis/logs/ (log files)"
+di "  - logs/ (log files)"
 di "{hline 80}"

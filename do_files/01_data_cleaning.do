@@ -16,10 +16,13 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+
+* %%
 // Start log file
 capture log close
 log using "${logs}/01_data_cleaning.log", replace
 
+* %%
 /*==============================================================================
                             LOAD RAW DATA
 ==============================================================================*/
@@ -31,6 +34,7 @@ import delimited "${data_raw}/sample_data.csv", clear
 assert _N > 0
 assert _N < 100000  // Reasonable upper bound for sample size
 
+* %%
 /*==============================================================================
               INITIAL DATA EXPLORATION
 ==============================================================================*/
@@ -52,6 +56,7 @@ else {
     list in 1/10
 }
 
+* %%
 /*==============================================================================
                             DATA CLEANING
 ==============================================================================*/
@@ -66,6 +71,7 @@ capture rename Education education
 // Convert ID to string if not already
 capture tostring id, replace
 
+* %%
 /*==============================================================================
                     KEY VERIFICATION (CRITICAL)
 ==============================================================================*/
@@ -85,6 +91,7 @@ di "Time period: [Specify time period if relevant]"
 di "Geographic scope: [Specify geographic coverage]"
 di "{hline 60}" _n
 
+* %%
 // Check for and handle missing values using extended missing value conventions
 foreach var of varlist _all {
     count if missing(`var')
@@ -93,6 +100,7 @@ foreach var of varlist _all {
     }
 }
 
+* %%
 /*==============================================================================
                     DATA QUALITY ASSESSMENT
 ==============================================================================*/
@@ -102,6 +110,7 @@ di _n(2) "{hline 60}"
 di "DATA QUALITY ASSESSMENT"
 di "{hline 60}"
 
+* %%
 // 1. Check for duplicate observations
 duplicates report
 if r(unique_value) != r(N) {
@@ -109,6 +118,7 @@ if r(unique_value) != r(N) {
     duplicates list
 }
 
+* %%
 // 2. Inspect numeric variables for outliers and unreasonable values
 foreach var of varlist _all {
     capture confirm numeric variable `var'
@@ -139,6 +149,7 @@ foreach var of varlist _all {
     }
 }
 
+* %%
 // 3. Check string variables for consistency
 foreach var of varlist _all {
     capture confirm string variable `var'
@@ -153,6 +164,7 @@ foreach var of varlist _all {
     }
 }
 
+* %%
 // Apply extended missing value standards where appropriate
 // .d = "Don't know", .o = "Other", .n = "Not applicable", .r = "Refusal", .s = "Skip"
 // Note: This would be customized based on actual survey data structure
@@ -179,6 +191,7 @@ capture {
     label variable gender "[Demographics] Gender of respondent"
 }
 
+* %%
 // Clean numeric variables following practices
 capture {
     // Use naming convention and assert reasonable ranges
@@ -201,6 +214,7 @@ capture {
     compress income log_income
 }
 
+* %%
 // Generate additional variables following conventions
 capture {
     // Assert reasonable age range
@@ -219,17 +233,18 @@ capture {
 
     // Education level categories
     generate educ_level = .
-    replace educ_level = 1 if educ_years <= 8
-    replace educ_level = 2 if educ_years > 8 & educ_years <= 12
-    replace educ_level = 3 if educ_years > 12 & educ_years <= 16
-    replace educ_level = 4 if educ_years > 16 & !missing(educ_years)
+    replace educ_level = 1 if education <= 8
+    replace educ_level = 2 if education > 8 & education <= 12
+    replace educ_level = 3 if education > 12 & education <= 16
+    replace educ_level = 4 if education > 16 & !missing(education)
 
     label define educ_lbl 1 "Primary" 2 "Secondary" 3 "Tertiary" 4 "Graduate"
     label values educ_level educ_lbl
     label variable educ_level "[Derived] Education level"
-    label variable educ_years "[Demographics] Years of education"
+    label variable education "[Demographics] Years of education"
 }
 
+* %%
 /*==============================================================================
                             DATA VALIDATION
 ==============================================================================*/
@@ -239,6 +254,7 @@ describe
 summarize
 codebook, compact
 
+* %%
 // Check for duplicates using defensive programming
 duplicates report id
 if r(unique_value) != r(N) {
@@ -247,6 +263,7 @@ if r(unique_value) != r(N) {
     error 459  // Halt execution if duplicates found
 }
 
+* %%
 // Additional data validation checks
 assert _N > 0  // Ensure data exists
 count if missing(id)
@@ -255,6 +272,7 @@ if r(N) > 0 {
     error 459
 }
 
+* %%
 // Generate flag for complete cases
 egen missing_count = rowmiss(_all)
 generate complete_case = (missing_count == 0)
@@ -270,6 +288,7 @@ di "Complete cases: " r(N)
 di "Variables created: " c(k)
 di "{hline 60}"
 
+* %%
 /*==============================================================================
                             SAVE CLEANED DATA
 ==============================================================================*/

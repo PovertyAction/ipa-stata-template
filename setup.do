@@ -43,8 +43,8 @@ display _n(2) "{hline 60}"
 display as result "Setup complete!"
 display as text "{hline 60}"
 display as text "You can now run the analysis from any directory:"
-display as text "  do `"${project_path}/scripts/do/00_run.do`""
+display as text `"  do "${project_path}/do_files/00_run.do""'
 display as text ""
 display as text "Or run a specific script:"
-display as text "  do `"${project_path}/scripts/do/00_run.do`" 01_data_cleaning"
+display as text `"  do "${project_path}/do_files/00_run.do" 01_data_cleaning"'
 display as text "{hline 60}"

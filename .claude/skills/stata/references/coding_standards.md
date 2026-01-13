@@ -190,7 +190,7 @@ local control_rate   = 0.5
 
 ```stata
 * Good: Spaces around operators
-gen income_log = log(income + 1)
+gen log_income = log(income + 1)
 gen total = income + expenditure - savings
 gen ratio = income / expenditure
 

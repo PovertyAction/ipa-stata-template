@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-"""
-SConstruct file for reproducible Stata analysis
-Based on statacons tutorial: https://bquistorff.github.io/statacons/
+"""SConstruct file for reproducible Stata analysis.
+Based on statacons tutorial: https://bquistorff.github.io/statacons/.
 
 This file defines the build targets and dependencies for the analysis pipeline.
 It uses statacons to automatically track file dependencies and rebuild only
@@ -22,6 +21,7 @@ Dependencies:
 """
 
 import os
+
 from pystatacons import init_env
 
 # Initialize Stata environment
@@ -32,9 +32,9 @@ PATHS = {
     "data_raw": "data/raw",
     "data_clean": "data/clean",
     "data_final": "data/final",
-    "scripts": "scripts/do",
+    "scripts": "do_files",
     "analysis": "analysis",
-    "logs": "analysis/logs",
+    "logs": "logs",
     "outputs": "outputs",
     "tables": "outputs/tables",
     "figures": "outputs/figures",
@@ -55,22 +55,22 @@ env.AppendENVPath("STATA_PLUS", os.path.abspath(PATHS["ado"]))
 
 # Step 1: Data cleaning
 data_clean = env.StataBuild(
-    target="data/clean/cleaned_data.dta", source="scripts/do/01_data_cleaning.do"
+    target="data/clean/cleaned_data.dta", source="do_files/01_data_cleaning.do"
 )
 Depends(
     data_clean,
     [
         "data/raw/sample_data.csv",
-        "scripts/do/functions.do",  # functions dependency
+        "do_files/functions.do",  # functions dependency
         "ado",  # Ensure ado files are available
     ],
 )
 
 # Step 2: Data preparation for analysis
 data_final = env.StataBuild(
-    target="data/final/analysis_data.dta", source="scripts/do/02_data_preparation.do"
+    target="data/final/analysis_data.dta", source="do_files/02_data_preparation.do"
 )
-Depends(data_final, ["data/clean/cleaned_data.dta", "scripts/do/functions.do", "ado"])
+Depends(data_final, ["data/clean/cleaned_data.dta", "do_files/functions.do", "ado"])
 
 # =============================================================================
 # ANALYSIS PIPELINE
@@ -80,13 +80,13 @@ Depends(data_final, ["data/clean/cleaned_data.dta", "scripts/do/functions.do", "
 descriptive_analysis = env.StataBuild(
     target=[
         "outputs/tables/descriptive_stats.tex",
-        "analysis/logs/03_descriptive_analysis.log",
+        "logs/03_descriptive_analysis.log",
     ],
-    source="scripts/do/03_descriptive_analysis.do",
+    source="do_files/03_descriptive_analysis.do",
 )
 Depends(
     descriptive_analysis,
-    ["data/final/analysis_data.dta", "scripts/do/functions.do", "ado"],
+    ["data/final/analysis_data.dta", "do_files/functions.do", "ado"],
 )
 
 # Step 4: Main analysis
@@ -96,25 +96,23 @@ main_analysis = env.StataBuild(
         "outputs/tables/model1.tex",  # Updated targets from standard_regression function
         "outputs/tables/model2.tex",
         "outputs/tables/model3.tex",
-        "analysis/logs/04_main_analysis.log",
+        "logs/04_main_analysis.log",
     ],
-    source="scripts/do/04_main_analysis.do",
+    source="do_files/04_main_analysis.do",
 )
-Depends(
-    main_analysis, ["data/final/analysis_data.dta", "scripts/do/functions.do", "ado"]
-)
+Depends(main_analysis, ["data/final/analysis_data.dta", "do_files/functions.do", "ado"])
 
 # Step 5: Robustness checks
 robustness_analysis = env.StataBuild(
     target=[
         "outputs/tables/robustness_results.tex",
-        "analysis/logs/05_robustness_checks.log",
+        "logs/05_robustness_checks.log",
     ],
-    source="scripts/do/05_robustness_checks.do",
+    source="do_files/05_robustness_checks.do",
 )
 Depends(
     robustness_analysis,
-    ["data/final/analysis_data.dta", "scripts/do/functions.do", "ado"],
+    ["data/final/analysis_data.dta", "do_files/functions.do", "ado"],
 )
 
 # =============================================================================
@@ -124,9 +122,9 @@ Depends(
 # Step 6: Generate figures
 figures = env.StataBuild(
     target=["outputs/figures/figure1.pdf", "outputs/figures/figure2.pdf"],
-    source="scripts/do/06_generate_figures.do",
+    source="do_files/06_generate_figures.do",
 )
-Depends(figures, ["data/final/analysis_data.dta", "scripts/do/functions.do", "ado"])
+Depends(figures, ["data/final/analysis_data.dta", "do_files/functions.do", "ado"])
 
 # =============================================================================
 # BUILD ALIASES AND DEPENDENCIES
@@ -160,7 +158,7 @@ if GetOption("clean"):
         "data/final",
         "outputs/tables",
         "outputs/figures",
-        "analysis/logs",
+        "logs",
     ]
     for d in dirs_to_clean:
         if os.path.exists(d):

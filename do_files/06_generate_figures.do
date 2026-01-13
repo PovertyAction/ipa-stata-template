@@ -18,16 +18,19 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/06_generate_figures.log", replace
 
+* %%
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
 use "${data_final}/analysis_data.dta", clear
 
+* %%
 // Verify data integrity
 datasignature confirm
 
@@ -39,6 +42,7 @@ di "GENERATING FIGURES"
 di "{hline 60}"
 di "Analysis sample: " _N " observations"
 
+* %%
 /*==============================================================================
                             FIGURE SETTINGS
 ==============================================================================*/
@@ -68,6 +72,7 @@ local color_secondary "maroon"      // IPA secondary color
 local color_accent "dknavy"         // IPA accent color
 local color_neutral "gs8"           // Neutral gray
 
+* %%
 /*==============================================================================
                             FIGURE 1: DESCRIPTIVE VISUALIZATIONS
 ==============================================================================*/
@@ -97,6 +102,7 @@ twoway (histogram log_income if female == 0, ///
 
 graph export "${outputs}/figures/figure1_income_distribution.pdf", replace
 
+* %%
 /*------------------------------------------------------------------------------
                             Box Plot by Education Level
 ------------------------------------------------------------------------------*/
@@ -116,6 +122,7 @@ capture {
     graph export "${outputs}/figures/figure1_income_by_education.pdf", replace
 }
 
+* %%
 /*==============================================================================
                             FIGURE 2: REGRESSION RESULTS VISUALIZATION
 ==============================================================================*/
@@ -150,6 +157,7 @@ capture {
     graph export "${outputs}/figures/figure2_coefficients.pdf", replace
 }
 
+* %%
 /*------------------------------------------------------------------------------
                             Marginal Effects Plot
 ------------------------------------------------------------------------------*/
@@ -175,6 +183,7 @@ capture {
     graph export "${outputs}/figures/figure2_marginal_effects.pdf", replace
 }
 
+* %%
 /*==============================================================================
                             FIGURE 3: RESIDUAL DIAGNOSTICS
 ==============================================================================*/
@@ -208,6 +217,7 @@ twoway (scatter residuals fitted_values, ///
 
 graph export "${outputs}/figures/figure3_residuals_fitted.pdf", replace
 
+* %%
 /*------------------------------------------------------------------------------
                             Q-Q Plot for Normality
 ------------------------------------------------------------------------------*/
@@ -227,6 +237,7 @@ capture {
     graph export "${outputs}/figures/figure3_qq_plot.pdf", replace
 }
 
+* %%
 /*==============================================================================
                             FIGURE 4: ROBUSTNESS VISUALIZATION
 ==============================================================================*/
@@ -295,6 +306,7 @@ capture {
     graph export "${outputs}/figures/figure4_coefficient_stability.pdf", replace
 }
 
+* %%
 /*==============================================================================
                             COMBINED FIGURES
 ==============================================================================*/
@@ -365,6 +377,7 @@ capture {
     graph export "${outputs}/figures/combined_summary.pdf", replace
 }
 
+* %%
 /*==============================================================================
                             FIGURE SUMMARY
 ==============================================================================*/
@@ -384,6 +397,7 @@ di "  - combined_summary.pdf"
 di "All figures saved to: ${outputs}/figures/"
 di "{hline 60}"
 
+* %%
 // Close log
 log close
 

@@ -1,6 +1,9 @@
 # Stata Project Template for Reproducible Research
 
-A template repository for reproducible Stata analysis projects using modern workflow tools and best practices. This template integrates **IPA's Data Cleaning Guide** and Stata coding standards with established practices from leading development economics research groups.
+A template repository for reproducible Stata analysis projects using modern workflow
+tools and best practices. This template integrates **IPA's Data Cleaning Guide** and
+Stata coding standards with established practices from leading development economics
+research groups.
 
 > [!WARNING]
 > NEVER COMMIT DATA FILES TO GITHUB.
@@ -11,6 +14,18 @@ A template repository for reproducible Stata analysis projects using modern work
 >
 > ASSISTANTS OR STORING IN ANY UNENCRYPTED LOCATION.
 
+## Use This Template
+
+If you want to use this template for your own project:
+
+1. Click the green **Use this template** button at the top of this page
+2. Select **Create a new repository**
+3. On the "Create a new repository" page:
+   1. Start with a template: `PovertyAction/ipa-stata-template`
+   2. Include all branches: Off
+   3. Select Owner, Repository name, Description, and Configuration as desired.
+4. Click the green **Create repository** button.
+
 ## Quick Start (Minimal Setup)
 
 Get started with just **Git** and **Stata** - no additional tools required.
@@ -18,6 +33,9 @@ Get started with just **Git** and **Stata** - no additional tools required.
 ### Prerequisites
 
 - Git installed ([download](https://git-scm.com/))
+    - Windows: `winget install --id Git.Git -e`
+    - macOS: `brew install git`
+    - Linux: Use your package manager, e.g., `sudo apt install git`, `brew install git`
 - Stata 17+ installed and licensed
 
 ### Steps
@@ -65,15 +83,15 @@ Get started with just **Git** and **Stata** - no additional tools required.
    just stata-script 01_data_cleaning
 
    # Or open Stata and run directly (works from any directory!)
-   do scripts/do/00_run.do
-   do scripts/do/00_run.do "01_data_cleaning"  // single script
+   do do_files/00_run.do
+   do do_files/00_run.do "01_data_cleaning"  // single script
    ```
 
 5. **Check outputs**
 
    - Tables: `outputs/tables/`
    - Figures: `outputs/figures/`
-   - Logs: `analysis/logs/`
+   - Logs: `logs/`
 
 That's it! You now have a reproducible Stata workflow.
 
@@ -100,28 +118,36 @@ a `.here` marker file. This means:
 ## Project Structure
 
 ```text
-├── .here              # Project root marker (for setroot)
-├── setup.do           # One-time setup script
-├── data/
-│   ├── raw/           # Original, immutable data files
-│   ├── clean/         # Cleaned data (intermediate)
-│   └── final/         # Analysis-ready datasets
-├── scripts/
-│   └── do/            # Stata do-files
-│       ├── 00_run.do      # Master do-file (controls pipeline + runner)
-│       ├── 01_data_cleaning.do
-│       ├── 02_data_preparation.do
-│       ├── 03_descriptive_analysis.do
-│       ├── 04_main_analysis.do
-│       ├── 05_robustness_checks.do
-│       ├── 06_generate_figures.do
-│       └── functions.do   # Reusable helper functions
-├── ado/               # Local Stata packages (for reproducibility)
-├── analysis/logs/     # Log files from Stata runs
+├── README.md                           # Important information about the project. Keep this updated, provide additional documentation as needed in `/documentation`.
+├── .here                               # Project root marker (for setroot)
+├── .env                                # Stata configuration (gitignored) (copy from .env-example)
+├── .config/                            # Configuration files for packages and tools
+│   ├── quarto/                         # Config for Quarto formatting Quarto Markdown documents
+│   └── stata/                          # Stata package requirements
+│       ├── install_packages.do         # Script to install required Stata packages
+│       └── stata_requirements.txt      # List of required Stata packages
+├── setup.do                            # One-time setup script
+├── data/                               # Data files (DO NOT COMMIT SENSITIVE DATA OR LARGE FILES TO GIT/GITHUB)
+│   ├── raw/                            # Original, immutable data files
+│   ├── clean/                          # Cleaned data (intermediate)
+│   └── final/                          # Analysis-ready datasets
+├── do_files/                           # Stata do-files (files here are illustrative; actual do-files may vary)
+│   ├── 00_run.do                       # Master do-file (controls pipeline + runner)
+│   ├── 01_data_cleaning.do
+│   ├── 02_data_preparation.do
+│   ├── 03_descriptive_analysis.do
+│   ├── 04_main_analysis.do
+│   ├── 05_robustness_checks.do
+│   ├── 06_generate_figures.do
+│   └── functions.do                # Reusable helper functions
+├── ado/                                # Local Stata packages (for reproducibility)
 ├── outputs/
-│   ├── tables/        # Regression tables (.tex files)
-│   └── figures/       # Figures (.pdf files)
-└── documentation/     # Project documentation
+│   ├── figures/                        # Figures (.pdf, .png files)
+│   └── tables/                         # Regression tables (.tex, .md files)
+├── logs/                               # Log files from Stata runs (should be gitignored)
+├── reports/                            # Generate reports (e.g., Quarto, LaTeX)
+├── src/                                # Additional scripts (e.g., Python for data processing)
+└── documentation/                      # Project documentation
 ```
 
 ### Understanding `00_run.do`
@@ -203,7 +229,7 @@ just stata-check-installation
 For interactive Stata execution in VS Code (similar to Ctrl+D workflow):
 
 1. Install the [vscode-stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata) extension
-2. Test with demo files in `scripts/demo/`
+2. Test with demo files in `do_files/demo/`
 3. Select the nbstata kernel at `.venv/Scripts/python.exe` (Windows) or `.venv/bin/python` (macOS/Linux)
 
 See the [nbstata User Guide](https://hugetim.github.io/nbstata/user_guide.html) for details.
@@ -251,10 +277,10 @@ Packages are listed in `.config/stata/stata_requirements.txt`.
 
 ```bash
 just lint-stata                                    # Lint all do-files
-just lint-stata-file scripts/do/01_data_cleaning.do  # Lint specific file
+just lint-stata-file do_files/01_data_cleaning.do  # Lint specific file
 ```
 
-Reports saved to `analysis/logs/stata_linter_report.xlsx`.
+Reports saved to `logs/stata_linter_report.xlsx`.
 
 ### IPA Visualizations (for IPA Staff)
 
@@ -303,14 +329,14 @@ This template builds upon established best practices and tools from the developm
 
 ### Core Dependencies
 
-- **statacons** ([GitHub](https://github.com/bquistorff/statacons) | [Documentation](https://bquistorff.github.io/statacons/)): Python package for managing Stata workflows
-    - Authors: Brian Quistorff and colleagues
-    - License: [MIT License](https://github.com/bquistorff/statacons/blob/main/LICENSE)
-
 - **ipaplots** ([GitHub](https://github.com/PovertyAction/ipaplots)): IPA-branded Stata graphing scheme
     - Authors: Ronny Condor, Kelly Montaño (IPA Peru)
     - Organization: Innovations for Poverty Action
     - Features: Professional visualization theme with IPA branding
+
+- (Optional) **statacons** ([GitHub](https://github.com/bquistorff/statacons) | [Documentation](https://bquistorff.github.io/statacons/)): Python package for managing Stata workflows
+    - Authors: Brian Quistorff and colleagues
+    - License: [MIT License](https://github.com/bquistorff/statacons/blob/main/LICENSE)
 
 ### Coding Standards and Best Practices
 
@@ -325,6 +351,9 @@ This template builds upon established best practices and tools from the developm
 - **World Bank Reproducible Research Repository** ([GitHub](https://github.com/worldbank/wb-reproducible-research-repository)): Guidelines for reproducible research
     - Organization: World Bank
     - License: [Mozilla Public License 2.0](https://github.com/worldbank/wb-reproducible-research-repository/blob/main/LICENSE)
+- **Code and Data for the Social Sciences: A Practitioner's Guide** ([Website](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf)): Stata coding style guide
+    - Authors: Matthew Gentzkow and Jesse M. Shapiro
+    - Copyright (c) 2014, Matthew Gentzkow and Jesse M. Shapiro.
 
 ### Development Tools
 

@@ -17,16 +17,19 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/05_robustness_checks.log", replace
 
+* %%
 /*==============================================================================
                             LOAD ANALYSIS DATA
 ==============================================================================*/
 
 use "${data_final}/analysis_data.dta", clear
 
+* %%
 // Verify data integrity and key structure
 datasignature confirm
 verify_keys id  // Adjust key variables as needed for your data
@@ -39,6 +42,7 @@ di "ROBUSTNESS CHECKS"
 di "{hline 60}"
 di "Analysis sample: " _N " observations"
 
+* %%
 /*==============================================================================
                             ALTERNATIVE FUNCTIONAL FORMS
 ==============================================================================*/
@@ -51,16 +55,19 @@ di "Analysis sample: " _N " observations"
 regress income female age education, robust
 estimates store linear_income
 
+* %%
 // Semi-log model (log on left side only)
 regress log_income female age education, robust
 estimates store semilog_income
 
+* %%
 // Log-log model (if applicable)
 capture {
     regress log_income female log_age log_education, robust
     estimates store loglog_income
 }
 
+* %%
 /*------------------------------------------------------------------------------
                             Alternative Functional Forms for Age
 ------------------------------------------------------------------------------*/
@@ -70,16 +77,19 @@ capture generate age_squared = age^2
 regress log_income female age age_squared education, robust
 estimates store quadratic_age
 
+* %%
 // Cubic age specification
 generate age_cubed = age^3
 regress log_income female age age_squared age_cubed education, robust
 estimates store cubic_age
 
+* %%
 // Spline specification (age breakpoint at 40)
 generate age_spline = max(0, age - 40)
 regress log_income female age age_spline education, robust
 estimates store spline_age
 
+* %%
 /*==============================================================================
                             ALTERNATIVE ESTIMATION METHODS
 ==============================================================================*/
@@ -92,12 +102,15 @@ estimates store spline_age
 qreg log_income female age education, quantile(0.25)
 estimates store qreg_25
 
+* %%
 qreg log_income female age education, quantile(0.50)
 estimates store qreg_50
 
+* %%
 qreg log_income female age education, quantile(0.75)
 estimates store qreg_75
 
+* %%
 /*------------------------------------------------------------------------------
                             Robust Regression Methods
 ------------------------------------------------------------------------------*/
@@ -108,12 +121,14 @@ capture {
     estimates store robust_reg
 }
 
+* %%
 // Tobit model (if outcome is censored)
 capture {
     tobit log_income female age education, ll(0)
     estimates store tobit_model
 }
 
+* %%
 /*==============================================================================
                             SUBSAMPLE ANALYSIS
 ==============================================================================*/
@@ -126,10 +141,12 @@ capture {
 regress log_income age education if female == 0, robust
 estimates store male_only
 
+* %%
 // Female subsample only
 regress log_income age education if female == 1, robust
 estimates store female_only
 
+* %%
 /*------------------------------------------------------------------------------
                             Age-based Subsamples
 ------------------------------------------------------------------------------*/
@@ -138,10 +155,12 @@ estimates store female_only
 regress log_income female age education if age < 40, robust
 estimates store young_workers
 
+* %%
 // Older workers (age >= 40)
 regress log_income female age education if age >= 40, robust
 estimates store older_workers
 
+* %%
 /*------------------------------------------------------------------------------
                             Education-based Subsamples
 ------------------------------------------------------------------------------*/
@@ -156,6 +175,7 @@ capture {
     estimates store low_education
 }
 
+* %%
 /*==============================================================================
                             OUTLIER SENSITIVITY
 ==============================================================================*/
@@ -172,6 +192,7 @@ local p99 = r(r2)
 regress log_income female age education if income >= `p1' & income <= `p99', robust
 estimates store exclude_outliers_1pct
 
+* %%
 // Exclude top and bottom 5% of income distribution
 _pctile income if analysis_sample == 1, p(5 95)
 local p5 = r(r1)
@@ -180,6 +201,7 @@ local p95 = r(r2)
 regress log_income female age education if income >= `p5' & income <= `p95', robust
 estimates store exclude_outliers_5pct
 
+* %%
 /*==============================================================================
                             ALTERNATIVE SAMPLE DEFINITIONS
 ==============================================================================*/
@@ -191,6 +213,7 @@ estimates store exclude_outliers_5pct
 // Include observations previously excluded (less restrictive)
 use "${data_final}/analysis_data.dta", clear
 
+* %%
 // Relax some sample restrictions
 generate expanded_sample = 1
 replace expanded_sample = 0 if missing(age, income, female)
@@ -200,6 +223,7 @@ replace expanded_sample = 0 if age < 16 | age > 85
 regress log_income female age education if expanded_sample == 1, robust
 estimates store expanded_sample_model
 
+* %%
 /*==============================================================================
                             EXPORT ROBUSTNESS RESULTS
 ==============================================================================*/
@@ -218,6 +242,7 @@ esttab linear_income semilog_income quadratic_age spline_age ///
     sfmt(0 3) ///
     note("Robust standard errors in parentheses.")
 
+* %%
 // Export quantile regression results
 esttab qreg_25 qreg_50 qreg_75 ///
     using "${outputs}/tables/robustness_quantile.tex", ///
@@ -232,6 +257,7 @@ esttab qreg_25 qreg_50 qreg_75 ///
     sfmt(0) ///
     note("Standard errors in parentheses.")
 
+* %%
 // Export subsample analysis
 esttab male_only female_only young_workers older_workers ///
     using "${outputs}/tables/robustness_subsamples.tex", ///
@@ -246,6 +272,7 @@ esttab male_only female_only young_workers older_workers ///
     sfmt(0 3) ///
     note("Robust standard errors in parentheses.")
 
+* %%
 /*==============================================================================
                             SENSITIVITY ANALYSIS SUMMARY
 ==============================================================================*/
@@ -275,6 +302,7 @@ di _n(1) "Range of female coefficients: " ///
     " to " ///
     %6.3f max(`main_coef', `linear_coef', `median_coef', `no_outlier_coef')
 
+* %%
 /*==============================================================================
                             CONCLUSION
 ==============================================================================*/
@@ -289,6 +317,8 @@ di "  - Outlier sensitivity: 2 tests"
 di "Results saved to ${outputs}/tables/robustness_*.tex"
 di "{hline 60}"
 
+
+* %%
 // Close log
 log close
 

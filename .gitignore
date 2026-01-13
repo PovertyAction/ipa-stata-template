@@ -207,18 +207,21 @@ marimo/_lsp/
 __marimo__/
 
 # Generated Data Files
-data/*/*
-data/clean/
-data/final/
+# data/*/*
+# data/clean/
+# data/final/*.dta
 data/temp/
 data/processed/
 
 # Analysis Outputs
-outputs/
-analysis/logs/
-results/
-tables/
-figures/
+outputs/**/*.pdf
+outputs/**/*.png
+outputs/**/*.jpg
+outputs/**/*.jpeg
+outputs/**/*.tex
+outputs/**/*.txt
+# tables/
+# figures/
 
 # Stata-Specific Files
 *.tmp
@@ -247,8 +250,8 @@ figures/
 
 **/*.quarto_ipynb
 
-scripts/demo/*.html
-scripts/demo/nbstata-demo_files/
+do_files/demo/*.html
+do_files/demo/nbstata-demo_files/
 reports/*.html
 reports/**/**_files/
 ado/

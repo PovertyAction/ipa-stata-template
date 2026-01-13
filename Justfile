@@ -92,17 +92,17 @@ stata-do dofile:
 # Run traditional Stata master do-file (the main way to run your analysis)
 [windows]
 stata-run:
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [linux]
 stata-run:
-    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [macos]
 stata-run:
-    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
 
 # Run one-time project setup (install setroot and packages)
 [windows]
@@ -128,7 +128,7 @@ stata-setup:
 [windows]
 stata-script script:
     @echo "Running script: {{ script }}"
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do" "{{ script }}"
 
 # Run a specific analysis script via the runner pattern
 
@@ -136,7 +136,7 @@ stata-script script:
 [linux]
 stata-script script:
     @echo "Running script: {{ script }}"
-    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do" "{{ script }}"
 
 # Run a specific analysis script via the runner pattern
 
@@ -144,7 +144,7 @@ stata-script script:
 [macos]
 stata-script script:
     @echo "Running script: {{ script }}"
-    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "scripts/do/00_run.do" "{{ script }}"
+    "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do" "{{ script }}"
 
 # ==============================================================================
 # SETUP & INSTALLATION
@@ -261,40 +261,40 @@ fmt-check-markdown:
 [windows]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
-    @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(do_files) excel(logs/stata_linter_report.xlsx) replace"
+    @echo "Stata linting report saved to: logs/stata_linter_report.xlsx"
 
 # Lint Stata code with stata_linter
 [linux]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
-    @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(do_files) excel(logs/stata_linter_report.xlsx) replace"
+    @echo "Stata linting report saved to: logs/stata_linter_report.xlsx"
 
 # Lint Stata code with stata_linter
 [macos]
 lint-stata:
     @echo "Linting Stata do-files..."
-    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(scripts/do) excel(analysis/logs/stata_linter_report.xlsx) replace"
-    @echo "Stata linting report saved to: analysis/logs/stata_linter_report.xlsx"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path(do_files) excel(logs/stata_linter_report.xlsx) replace"
+    @echo "Stata linting report saved to: logs/stata_linter_report.xlsx"
 
 # Lint specific Stata file
 [windows]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Lint specific Stata file
 [linux]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Lint specific Stata file
 [macos]
 lint-stata-file f:
     @echo "Linting Stata file: {{ f }}"
-    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(analysis/logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
+    @"{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} "stata_linter, path({{ f }}) excel(logs/stata_linter_{{ file_stem(f) }}.xlsx) replace"
 
 # Check if stata_linter is installed and provide installation instructions
 [windows]
@@ -343,13 +343,13 @@ stata-clean:
 # Quick data check - show basic info about analysis data
 data-info:
     uv run scons data
-    @echo "Analysis data created. Check analysis/logs/ for data cleaning logs."
+    @echo "Analysis data created. Check logs/ for data cleaning logs."
 
 # Run data quality checks
 data-check:
     @echo "Running data quality checks..."
-    @{{ stata_cmd }} {{ stata_options }} {{ stata_mode }} do "scripts/do/01_data_cleaning.do"
-    @echo "Check analysis/logs/01_data_cleaning.log for results"
+    @{{ stata_cmd }} {{ stata_options }} {{ stata_mode }} do "do_files/01_data_cleaning.do"
+    @echo "Check logs/01_data_cleaning.log for results"
 
 # Generate only tables (no figures)
 stata-tables:

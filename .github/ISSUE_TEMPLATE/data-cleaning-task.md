@@ -66,13 +66,13 @@ assignees: []
 ## Output Requirements
 
 - [ ] **Cleaned dataset**: `data/clean/[filename].dta`
-- [ ] **Cleaning log**: `analysis/logs/01_data_cleaning.log`
+- [ ] **Cleaning log**: `logs/01_data_cleaning.log`
 - [ ] **Data documentation**: [Variable descriptions, cleaning decisions]
 
 ## Quality Control
 
 - [ ] **Code review completed**
-    - [ ] `just lint-stata-file scripts/do/01_data_cleaning.do` passes
+    - [ ] `just lint-stata-file do_files/01_data_cleaning.do` passes
     - [ ] Code follows IPA standards (based on Gentzkow & Shapiro principles)
     - [ ] Documentation is complete
 - [ ] **Validation completed**
