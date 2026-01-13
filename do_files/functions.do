@@ -117,7 +117,7 @@ program define data_quality_report
 
     // Missing data patterns
     di _n "MISSING DATA ANALYSIS:"
-    missings report, minimum(1)
+    misstable summarize, all
 
     // Check for completely empty observations
     egen _missing_count = rowmiss(_all)
@@ -223,7 +223,7 @@ program define validate_paths
     di "{hline 60}"
 
     // Required directories
-    local required_dirs "data/raw data/clean data/final outputs/tables outputs/figures analysis/logs"
+    local required_dirs "data/raw data/clean data/final outputs/tables outputs/figures logs"
 
     foreach dir in `required_dirs' {
         capture confirm file "${project_path}/`dir'"

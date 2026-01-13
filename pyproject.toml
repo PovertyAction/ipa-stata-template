@@ -65,6 +65,11 @@ ignore = [
     "D213",
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# SCons injects these functions at runtime
+"SConstruct" = ["F821"]
+"SConscript" = ["F821"]
+
 [tool.ruff.format]
 docstring-code-format = true
 docstring-code-line-length = 88

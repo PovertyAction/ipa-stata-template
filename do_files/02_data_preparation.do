@@ -16,10 +16,12 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+* %%
 // Start log file
 capture log close
 log using "${logs}/02_data_preparation.log", replace
 
+* %%
 /*==============================================================================
                             LOAD CLEANED DATA
 ==============================================================================*/
@@ -30,6 +32,7 @@ use "${data_clean}/cleaned_data.dta", clear
 datasignature confirm
 verify_keys id  // Adjust key variables as needed for your data
 
+* %%
 // Generate data quality report for cleaned data
 data_quality_report "Cleaned Data for Preparation"
 
@@ -38,6 +41,7 @@ di "PREPARING DATA FOR ANALYSIS"
 di "{hline 60}"
 di "Starting observations: " _N
 
+* %%
 /*==============================================================================
                             CREATE ANALYSIS VARIABLES
 ==============================================================================*/
@@ -53,6 +57,7 @@ capture {
     }
 }
 
+* %%
 // Create interaction terms and polynomial terms if relevant variables exist
 capture {
     if _rc == 0 {
@@ -68,6 +73,7 @@ capture {
     }
 }
 
+* %%
 // Create quantile/percentile variables
 capture {
     // Income quintiles
@@ -87,6 +93,7 @@ capture {
         label variable education_level "Education level categories"
     }
 }
+
 
 /*==============================================================================
                             SAMPLE RESTRICTIONS
@@ -116,6 +123,7 @@ count
 local total_n = r(N)
 local excluded = `total_n' - `analysis_n'
 
+* %%
 di _n(2) "{hline 60}"
 di "SAMPLE RESTRICTIONS SUMMARY"
 di "{hline 60}"
@@ -125,6 +133,7 @@ di "Excluded observations: " `excluded'
 di "Exclusion rate: " %4.1f (`excluded'/`total_n'*100) "%"
 di "{hline 60}"
 
+* %%
 /*==============================================================================
                             CREATE ANALYSIS SUBSAMPLES
 ==============================================================================*/
@@ -146,6 +155,7 @@ capture {
     label variable old_sample "1 if in old (age>=40) subsample"
 }
 
+* %%
 /*==============================================================================
                             FINAL DATA CHECKS
 ==============================================================================*/
@@ -171,6 +181,7 @@ foreach var of varlist age income female {
     }
 }
 
+* %%
 /*==============================================================================
                             SAVE ANALYSIS DATA
 ==============================================================================*/
@@ -189,12 +200,14 @@ capture {
     codebook, compact
 }
 
+* %%
 di _n(2) "{hline 60}"
 di "DATA PREPARATION COMPLETED"
 di "Final analysis sample: " `analysis_n' " observations"
 di "Output saved to: ${data_final}/analysis_data.dta"
 di "{hline 60}"
 
+* %%
 // Close log
 log close
 

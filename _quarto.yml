@@ -3,22 +3,29 @@ project:
   title: "IPA Stata Analysis Project"
 
 format:
-  typst:
-    margin:
-      x: 1in
-      y: 1in
+  typst: # docs: https://quarto.org/docs/output-formats/typst.html
     fontsize: 11pt
     mainfont: "Arial"
-    toc: true
-    number-sections: true
+    keep-typ: true
 
-  html:
+  html: # docs: https://quarto.org/docs/output-formats/html-basics.html
     theme: cosmo
     toc: true
-    toc-depth: 3
+    toc-depth: 2
     number-sections: true
     fig-cap-location: bottom
     tbl-cap-location: top
+
+  pdf: # docs: https://quarto.org/docs/output-formats/pdf-basics.html
+    documentclass: report
+    fontsize: 11pt
+    mainfont: "Arial"
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    keep-tex: true
 
 execute:
   echo: false

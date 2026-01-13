@@ -48,17 +48,17 @@ Start with **Tier 1** (minimal) and add features as needed.
 
    ```bash
    # Batch mode (recommended - creates log files)
-   stata -e do scripts/do/00_run.do
+   stata -e do do_files/00_run.do
 
    # Or interactively in Stata
-   do scripts/do/00_run.do
+   do do_files/00_run.do
    ```
 
 4. **Check outputs**
 
    - Tables: `outputs/tables/`
    - Figures: `outputs/figures/`
-   - Logs: `analysis/logs/`
+   - Logs: `logs/`
 
 ### Understanding `00_run.do`
 
@@ -156,7 +156,7 @@ scons reads the `SConstruct` file which defines dependencies:
 # When 01_data_cleaning.do changes, rebuild cleaned_data.dta
 data_clean = env.StataBuild(
     target='data/clean/cleaned_data.dta',
-    source='scripts/do/01_data_cleaning.do'
+    source='do_files/01_data_cleaning.do'
 )
 ```
 
@@ -186,7 +186,7 @@ This installs everything: `uv`, `git`, `quarto`, `markdownlint`, `nbstata`, Stat
 Run Stata interactively in VS Code, similar to Ctrl+D workflow:
 
 1. Install the [vscode-stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata) extension
-2. Test with files in `scripts/demo/`
+2. Test with files in `do_files/demo/`
 3. Select the nbstata kernel at `.venv/Scripts/python.exe`
 
 #### Code Quality
@@ -276,6 +276,6 @@ Before increasing `maxvar`, consider:
 
 ### Getting Help
 
-- Check log files in `analysis/logs/` for Stata errors
+- Check log files in `logs/` for Stata errors
 - Review the [statacons documentation](https://bquistorff.github.io/statacons/)
 - See the README for additional resources

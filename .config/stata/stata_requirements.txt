@@ -10,9 +10,9 @@ ivreg2  >= 4.1.12
 outreg2     >= 2.3.2
 winsor2     >= 1.1
 distinct    >= 1.2.0
-missings    >= 1.4.0
 repkit      >= 4.0
 setroot >= 1.0
+statacons >= 3.0, from(https://raw.github.com/bquistorff/statacons/main/)
 
 # Github/etc requirements
 
