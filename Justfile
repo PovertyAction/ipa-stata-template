@@ -29,21 +29,21 @@ system-info:
 stata-check-installation:
     @echo "Checking Stata installation..."
     @echo "Command: {{ stata_cmd }}"
-    @{{ if os_family() == "windows" { "& \"" + stata_cmd + "\"" } else { stata_cmd } }} {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+    @{{ if os_family() == "windows" { "& \"" + stata_cmd + "\"" } else { stata_cmd } }} {{ stata_options }} -e "display \"Stata version: \" c(version) \" | Stata flavor: \" c(flavor) \" | Stata edition: \" c(stata_version) \" | System: \" c(os) \" \" c(machine_type)"
 
 # Check Stata installation and version
 [linux]
 stata-check-installation:
     @echo "Checking Stata installation..."
     @echo "Command: {{ stata_cmd }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version) \" | Stata flavor: \" c(flavor) \" | Stata edition: \" c(stata_version) \" | System: \" c(os) \" \" c(machine_type)"
 
 # Check Stata installation and version
 [macos]
 stata-check-installation:
     @echo "Checking Stata installation..."
     @echo "Command: {{ stata_cmd }}"
-    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version); display \"Stata flavor: \" c(flavor); display \"Stata edition: \" c(stata_version); display \"System: \" c(os) \" \" c(machine_type)"
+    @"{{ stata_cmd }}" {{ stata_options }} -e "display \"Stata version: \" c(version) \" | Stata flavor: \" c(flavor) \" | Stata edition: \" c(stata_version) \" | System: \" c(os) \" \" c(machine_type)"
 
 # Show Stata configuration
 stata-config:
