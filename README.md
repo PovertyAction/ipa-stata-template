@@ -105,6 +105,78 @@ a `.here` marker file. This means:
 - **Full adopath isolation** - only BASE + local `ado/` for reproducibility
 - **Runner pattern** - run individual scripts with proper environment setup
 
+### Separating Code and Data Paths
+
+The template supports storing code and data in **separate locations**. This is useful when:
+
+- Data is stored in a Cryptomator vault
+- Data is synced via Box/Dropbox/OneDrive to different locations on each machine
+- Multiple team members work from different directory structures
+- You want to keep large data files outside your git repository
+
+#### Setup for Separate Data Storage
+
+1. **Copy the template file**:
+
+    ```bash
+    # Windows Command Prompt or bash
+    cp config.do.template config.do
+
+    # Windows PowerShell
+
+    Copy-Item config.do.template config.do
+    ```
+
+    > [!IMPORTANT]
+    > **Never commit `config.do`** - it's gitignored for a reason (contains user-specific paths).
+    > Always commit `config.do.template` so others know how to configure theirs.
+
+2. **Edit `config.do`** to set your data path:
+
+    ```stata
+    // Example: Dropbox
+    global data_root "C:/Users/YourName/Dropbox/Research/ProjectName/data"
+
+    // Example: External drive (macOS)
+    global data_root "/Volumes/ExternalDrive/research-data/ProjectName"
+    ```
+
+3. **Run your analysis** as usual - paths are resolved automatically:
+
+    ```bash
+    just stata-run
+    ```
+
+#### Default Behavior (Everything Together)
+
+If you don't create a `config.do` file, the template uses default paths:
+
+```stata
+data/raw/     -> [project_root]/data/raw/
+data/clean/   -> [project_root]/data/clean/
+data/final/   -> [project_root]/data/final/
+```
+
+#### Path Variables Reference
+
+After setup, these globals are available in all scripts:
+
+**Data paths** (customizable via `config.do`):
+
+- `${data_root}` - Root of all data folders
+- `${data_raw}` - Raw/original data
+- `${data_clean}` - Cleaned data
+- `${data_final}` - Final analysis datasets
+
+**Code/output paths** (always in project root):
+
+- `${project_path}` - Project root (from setroot)
+- `${scripts}` - Do-files directory
+- `${outputs}` - All outputs
+- `${tables}` - Regression tables
+- `${figures}` - Figures and graphs
+- `${logs}` - Log files
+
 > [!TIP]
 > **Want more automation?** See [Advanced Setup](#advanced-setup) below for:
 >
@@ -121,6 +193,8 @@ a `.here` marker file. This means:
 ├── README.md                           # Important information about the project. Keep this updated, provide additional documentation as needed in `/documentation`.
 ├── .here                               # Project root marker (for setroot)
 ├── .env                                # Stata configuration (gitignored) (copy from .env-example)
+├── config.do.template                  # Template for user-specific data paths
+├── config.do                           # User-specific data paths (gitignored) (copy from config.do.template)
 ├── .config/                            # Configuration files for packages and tools
 │   ├── quarto/                         # Config for Quarto formatting Quarto Markdown documents
 │   └── stata/                          # Stata package requirements

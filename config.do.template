@@ -1,0 +1,47 @@
+/*==============================================================================
+USER-SPECIFIC CONFIGURATION TEMPLATE
+================================================================================
+
+Instructions:
+1. Copy this file to config.do:
+   - Windows: copy config.do.template config.do
+   - macOS/Linux: cp config.do.template config.do
+
+2. Edit config.do to set your local data path
+
+3. config.do is gitignored - never commit it to version control
+
+Note: If config.do doesn't exist, the template defaults to data/ in project root
+
+==============================================================================*/
+
+/*------------------------------------------------------------------------------
+    DATA PATH CONFIGURATION
+------------------------------------------------------------------------------*/
+
+// OPTION 1: Data stored separately from code (RECOMMENDED for shared drives)
+// Uncomment and edit the path below:
+
+// global data_root "X:/SECURE_AREA_12345_project_name_country/data"
+// global data_root "D:/Dropbox/ProjectName/data"
+// global data_root "/mnt/network-drive/research/ProjectName/data"
+// global data_root "C:/Users/YourName/Documents/Research/ProjectName/data"
+
+/*------------------------------------------------------------------------------
+    ADVANCED: Override individual data folders
+------------------------------------------------------------------------------*/
+
+// If you only want to override specific folders, uncomment and edit:
+
+// global data_raw "${data_root}/raw"
+// global data_clean "${data_root}/clean"
+// global data_final "${data_root}/final"
+
+/*------------------------------------------------------------------------------
+    NOTES
+------------------------------------------------------------------------------*/
+
+// - Use forward slashes (/) in paths, even on Windows
+// - Stata will convert them automatically
+// - Paths can be absolute or relative
+// - Use quotes if path contains spaces

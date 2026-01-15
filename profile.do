@@ -14,15 +14,28 @@ capture setroot
 if _rc == 0 {
     global project_path "$root"
 
-    // Define standard project paths
-    global data_raw "${project_path}/data/raw"
-    global data_clean "${project_path}/data/clean"
-    global data_final "${project_path}/data/final"
+    // Check for user-specific config file (gitignored)
+    capture confirm file "${project_path}/config.do"
+    if _rc == 0 {
+        do "${project_path}/config.do"
+    }
+
+    // Set default data root if not defined in config.do
+    if "${data_root}" == "" {
+        global data_root "${project_path}/data"
+    }
+
+    // Define standard paths (use config.do values if set, otherwise use defaults)
+    if "${data_raw}" == "" global data_raw "${data_root}/raw"
+    if "${data_clean}" == "" global data_clean "${data_root}/clean"
+    if "${data_final}" == "" global data_final "${data_root}/final"
+
+    // Code and output paths always relative to project root
     global scripts "${project_path}/do_files"
     global outputs "${project_path}/outputs"
     global logs "${project_path}/logs"
-    global tables "${project_path}/outputs/tables"
-    global figures "${project_path}/outputs/figures"
+    global tables "${outputs}/tables"
+    global figures "${outputs}/figures"
 
     // Load project functions
     capture do "${scripts}/functions.do"
