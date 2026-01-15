@@ -85,6 +85,10 @@ capture rename Gender gender
 capture rename Income income  // Keep simple name for analysis compatibility
 capture rename Education education
 
+// Create educ_years alias for consistency across dofiles
+capture generate educ_years = education
+capture replace educ_years = education if missing(educ_years)
+
 // Convert ID to string if not already
 capture tostring id, replace
 
@@ -166,11 +170,35 @@ foreach var of varlist _all {
     capture confirm string variable `var'
     if _rc == 0 {
         di _n(1) "String variable `var' unique values:"
-        levelsof `var', clean
-        local num_unique : word count `r(levels)'
-        if `num_unique' > 20 {
-            di "  Has " `num_unique' " unique values (showing first 10):"
-            levelsof `var' in 1/10, clean
+        quietly count if !missing(`var')
+        local non_missing = r(N)
+        if `non_missing' > 0 {
+            capture levelsof `var', clean local(unique_vals)
+            if _rc == 0 {
+                local num_unique : word count `unique_vals'
+                if `num_unique' > 20 {
+                    di "  Has " `num_unique' " unique values (showing first 10):"
+                    capture levelsof `var' in 1/10, clean local(sample_vals)
+                    if _rc == 0 {
+                        di `"  `sample_vals'"'
+                    }
+                }
+                else {
+                    di "  Has " `num_unique' " unique values:"
+                    di `"  `unique_vals'"'
+                }
+            }
+            else {
+                // If levelsof fails, count unique values without listing them
+                tempvar unique_id
+                quietly egen `unique_id' = group(`var')
+                quietly summarize `unique_id'
+                local num_unique = r(max)
+                di "  Has " `num_unique' " unique values (too many to display)"
+            }
+        }
+        else {
+            di "  No non-missing values"
         }
     }
 }

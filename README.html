@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>readme</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="README_files/libs/clipboard/clipboard.min.js"></script>
+<script src="README_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="README_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="README_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="README_files/libs/quarto-html/popper.min.js"></script>
+<script src="README_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="README_files/libs/quarto-html/anchor.min.js"></script>
+<link href="README_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="README_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="README_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="README_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="README_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="stata-project-template-for-reproducible-research" class="level1">
+<h1>Stata Project Template for Reproducible Research</h1>
+<p>A comprehensive template repository for reproducible Stata analysis projects using modern workflow tools and best practices. This template integrates <strong>statacons</strong> for dependency management with <strong>IPA’s Data Cleaning Guide</strong> and Stata coding standards, along with established practices from leading development economics research groups.</p>
+<section id="quick-start" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start">Quick Start</h2>
+<section id="for-stata-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="for-stata-analysis">For Stata Analysis</h3>
+<p><strong>Choose Your Workflow Method:</strong></p>
+<section id="automated-build-system-recommended---sconstruct" class="level4">
+<h4 class="anchored" data-anchor-id="automated-build-system-recommended---sconstruct">1. <strong>Automated Build System (Recommended)</strong> - <code>SConstruct</code></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-full     <span class="co"># Complete pipeline with build system</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># OR use scons directly:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span>              <span class="co"># Builds entire analysis pipeline</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> data         <span class="co"># Builds only data cleaning/preparation</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> analysis     <span class="co"># Builds only analysis outputs</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> figures      <span class="co"># Builds only figures</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> <span class="at">-c</span>           <span class="co"># Clean all outputs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="traditional-master-do-file---00_run.do" class="level4">
+<h4 class="anchored" data-anchor-id="traditional-master-do-file---00_run.do">2. <strong>Traditional Master Do-File</strong> - <code>00_run.do</code></h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-run     <span class="co"># Run traditional master do-file</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># OR run directly in Stata:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># do "scripts/do/00_run.do"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="when-to-use-which-method" class="level4">
+<h4 class="anchored" data-anchor-id="when-to-use-which-method"><strong>When to Use Which Method:</strong></h4>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 41%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Use Case</th>
+<th>SConstruct (Build System)</th>
+<th>00_run.do (Master Do-File)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Development &amp; Iteration</strong></td>
+<td>✅ <strong>Recommended</strong> - Only rebuilds changed components</td>
+<td>❌ Reruns entire pipeline each time</td>
+</tr>
+<tr class="even">
+<td><strong>Production &amp; Final Results</strong></td>
+<td>✅ <strong>Recommended</strong> - Ensures all dependencies are current</td>
+<td>✅ Good for final validation runs</td>
+</tr>
+<tr class="odd">
+<td><strong>CI/CD &amp; Automation</strong></td>
+<td>✅ <strong>Recommended</strong> - Optimal for automated workflows</td>
+<td>✅ Simple for basic automation</td>
+</tr>
+<tr class="even">
+<td><strong>Debugging Specific Steps</strong></td>
+<td>✅ <strong>Excellent</strong> - <code>scons analysis</code> runs only analysis steps</td>
+<td>❌ Must modify switches in do-file</td>
+</tr>
+<tr class="odd">
+<td><strong>New Users/Learning</strong></td>
+<td>❌ Requires learning SCons concepts</td>
+<td>✅ <strong>Recommended</strong> - Familiar Stata workflow</td>
+</tr>
+<tr class="even">
+<td><strong>Collaboration</strong></td>
+<td>✅ <strong>Excellent</strong> - Automatic dependency tracking</td>
+<td>⚠️ Manual coordination of file changes</td>
+</tr>
+<tr class="odd">
+<td><strong>Reproducibility</strong></td>
+<td>✅ <strong>Superior</strong> - Tracks all file dependencies automatically</td>
+<td>✅ Good with proper version control</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="technical-differences" class="level4">
+<h4 class="anchored" data-anchor-id="technical-differences"><strong>Technical Differences:</strong></h4>
+<p><strong>SConstruct (<code>just stata-full</code>):</strong></p>
+<ul>
+<li>✅ <strong>Selective rebuilding</strong> - Only processes files that have changed or depend on changed files</li>
+<li>✅ <strong>Automatic dependency tracking</strong> - Updates when <code>functions.do</code> or data files change</li>
+<li>✅ <strong>Parallel processing</strong> - Can run independent steps simultaneously</li>
+<li>✅ <strong>Build validation</strong> - Ensures all outputs are up-to-date</li>
+<li>⚠️ <strong>Learning curve</strong> - Requires understanding SCons concepts</li>
+</ul>
+<p><strong>00_run.do (<code>just stata-run</code>):</strong></p>
+<ul>
+<li>✅ <strong>Familiar workflow</strong> - Standard Stata master do-file approach</li>
+<li>✅ <strong>Manual control</strong> - Use switches to control which sections run</li>
+<li>✅ <strong>Easy debugging</strong> - Set switches to run specific analysis sections</li>
+<li>❌ <strong>Full rebuilds</strong> - Runs entire pipeline regardless of what changed</li>
+<li>❌ <strong>Manual dependency management</strong> - Must manually track file dependencies</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="development-setup" class="level2">
+<h2 class="anchored" data-anchor-id="development-setup">Development Setup</h2>
+<p>Development relies on the following software</p>
+<ul>
+<li><strong>Stata</strong> (MP, SE, or IC) with command line access configured</li>
+<li><code>winget</code> (Windows) or <code>homebrew</code> (MacOS/Linux) or <code>snap</code> (Linux) for package management and installation</li>
+<li><code>git</code> for source control management</li>
+<li><code>just</code> for running common command line patterns</li>
+<li><code>uv</code> for installing Python and managing virtual environments</li>
+</ul>
+<p>This repository uses a <code>Justfile</code> for collecting common command line actions that we run to set up the computing environment and build the assets of the handbook. Note that you should also have Git installed</p>
+<p>To get started, make sure you have <code>Just</code> installed on your computer by running the following from the command line:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 88%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Windows</td>
+<td><code>winget install Git.Git Casey.Just astral-sh.uv GitHub.cli Posit.Quarto</code></td>
+</tr>
+<tr class="even">
+<td>Mac/Linux</td>
+<td><code>brew install just uv gh</code></td>
+</tr>
+</tbody>
+</table>
+<p>This will make sure that you have the latest version of <code>Just</code>, as well as <a href="https://docs.astral.sh/uv/">uv</a> (installer for Python) and <a href="https://quarto.org/docs/guide/">Quarto</a> (for writing and compiling scientific and technical documents).</p>
+<ul>
+<li>We use <code>Just</code> in order to make it easier for all IPA users to be productive with data and technology systems. The goal of using a <code>Justfile</code> is to help make the end goal of the user easier to achieve without needing to know or remember all of the technical details of how we get to that goal.</li>
+<li>We use <code>uv</code> to help ease use of Python. <code>uv</code> provides a global system for creating and building computing environments for Python.</li>
+<li>We use Quarto to allow users to focus on writing and data analytics. Writing in markdown, jupyter notebooks, python scripts, R scripts, etc. makes it easier to review, update, and deploy technical documentation.</li>
+<li>We also recommend using in Integrated Development Environment (IDE). Preferred options are <code>VS Code</code> or <code>Positron</code>.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 88%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Windows</td>
+<td><code>winget install Microsoft.VisualStudioCode</code></td>
+</tr>
+<tr class="even">
+<td>Mac</td>
+<td><code>brew install --cask visual-studio-code</code></td>
+</tr>
+<tr class="odd">
+<td>Linux</td>
+<td><code>sudo snap install code --classic</code></td>
+</tr>
+</tbody>
+</table>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 88%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Platform</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Windows</td>
+<td><code>winget install Posit.Positron</code></td>
+</tr>
+<tr class="even">
+<td>Mac</td>
+<td><code>brew install --cask positron</code></td>
+</tr>
+</tbody>
+</table>
+<p>As a shortcut, if you already have <code>Just</code> installed, you can run the following to install required software and build a python virtual environment that is used to build the handbook pages:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> get-started</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note: you may need to restart your terminal after running the command above to activate the installed software.</p>
+<p>After the required software is installed, you can activate the Python virtual environment:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Shell</th>
+<th>Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bash</td>
+<td><code>.venv/Scripts/activate</code></td>
+</tr>
+<tr class="even">
+<td>Powershell</td>
+<td><code>.venv/Scripts/activate.ps1</code></td>
+</tr>
+<tr class="odd">
+<td>Nushell</td>
+<td><code>overlay use .venv/Scripts/activate.nu</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stata-command-line-setup" class="level2">
+<h2 class="anchored" data-anchor-id="stata-command-line-setup">Stata Command Line Setup</h2>
+<p>This template requires Stata to be accessible from the command line. Follow the setup instructions for your platform:</p>
+<section id="configuration" class="level3">
+<h3 class="anchored" data-anchor-id="configuration">Configuration</h3>
+<ol type="1">
+<li><p><strong>Copy the environment template</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> .env-example .env</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Edit <code>.env</code> file</strong> to specify your Stata installation:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example configurations:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows with Stata/MP in standard location</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span><span class="st">"C:\Program Files\Stata18\StataMP-64.exe"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS/Linux with Stata in PATH</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span>stata-mp</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom installation path</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span>/usr/local/stata18/stata-mp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ol>
+</section>
+<section id="platform-specific-setup" class="level3">
+<h3 class="anchored" data-anchor-id="platform-specific-setup">Platform-Specific Setup</h3>
+<section id="windows" class="level4">
+<h4 class="anchored" data-anchor-id="windows">Windows</h4>
+<section id="option-1-add-stata-to-path-recommended" class="level5">
+<h5 class="anchored" data-anchor-id="option-1-add-stata-to-path-recommended">Option 1: Add Stata to PATH (Recommended)</h5>
+<ol type="1">
+<li>Find your Stata installation directory (e.g., <code>C:\Program Files\Stata18\</code>)</li>
+<li>Add this directory to your Windows PATH environment variable</li>
+<li>Use <code>STATA_CMD=stata-mp</code> (or <code>stata-se</code>, <code>stata</code>) in your <code>.env</code> file</li>
+</ol>
+</section>
+<section id="option-2-use-full-path" class="level5">
+<h5 class="anchored" data-anchor-id="option-2-use-full-path">Option 2: Use Full Path</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In .env file - adjust path to match your installation</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span><span class="st">"C:\Program Files\Stata18\StataMP-64.exe"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Common Windows Stata Locations:</strong></p>
+<ul>
+<li>Stata/MP: <code>C:\Program Files\Stata18\StataMP-64.exe</code></li>
+<li>Stata/SE: <code>C:\Program Files\Stata18\StataSE-64.exe</code></li>
+<li>Stata/IC: <code>C:\Program Files\Stata18\Stata-64.exe</code></li>
+</ul>
+</section>
+</section>
+<section id="macos" class="level4">
+<h4 class="anchored" data-anchor-id="macos">macOS</h4>
+<section id="option-1-create-command-line-tools-recommended" class="level5">
+<h5 class="anchored" data-anchor-id="option-1-create-command-line-tools-recommended">Option 1: Create Command Line Tools (Recommended)</h5>
+<ol type="1">
+<li><p>Open Terminal and create symlinks:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For Stata/MP</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-s</span> /Applications/Stata/StataMP.app/Contents/MacOS/StataMP /usr/local/bin/stata-mp</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># For Stata/SE</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ln <span class="at">-s</span> /Applications/Stata/StataSE.app/Contents/MacOS/StataSE /usr/local/bin/stata-se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Use <code>STATA_CMD=stata-mp</code> in your <code>.env</code> file</p></li>
+</ol>
+</section>
+<section id="option-2-use-full-path-1" class="level5">
+<h5 class="anchored" data-anchor-id="option-2-use-full-path-1">Option 2: Use Full Path</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In .env file</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span>/Applications/Stata/StataMP.app/Contents/MacOS/StataMP</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="linux" class="level4">
+<h4 class="anchored" data-anchor-id="linux">Linux</h4>
+<section id="option-1-stata-in-path" class="level5">
+<h5 class="anchored" data-anchor-id="option-1-stata-in-path">Option 1: Stata in PATH</h5>
+<p>If Stata was installed system-wide, use:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In .env file</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span>stata-mp  <span class="co"># or stata-se, stata</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="option-2-custom-installation-path" class="level5">
+<h5 class="anchored" data-anchor-id="option-2-custom-installation-path">Option 2: Custom Installation Path</h5>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># In .env file - adjust path to your installation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="va">STATA_CMD</span><span class="op">=</span>/usr/local/stata18/stata-mp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+</section>
+<section id="verification" class="level3">
+<h3 class="anchored" data-anchor-id="verification">Verification</h3>
+<p>Test your Stata configuration:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test basic Stata access</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-check-installation</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View current configuration</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-config</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with a simple command</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> system-info</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Expected output should show your Stata version, flavor (MP/SE/IC), and system information.</p>
+</section>
+<section id="troubleshooting" class="level3">
+<h3 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h3>
+<p><strong>Command not found errors:</strong></p>
+<ul>
+<li>Verify Stata path in <code>.env</code> file</li>
+<li>Check that Stata is installed and accessible</li>
+<li>Ensure quotes around paths with spaces (Windows)</li>
+</ul>
+<p><strong>Permission errors (macOS/Linux):</strong></p>
+<ul>
+<li>Use <code>sudo</code> when creating symlinks</li>
+<li>Check file permissions on Stata executable</li>
+</ul>
+<p><strong>Batch mode issues:</strong></p>
+<ul>
+<li>Ensure your Stata license supports batch processing</li>
+<li>Some Stata commands may not work in batch mode</li>
+</ul>
+</section>
+</section>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">Project Structure</h2>
+<p>This template follows best practices for Stata project organization:</p>
+<pre class="text"><code>├── data/
+│   ├── raw/           # Original, immutable data files
+│   ├── clean/         # Cleaned data (intermediate)
+│   └── final/         # Analysis-ready datasets
+├── scripts/           # Code
+│   ├── demo/            # Demo scripts
+│   └── do/            # Stata do-files
+│       ├── 00_run.do      # Master do-file
+│       ├── 01_data_cleaning.do
+│       ├── 02_data_preparation.do
+│       ├── 03_descriptive_analysis.do
+│       ├── 04_main_analysis.do
+│       ├── 05_robustness_checks.do
+│       └── 06_generate_figures.do
+├── ado/               # User-written Stata packages
+├── analysis/logs/     # Log files from Stata runs
+├── outputs/
+│   ├── tables/        # Regression tables (.tex files)
+│   └── figures/       # Figures (.pdf files)
+├── documentation/     # Project documentation
+└── SConstruct         # statacons workflow definition</code></pre>
+<p>The <code>scripts/demo/nbstata-demo.qmd</code> file provides a Quarto notebook example for interactive Stata analysis.</p>
+</section>
+<section id="workflow-features" class="level2">
+<h2 class="anchored" data-anchor-id="workflow-features">Workflow Features</h2>
+<section id="automated-dependency-management" class="level3">
+<h3 class="anchored" data-anchor-id="automated-dependency-management">Automated Dependency Management</h3>
+<ul>
+<li><strong>statacons integration</strong>: Automatically tracks file dependencies and rebuilds only what’s necessary</li>
+<li><strong>Reproducible environments</strong>: Stata packages managed in local <code>ado/</code> folder</li>
+<li><strong>Version control friendly</strong>: All outputs are generated, not committed</li>
+</ul>
+</section>
+<section id="best-practice-implementation" class="level3">
+<h3 class="anchored" data-anchor-id="best-practice-implementation">Best Practice Implementation</h3>
+<ul>
+<li><strong>IPA Data Standards</strong>: Follows IPA Data Cleaning Guide and Stata coding best practices</li>
+<li><strong>Data Carpentry Methods</strong>: Implements research-grade programming techniques for data exploration, transformation, and combination</li>
+<li><strong>Standardized coding style</strong>: Implementing IPA, Data Carpentry, DIME Analytics, and Sean Higgins guidelines</li>
+<li><strong>Defensive programming</strong>: Uses assert statements and quality checks throughout</li>
+<li><strong>Advanced programming</strong>: Includes loops, macros, temporary files, and modular programming</li>
+<li><strong>Extended missing values</strong>: Implements IPA’s .d/.o/.n/.r/.s conventions</li>
+<li><strong>Code quality enforcement</strong>: Integrated stata_linter for style checking and best practices</li>
+<li><strong>Reproducible package management</strong>: Requirements-based Stata package installation system</li>
+<li><strong>Comprehensive logging</strong>: All Stata runs generate detailed log files</li>
+<li><strong>Publication-ready outputs</strong>: Tables in LaTeX format, figures in PDF</li>
+</ul>
+</section>
+</section>
+<section id="customizing-the-build-system-sconstruct" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-the-build-system-sconstruct">Customizing the Build System (SConstruct)</h2>
+<p>The <code>SConstruct</code> file defines the automated build pipeline and must be updated when you modify the analysis workflow.</p>
+<section id="when-to-update-sconstruct" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-update-sconstruct">When to Update SConstruct</h3>
+<p><strong>Always update <code>SConstruct</code> when you:</strong></p>
+<ul>
+<li>Add new Stata scripts to the analysis pipeline</li>
+<li>Create new output files (tables, figures, datasets)</li>
+<li>Add dependencies between analysis steps</li>
+<li>Modify file paths or naming conventions</li>
+</ul>
+</section>
+<section id="key-components-to-update" class="level3">
+<h3 class="anchored" data-anchor-id="key-components-to-update">Key Components to Update</h3>
+<section id="adding-new-analysis-scripts" class="level4">
+<h4 class="anchored" data-anchor-id="adding-new-analysis-scripts">1. <strong>Adding New Analysis Scripts</strong></h4>
+<p>When adding a new script (e.g., <code>07_sensitivity_analysis.do</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add new step to SConstruct</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>sensitivity_analysis <span class="op">=</span> env.StataBuild(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    target<span class="op">=</span>[</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/sensitivity_results.tex"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"analysis/logs/07_sensitivity_analysis.log"</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"scripts/do/07_sensitivity_analysis.do"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>Depends(sensitivity_analysis, [<span class="st">"data/final/analysis_data.dta"</span>, <span class="st">"scripts/do/functions.do"</span>, <span class="st">"ado"</span>])</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Add to aliases</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>Alias(<span class="st">"analysis"</span>, [descriptive_analysis, main_analysis, robustness_analysis, sensitivity_analysis])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="adding-new-output-files" class="level4">
+<h4 class="anchored" data-anchor-id="adding-new-output-files">2. <strong>Adding New Output Files</strong></h4>
+<p>If your <code>standard_regression</code> function creates new table files, update the targets:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>main_analysis <span class="op">=</span> env.StataBuild(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    target<span class="op">=</span>[</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/main_results.tex"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/model1.tex"</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/model2.tex"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/model3.tex"</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"outputs/tables/model4.tex"</span>,  <span class="co"># Add new model outputs</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"analysis/logs/04_main_analysis.log"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    source<span class="op">=</span><span class="st">"scripts/do/04_main_analysis.do"</span>,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="managing-dependencies" class="level4">
+<h4 class="anchored" data-anchor-id="managing-dependencies">3. <strong>Managing Dependencies</strong></h4>
+<p><strong>Critical: All scripts depend on <code>functions.do</code></strong> because they load G&amp;S standardized functions:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Always include functions.do dependency</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Depends(script_name, [<span class="st">"input_data.dta"</span>, <span class="st">"scripts/do/functions.do"</span>, <span class="st">"ado"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="build-aliases" class="level4">
+<h4 class="anchored" data-anchor-id="build-aliases">4. <strong>Build Aliases</strong></h4>
+<p>Update aliases when adding new components:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Alias(<span class="st">"data"</span>, [data_clean, data_final])</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Alias(<span class="st">"analysis"</span>, [descriptive_analysis, main_analysis, robustness_analysis, sensitivity_analysis])</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Alias(<span class="st">"figures"</span>, [figures, new_figures])</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Alias(<span class="st">"all"</span>, [data_clean, data_final, descriptive_analysis, main_analysis, robustness_analysis, figures, sensitivity_analysis])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="testing-sconstruct-changes" class="level3">
+<h3 class="anchored" data-anchor-id="testing-sconstruct-changes">Testing SConstruct Changes</h3>
+<p>After modifying <code>SConstruct</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test individual components</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> data          <span class="co"># Test data pipeline</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> analysis      <span class="co"># Test analysis pipeline</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> figures       <span class="co"># Test figure generation</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Test full pipeline</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span> <span class="at">-c</span>            <span class="co"># Clean all outputs</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="ex">scons</span>               <span class="co"># Rebuild everything</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sconstruct-vs-00_run.do-maintenance" class="level3">
+<h3 class="anchored" data-anchor-id="sconstruct-vs-00_run.do-maintenance">SConstruct vs 00_run.do Maintenance</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 40%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>When to Update</th>
+<th>What to Update</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>SConstruct</strong></td>
+<td>Adding scripts, changing outputs, modifying dependencies</td>
+<td>Build targets, file dependencies, aliases</td>
+</tr>
+<tr class="even">
+<td><strong>00_run.do</strong></td>
+<td>Adding scripts, changing control flow</td>
+<td>Switch variables, script paths, execution order</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Both files should be kept in sync</strong> - if you add a new analysis script, update both the SCons build definition and the master do-file switches.</p>
+</section>
+</section>
+<section id="using-the-template" class="level2">
+<h2 class="anchored" data-anchor-id="using-the-template">Using the Template</h2>
+<section id="data-preparation" class="level3">
+<h3 class="anchored" data-anchor-id="data-preparation">1. Data Preparation</h3>
+<ul>
+<li>Place raw data in <code>data/raw/</code></li>
+<li>Modify <code>scripts/do/01_data_cleaning.do</code> for your data cleaning steps</li>
+<li>Modify <code>scripts/do/02_data_preparation.do</code> for analysis sample creation</li>
+</ul>
+</section>
+<section id="analysis" class="level3">
+<h3 class="anchored" data-anchor-id="analysis">2. Analysis</h3>
+<ul>
+<li>Update analysis scripts (<code>03_descriptive_analysis.do</code>, <code>04_main_analysis.do</code>, <code>05_robustness_checks.do</code>)</li>
+<li>Modify <code>scripts/do/06_generate_figures.do</code> for your visualization needs</li>
+<li>Run entire pipeline with <code>scons</code> or individual steps with <code>scons [target]</code></li>
+</ul>
+</section>
+<section id="ipa-visualizations-recommended-for-ipa-staff" class="level3">
+<h3 class="anchored" data-anchor-id="ipa-visualizations-recommended-for-ipa-staff">3. IPA Visualizations (Recommended for IPA Staff)</h3>
+<p>For IPA staff, install the <code>ipaplots</code> package for branded visualizations:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>net install github, from(<span class="st">"https://haghish.github.io/github/"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>github install PovertyAction/ipaplots</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The template automatically detects and uses the IPA theme when available, falling back to default schemes otherwise.</p>
+</section>
+<section id="package-management-and-environment-reproducibility" class="level3">
+<h3 class="anchored" data-anchor-id="package-management-and-environment-reproducibility">4. Package Management and Environment Reproducibility</h3>
+<p>Stata lacks a built-in package manager, making reproducible environments challenging. This template provides a requirements-based system:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install all required packages from requirements file</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-install-packages</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Package Requirements File</strong>: <code>scripts/setup/stata_requirements.txt</code> contains a list of required packages with their installation sources:</p>
+<pre class="text"><code># Format: package_name,install_source,install_command
+estout,ssc,ssc install estout
+reghdfe,ssc,ssc install reghdfe
+ipaplots,github,github install PovertyAction/ipaplots
+stata_linter,net,net install stata_linter, from(https://raw.githubusercontent.com/worldbank/stata-linter/main)</code></pre>
+</section>
+<section id="code-quality-with-stata_linter" class="level3">
+<h3 class="anchored" data-anchor-id="code-quality-with-stata_linter">5. Code Quality with stata_linter</h3>
+<p>This template integrates <a href="https://dimewiki.worldbank.org/Stata_Linter">stata_linter</a> from the World Bank DIME team for enforcing Stata coding best practices:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lint all Stata do-files and generate Excel report</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> lint-stata</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Lint a specific do-file</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> lint-stata-file scripts/do/01_data_cleaning.do</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if stata_linter is installed</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-check-linter</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Install stata_linter (included in package requirements)</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> stata-install-packages</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The linter checks for:</p>
+<ul>
+<li>Variable naming conventions</li>
+<li>Proper use of global macros for file paths</li>
+<li>Consistent indentation and spacing</li>
+<li>Deprecated command usage</li>
+<li>Best practices for loops and conditionals</li>
+</ul>
+<p>Linting reports are saved to <code>analysis/logs/stata_linter_report.xlsx</code> with detailed feedback on code quality issues.</p>
+</section>
+<section id="generate-reports" class="level3">
+<h3 class="anchored" data-anchor-id="generate-reports">6. Generate Reports</h3>
+<p>Create publication-ready reports that automatically include your Stata outputs:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate complete analysis and report</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> full-analysis-report</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Or generate report from existing outputs</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> render-report</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview report in browser</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="ex">just</span> preview-report</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The Quarto report template automatically integrates your Stata outputs including LaTeX tables and PDF figures.</p>
+</section>
+<section id="outputs" class="level3">
+<h3 class="anchored" data-anchor-id="outputs">7. Outputs</h3>
+<ul>
+<li>Tables will be generated in <code>outputs/tables/</code> (LaTeX format)</li>
+<li>Figures will be generated in <code>outputs/figures/</code> (PDF format, with IPA branding when available)</li>
+<li>Log files will be saved in <code>analysis/logs/</code></li>
+<li>Reports will be generated in <code>reports/</code> (PDF, HTML, or Typst format)</li>
+</ul>
+</section>
+</section>
+<section id="acknowledgments-and-references" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgments-and-references">Acknowledgments and References</h2>
+<p>This template builds upon established best practices and tools from the development economics and data science communities:</p>
+<section id="primary-guidelines-and-standards" class="level3">
+<h3 class="anchored" data-anchor-id="primary-guidelines-and-standards">Primary Guidelines and Standards</h3>
+<ul>
+<li><strong>IPA Data Cleaning Guide</strong> (<a href="https://data.poverty-action.org/data-cleaning/">Website</a>): Comprehensive guide for data cleaning best practices
+<ul>
+<li>Organization: Innovations for Poverty Action (IPA)</li>
+<li>Covers: Raw data management, variable management, dataset documentation, data aggregation</li>
+</ul></li>
+<li><strong>IPA Stata Tutorials</strong> (<a href="https://data.poverty-action.org/software/stata/">Website</a>): Stata coding standards and best practices
+<ul>
+<li>Organization: Innovations for Poverty Action (IPA)</li>
+<li>Covers: Stata syntax, data processing, coding standards</li>
+</ul></li>
+<li><strong>Data Carpentry Stata Economics</strong> (<a href="https://datacarpentry.github.io/stata-economics/">Website</a>): Research-grade Stata programming curriculum
+<ul>
+<li>Organization: Data Carpentry</li>
+<li>Covers: Data exploration, quality assessment, transformation, combination, programming, loops, advanced techniques</li>
+<li>License: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="core-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="core-dependencies">Core Dependencies</h3>
+<ul>
+<li><strong>statacons</strong> (<a href="https://github.com/bquistorff/statacons">GitHub</a> | <a href="https://bquistorff.github.io/statacons/">Documentation</a>): Python package for managing Stata workflows
+<ul>
+<li>Authors: Brian Quistorff and colleagues</li>
+<li>License: <a href="https://github.com/bquistorff/statacons/blob/main/LICENSE">MIT License</a></li>
+</ul></li>
+<li><strong>ipaplots</strong> (<a href="https://github.com/PovertyAction/ipaplots">GitHub</a>): IPA-branded Stata graphing scheme
+<ul>
+<li>Authors: Ronny Condor, Kelly Montaño (IPA Peru)</li>
+<li>Organization: Innovations for Poverty Action</li>
+<li>Features: Professional visualization theme with IPA branding</li>
+</ul></li>
+</ul>
+</section>
+<section id="coding-standards-and-best-practices" class="level3">
+<h3 class="anchored" data-anchor-id="coding-standards-and-best-practices">Coding Standards and Best Practices</h3>
+<ul>
+<li><strong>Sean Higgins Stata Guide</strong> (<a href="https://github.com/skhiggins/Stata_guide">GitHub</a>): Comprehensive coding style and workflow recommendations
+<ul>
+<li>Author: Sean Higgins</li>
+<li>License: Creative Commons</li>
+</ul></li>
+<li><strong>DIME Analytics Data Handbook</strong> (<a href="https://worldbank.github.io/dime-data-handbook/coding.html">Website</a>): World Bank DIME team coding standards
+<ul>
+<li>Organization: World Bank Development Impact Evaluation (DIME)</li>
+<li>License: <a href="https://github.com/worldbank/dime-data-handbook/blob/main/LICENSE">MIT License</a></li>
+</ul></li>
+<li><strong>World Bank Reproducible Research Repository</strong> (<a href="https://github.com/worldbank/wb-reproducible-research-repository">GitHub</a>): Guidelines for reproducible research
+<ul>
+<li>Organization: World Bank</li>
+<li>License: <a href="https://github.com/worldbank/wb-reproducible-research-repository/blob/main/LICENSE">Mozilla Public License 2.0</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="development-tools" class="level3">
+<h3 class="anchored" data-anchor-id="development-tools">Development Tools</h3>
+<ul>
+<li><strong>uv</strong> (<a href="https://docs.astral.sh/uv/">Documentation</a>): Fast Python package installer and resolver</li>
+<li><strong>Just</strong> (<a href="https://github.com/casey/just">GitHub</a>): Command runner for development tasks</li>
+<li><strong>Quarto</strong> (<a href="https://quarto.org/">Website</a>): Scientific and technical publishing system</li>
+</ul>
+</section>
+</section>
+<section id="license" class="level2">
+<h2 class="anchored" data-anchor-id="license">License</h2>
+<p>This template is released under the MIT License. See <a href="LICENSE">LICENSE</a> for details.</p>
+<p>While this template is MIT licensed, please respect the licenses of the constituent tools and respect the intellectual contributions of the referenced guides and best practices.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

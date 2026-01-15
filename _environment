@@ -1,1 +1,2 @@
 QUARTO_PYTHON=.venv/Scripts/python.exe
+STATA_CMD=C:/Program Files/Stata18/StataMP-64.exe

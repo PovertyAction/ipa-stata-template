@@ -63,7 +63,7 @@ di "{hline 40}"
 
 // Use local macros for flexible programming
 local demographic_vars "age female educ_years"
-local economic_vars "inc_total inc_total_log"
+local economic_vars "income log_income"
 local derived_vars "age_cat educ_level"
 
 di "Demographic variables: `demographic_vars'"
@@ -92,7 +92,7 @@ di "{hline 40}"
 di "Creating interaction terms using nested loops:"
 
 local group_vars "female educ_level"
-local continuous_vars "age inc_total_log"
+local continuous_vars "age log_income"
 
 foreach group_var of local group_vars {
     foreach cont_var of local continuous_vars {
@@ -136,7 +136,7 @@ save `main_data'
 
 // Create summary statistics dataset
 preserve
-collapse (mean) mean_inc=inc_total (sd) sd_inc=inc_total ///
+collapse (mean) mean_inc=income (sd) sd_inc=income ///
          (count) n_obs=id, by(educ_level female)
 
 // Save summary statistics
@@ -149,7 +149,7 @@ restore
 merge m:1 educ_level female using `summary_stats', nogenerate
 
 // Create standardized income within groups
-generate `inc_residual' = (inc_total - mean_inc) / sd_inc
+generate `inc_residual' = (income - mean_inc) / sd_inc
 label variable `inc_residual' "Income standardized within education-gender groups"
 
 /*==============================================================================
@@ -166,14 +166,14 @@ preserve
 di "Original dataset has " _N " observations"
 
 // Perform operations that modify the dataset
-keep if !missing(inc_total) & !missing(age) & !missing(educ_years)
+keep if !missing(income) & !missing(age) & !missing(educ_years)
 di "After filtering: " _N " observations"
 
 // Create analysis specific to this subset
-summarize inc_total age educ_years
+summarize income age educ_years
 
 // Calculate correlations
-correlate inc_total age educ_years
+correlate income age educ_years
 
 restore
 
@@ -191,7 +191,7 @@ di "{hline 40}"
 local base_year 2023  // Example base year
 
 // Create year-specific variables dynamically
-foreach var in inc_total age {
+foreach var in income age {
     // Create base-year reference variable
     generate `var'_base_`base_year' = `var'  // In real data, this would be conditional
 
@@ -215,7 +215,7 @@ di "{hline 40}"
 // Robust error handling
 capture {
     // Attempt to create a variable that might fail
-    generate test_var = inc_total / 0  // This will create missing values
+    generate test_var = income / 0  // This will create missing values
 
     // Check if the operation succeeded
     count if !missing(test_var)
@@ -236,7 +236,7 @@ capture {
         local validation_errors = `validation_errors' + 1
     }
 
-    count if inc_total < 0
+    count if income < 0
     if r(N) > 0 {
         di as error "Error: " r(N) " observations with negative income"
         local validation_errors = `validation_errors' + 1
@@ -278,7 +278,7 @@ program define create_summary_table
 end
 
 // Use the custom program
-create_summary_table inc_total age, by(female) title("Summary by Gender")
+create_summary_table income age, by(female) title("Summary by Gender")
 
 /*==============================================================================
                     ADVANCED FILE MANIPULATION
@@ -299,7 +299,7 @@ forvalues group = 0/1 {
     local gender = cond(`group', "female", "male")
 
     // Create group-specific analysis
-    summarize inc_total age educ_years
+    summarize income age educ_years
 
     // Save group-specific dataset
     local filename "${outputs}/analysis_`gender'.dta"
@@ -327,7 +327,7 @@ di "{hline 40}"
 preserve
 
 // Create example of complex reshape
-keep id female age inc_total educ_years
+keep id female age income educ_years
 generate observation = _n
 
 // Create multiple measurements per person (simulated panel data)
@@ -336,7 +336,7 @@ sort id
 by id: generate time_period = _n
 
 // Create time-varying variables
-generate income_t = inc_total * (0.9 + 0.1 * time_period + uniform() * 0.2)
+generate income_t = income * (0.9 + 0.1 * time_period + uniform() * 0.2)
 generate age_t = age + time_period - 1
 
 // Reshape to wide format

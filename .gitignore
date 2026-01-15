@@ -243,3 +243,5 @@ figures/
 
 CLAUDE.md
 .claude/
+
+**/*.quarto_ipynb
