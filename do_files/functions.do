@@ -222,15 +222,48 @@ program define validate_paths
     di "VALIDATING PROJECT STRUCTURE"
     di "{hline 60}"
 
-    // Required directories
-    local required_dirs "data/raw data/clean data/final outputs/tables outputs/figures logs"
+    // Validate data directories (may be outside project root)
+    local data_dirs "${data_raw}" "${data_clean}" "${data_final}"
+    local data_labels "data/raw" "data/clean" "data/final"
 
-    foreach dir in `required_dirs' {
+    tokenize `data_labels'
+    foreach dir in `data_dirs' {
+        capture confirm file "`dir'"
+        if _rc != 0 {
+            di as error "Missing directory: `1' (`dir')"
+            di "Creating directory..."
+
+            // Handle cross-platform mkdir
+            if c(os) == "Windows" {
+                shell mkdir "`dir'"
+            }
+            else {
+                shell mkdir -p "`dir'"
+            }
+            di as result "Created: `1'"
+        }
+        else {
+            di as result "Exists: `1' (`dir')"
+        }
+        macro shift
+    }
+
+    // Validate output directories (always in project root)
+    local output_dirs "outputs/tables" "outputs/figures" "logs"
+
+    foreach dir in `output_dirs' {
         capture confirm file "${project_path}/`dir'"
         if _rc != 0 {
             di as error "Missing directory: `dir'"
             di "Creating directory..."
-            shell mkdir "${project_path}/`dir'"
+
+            // Handle cross-platform mkdir
+            if c(os) == "Windows" {
+                shell mkdir "${project_path}/`dir'"
+            }
+            else {
+                shell mkdir -p "${project_path}/`dir'"
+            }
             di as result "Created: `dir'"
         }
         else {
