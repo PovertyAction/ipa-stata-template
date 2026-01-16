@@ -31,9 +31,9 @@ else {
 * Installing ietoolkit to main PLUS, do we also need it in local ado?
 capture which ietoolkit
 if _rc != 0 {
-    display "Installing setroot..."
+    display "Installing ietoolkit..."
     capture ssc install ietoolkit
-    if _rc != 0 {
+    if _rc != 0 {brook
         display as error "ERROR: ietoolkit installation failed"
         display as error "Please check your internet connection and try again"
         display as error "Or install manually: ssc install ietoolkit"
@@ -41,6 +41,7 @@ if _rc != 0 {
     }
 else {
     display as result "ietoolkit already installed"
+}
 }
 
 * Find project root using setroot
@@ -51,7 +52,7 @@ display as text "Project root: ${project_path}"
 
 * Install all project packages to local ado/
 display _n "Installing project packages..."
-do "${project_path}/.config/stata/install_packages.do"
+include "${project_path}/.config/stata/install_packages.do"
 
 display _n(2) "{hline 60}"
 display as result "Setup complete!"
