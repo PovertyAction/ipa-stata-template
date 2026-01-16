@@ -28,6 +28,10 @@ If you want to use this template for your own project:
 
 ## Quick Start (Minimal Setup)
 
+> [!TIP]
+> If you are new to this repository, start here but be sure to read the full README
+> as well as the [Getting Started Guide](./documentation/getting-started.md).
+
 Get started with just **Git** and **Stata** - no additional tools required.
 
 ### Prerequisites
