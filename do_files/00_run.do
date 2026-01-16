@@ -49,12 +49,12 @@ set seed 123456789
 
 // Uses setroot to find .here or .git marker from any directory
 // Install setroot first: ssc install setroot (or run setup.do)
+// Install setroot first: ssc install setroot (or run setup.do)
 setroot, verbose 
 global project_path "${root}"
 
 // Use ieboilstart strict to only allow commands being run from selected adopath
-ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)  
-
+ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)
 // ieboilstart modifies a lot of the settings below, might need to adjust settings individually
 //set maxvar 5000
 //set matsize 11000
