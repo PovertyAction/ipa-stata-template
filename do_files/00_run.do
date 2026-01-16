@@ -61,7 +61,24 @@ set type double
 * %%
 // Uses setroot to find .here or .git marker from any directory
 // Install setroot first: ssc install setroot (or run setup.do)
-setroot
+capture setroot
+if _rc != 0 {
+    di as error _n(2) "{hline 80}"
+    di as error "ERROR: Could not find project root directory"
+    di as error "{hline 80}"
+    di as text _n "Current directory: " c(pwd)
+    di as text _n "Possible solutions:"
+    di as text "  1. In Stata, change to project directory first:"
+    di as text "     cd ~/code/ipa-stata-template"
+    di as text "     do do_files/00_run.do"
+    di as text _n "  2. Use the recommended workflow with just:"
+    di as text "     just stata-run              (from terminal in project directory)"
+    di as text "     just stata-script 01_data_cleaning"
+    di as text _n "  3. Ensure setroot package is installed:"
+    di as text "     ssc install setroot"
+    di as error _n "{hline 80}"
+    exit 601
+}
 global project_path "$root"
 
 /*==============================================================================
@@ -111,7 +128,9 @@ do "${scripts}/functions.do"
 
 // Validate project structure and dependencies
 validate_paths
-validate_pipeline
+validate_pipeline, ///
+    files("data/raw/sample_data.csv") ///
+    packages("estout outreg2 missings reghdfe coefplot")
 
 // Display system information
 di "Stata version: `c(stata_version)'"

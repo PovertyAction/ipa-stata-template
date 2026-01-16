@@ -86,10 +86,17 @@ Get started with just **Git** and **Stata** - no additional tools required.
    # Or run a single script
    just stata-script 01_data_cleaning
 
-   # Or open Stata and run directly (works from any directory!)
+   # Or open Stata and run directly
+   # IMPORTANT: First change to the project directory in Stata:
+   cd ~/code/ipa-stata-template
    do do_files/00_run.do
    do do_files/00_run.do "01_data_cleaning"  // single script
    ```
+
+   > [!TIP]
+   > If you get a "Root folder of project not found" error, make sure you've changed
+   > to the project directory in Stata using `cd ~/code/ipa-stata-template` before
+   > running the do-file.
 
 5. **Check outputs**
 
