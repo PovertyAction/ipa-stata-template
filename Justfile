@@ -92,17 +92,23 @@ stata-do dofile:
 # Run traditional Stata master do-file (the main way to run your analysis)
 [windows]
 stata-run:
+    @echo "Running Stata analysis pipeline..."
     @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
+    @echo "Pipeline running. Check the log file: 00_run.log"
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [linux]
 stata-run:
+    @echo "Running Stata analysis pipeline..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
+    @echo "Pipeline running. Check the log file: 00_run.log"
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [macos]
 stata-run:
+    @echo "Running Stata analysis pipeline..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
+    @echo "Pipeline running. Check the log file: 00_run.log"
 
 # Run one-time project setup (install setroot and packages)
 [windows]

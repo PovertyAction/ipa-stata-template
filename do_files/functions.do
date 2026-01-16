@@ -223,29 +223,57 @@ program define validate_paths
     di "{hline 60}"
 
     // Validate data directories (may be outside project root)
-    local data_dirs "${data_raw}" "${data_clean}" "${data_final}"
-    local data_labels "data/raw" "data/clean" "data/final"
+    // Check each directory individually to avoid macro expansion issues
 
-    tokenize `data_labels'
-    foreach dir in `data_dirs' {
-        capture confirm file "`dir'"
-        if _rc != 0 {
-            di as error "Missing directory: `1' (`dir')"
-            di "Creating directory..."
-
-            // Handle cross-platform mkdir
-            if c(os) == "Windows" {
-                shell mkdir "`dir'"
-            }
-            else {
-                shell mkdir -p "`dir'"
-            }
-            di as result "Created: `1'"
+    // Check data/raw
+    capture confirm file "${data_raw}"
+    if _rc != 0 {
+        di as error "Missing directory: raw data directory (${data_raw})"
+        di "Creating directory..."
+        if c(os) == "Windows" {
+            shell mkdir "${data_raw}"
         }
         else {
-            di as result "Exists: `1' (`dir')"
+            shell mkdir -p "${data_raw}"
         }
-        macro shift
+        di as result "Created: data/raw"
+    }
+    else {
+        di as result "Exists: data/raw (${data_raw})"
+    }
+
+    // Check data/clean
+    capture confirm file "${data_clean}"
+    if _rc != 0 {
+        di as error "Missing directory: clean data directory (${data_clean})"
+        di "Creating directory..."
+        if c(os) == "Windows" {
+            shell mkdir "${data_clean}"
+        }
+        else {
+            shell mkdir -p "${data_clean}"
+        }
+        di as result "Created: data/clean"
+    }
+    else {
+        di as result "Exists: data/clean (${data_clean})"
+    }
+
+    // Check data/final
+    capture confirm file "${data_final}"
+    if _rc != 0 {
+        di as error "Missing directory: final data directory (${data_final})"
+        di "Creating directory..."
+        if c(os) == "Windows" {
+            shell mkdir "${data_final}"
+        }
+        else {
+            shell mkdir -p "${data_final}"
+        }
+        di as result "Created: data/final"
+    }
+    else {
+        di as result "Exists: data/final (${data_final})"
     }
 
     // Validate output directories (always in project root)
