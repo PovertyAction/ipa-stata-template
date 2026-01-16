@@ -28,6 +28,20 @@ if _rc != 0 {
 else {
     display as result "setroot already installed"
 }
+* Installing ietoolkit to main PLUS, do we also need it in local ado?
+capture which ietoolkit
+if _rc != 0 {
+    display "Installing setroot..."
+    capture ssc install ietoolkit
+    if _rc != 0 {
+        display as error "ERROR: ietoolkit installation failed"
+        display as error "Please check your internet connection and try again"
+        display as error "Or install manually: ssc install ietoolkit"
+        exit 601
+    }
+else {
+    display as result "ietoolkit already installed"
+}
 
 * Find project root using setroot
 setroot
