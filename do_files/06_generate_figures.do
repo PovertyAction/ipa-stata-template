@@ -55,7 +55,7 @@ capture set scheme ipaplots
 if _rc != 0 {
     di as text "Note: ipaplots scheme not installed, using default s2color"
     di as text "For IPA staff: Install ipaplots for branded visualizations"
-    di as text "Commands: net install github, from(\"https://haghish.github.io/github/\")"
+    di as text "Commands: net install github, from(https://haghish.github.io/github/)"
     di as text "          github install PovertyAction/ipaplots"
     set scheme s2color
 }
