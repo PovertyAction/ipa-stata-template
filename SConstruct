@@ -44,10 +44,10 @@ PATHS = {
 # Ensure output directories exist
 for path in PATHS.values():
     if not os.path.exists(path):
-        os.makedirs(path)
+        os.makedirs(name=path)
 
 # Set Stata PLUS directory to local ado folder for reproducibility
-env.AppendENVPath("STATA_PLUS", os.path.abspath(PATHS["ado"]))
+env.AppendENVPath(name="STATA_PLUS", newpath=os.path.abspath(PATHS["ado"]))
 
 # =============================================================================
 # DATA PREPARATION PIPELINE
@@ -78,10 +78,7 @@ Depends(data_final, ["data/clean/cleaned_data.dta", "do_files/functions.do", "ad
 
 # Step 3: Descriptive analysis
 descriptive_analysis = env.StataBuild(
-    target=[
-        "outputs/tables/descriptive_stats.tex",
-        "logs/03_descriptive_analysis.log",
-    ],
+    target="outputs/tables/descriptive_stats.tex",
     source="do_files/03_descriptive_analysis.do",
 )
 Depends(
@@ -96,7 +93,6 @@ main_analysis = env.StataBuild(
         "outputs/tables/model1.tex",  # Updated targets from standard_regression function
         "outputs/tables/model2.tex",
         "outputs/tables/model3.tex",
-        "logs/04_main_analysis.log",
     ],
     source="do_files/04_main_analysis.do",
 )
@@ -105,8 +101,9 @@ Depends(main_analysis, ["data/final/analysis_data.dta", "do_files/functions.do",
 # Step 5: Robustness checks
 robustness_analysis = env.StataBuild(
     target=[
-        "outputs/tables/robustness_results.tex",
-        "logs/05_robustness_checks.log",
+        "outputs/tables/robustness_functional_forms.tex",
+        "outputs/tables/robustness_quantile.tex",
+        "outputs/tables/robustness_subsamples.tex",
     ],
     source="do_files/05_robustness_checks.do",
 )
@@ -121,7 +118,15 @@ Depends(
 
 # Step 6: Generate figures
 figures = env.StataBuild(
-    target=["outputs/figures/figure1.pdf", "outputs/figures/figure2.pdf"],
+    target=[
+        "outputs/figures/figure1_income_distribution.pdf",
+        "outputs/figures/figure1_income_by_education.pdf",
+        "outputs/figures/figure2_coefficients.pdf",
+        "outputs/figures/figure3_residuals_fitted.pdf",
+        "outputs/figures/figure3_qq_plot.pdf",
+        "outputs/figures/figure4_coefficient_stability.pdf",
+        "outputs/figures/combined_summary.pdf",
+    ],
     source="do_files/06_generate_figures.do",
 )
 Depends(figures, ["data/final/analysis_data.dta", "do_files/functions.do", "ado"])
@@ -161,6 +166,6 @@ if GetOption("clean"):
         "logs",
     ]
     for d in dirs_to_clean:
-        if os.path.exists(d):
-            shutil.rmtree(d)
-            os.makedirs(d)
+        if os.path.exists(path=d):
+            shutil.rmtree(path=d)
+            os.makedirs(name=d)
