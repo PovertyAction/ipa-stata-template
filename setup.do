@@ -33,15 +33,15 @@ capture which ietoolkit
 if _rc != 0 {
     display "Installing ietoolkit..."
     capture ssc install ietoolkit
-    if _rc != 0 {brook
+    if _rc != 0 {
         display as error "ERROR: ietoolkit installation failed"
         display as error "Please check your internet connection and try again"
         display as error "Or install manually: ssc install ietoolkit"
         exit 601
     }
+}
 else {
     display as result "ietoolkit already installed"
-}
 }
 
 * Find project root using setroot
