@@ -477,14 +477,14 @@ wheels = [
 
 [[package]]
 name = "fastcore"
-version = "1.8.12"
+version = "1.12.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/eb/af/03bfd50e750139cb84c969ce628ad77ab06505d0834f791b090432f2486e/fastcore-1.8.12.tar.gz", hash = "sha256:c6febf2c689ea365d2edb708dcfce687dbc7e05437a5962c9187a9f170c82ff7", size = 81170, upload-time = "2025-09-29T00:56:34.855Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8d/9f/10ba070937da0ddab01b23dc01f64f521e3632d5ff1897bc3d73a02ba29f/fastcore-1.12.2.tar.gz", hash = "sha256:01c0c9e19cd0c3cb7a208311d2826da3f0269babc32bd9aa21c7b7976ad5626e", size = 91650, upload-time = "2026-01-18T00:52:35.387Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/92/56/202cddea9ea549be21867dbc1a98ead8660e61e943374a28339d02aa5b4a/fastcore-1.8.12-py3-none-any.whl", hash = "sha256:7b9bfb8c564f307313971bbb27a4542e945e48e8149361d8a5e4e14f7d436937", size = 84190, upload-time = "2025-09-29T00:56:33.086Z" },
+    { url = "https://files.pythonhosted.org/packages/12/97/b0f340e715629fdab003fa5af9b32264ae0aaa04c8521694cb60a3007f2c/fastcore-1.12.2-py3-none-any.whl", hash = "sha256:11fccdc9dc0a13a0d15f6b63bed3f45e6bc8ab73458f8795300d2bd8e35d8ba6", size = 94347, upload-time = "2026-01-18T00:52:33.555Z" },
 ]
 
 [[package]]
@@ -1327,7 +1327,7 @@ wheels = [
 
 [[package]]
 name = "nbstata"
-version = "0.8.3"
+version = "0.8.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -1341,9 +1341,9 @@ dependencies = [
     { name = "pandas" },
     { name = "pygments" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6d/78/da815693807db17ad047e38fb75ee0c3f5cde7e95cd54358a027c6128270/nbstata-0.8.3.tar.gz", hash = "sha256:23e196febcad00d8144af15d69a1c1b93f0a3edfba7a42a8430a36aaa4393c32", size = 153120, upload-time = "2025-09-01T23:17:27.589Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/85/0d6744c791a0101e703e0ff5678d10781fae792d14df447ad5169e6a0c31/nbstata-0.8.5.tar.gz", hash = "sha256:abac3dda90f4ce98cf9f8002cb8402a36e1e1a066e40dc81c22c4f251078b42c", size = 187310, upload-time = "2026-01-16T23:04:32.388Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/03/a53ed9e1396cd1e5a3f759148495494d1dbc50891e8b05832b6d9cf6accf/nbstata-0.8.3-py3-none-any.whl", hash = "sha256:a994f625be278e5195f806c66cc17ce63d11d24d558e5885688b044a9ee07dc3", size = 186104, upload-time = "2025-09-01T23:17:26.261Z" },
+    { url = "https://files.pythonhosted.org/packages/ec/2a/170947a8e6894623449428cf1fbab8c13226707f7b5bc63ca5fe5c07456c/nbstata-0.8.5-py3-none-any.whl", hash = "sha256:a60eae64d83b752352f4d6f97904837fb9c0c018be3148a5145db0397addaa26", size = 126004, upload-time = "2026-01-16T23:04:30.829Z" },
 ]
 
 [[package]]
