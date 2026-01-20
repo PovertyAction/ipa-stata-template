@@ -16,6 +16,74 @@ Notes:       - Assumes globals are set by 00_run.do
 
 ==============================================================================*/
 
+/*==============================================================================
+                    STANDALONE INITIALIZATION
+==============================================================================*/
+
+// Check if already initialized by 00_run.do
+if "${project_path}" == "" {
+
+    di _n(2) "{hline 60}"
+    di "STANDALONE EXECUTION DETECTED"
+    di "{hline 60}"
+
+    // 1. Clear and setup environment
+    clear all
+    macro drop _all
+    capture log close _all
+    set more off
+
+    // 2. Find project root with setroot
+    capture setroot, verbose
+    if _rc != 0 {
+        di as error "ERROR: Could not find project root"
+        di as error "Ensure setroot is installed: ssc install setroot"
+        di as error "Or run from project directory"
+        exit 601
+    }
+    global project_path "${root}"
+
+    // 3. Environment setup with ieboilstart
+    ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)
+
+    // 4. Load user configuration (if exists)
+    capture confirm file "${project_path}/config.do"
+    if _rc == 0 {
+        di as text "Loading user configuration from config.do"
+        do "${project_path}/config.do"
+    }
+
+    // 5. Set default paths
+    if "${data_root}" == "" {
+        global data_root "${project_path}/data"
+    }
+
+    // 6. Define standard paths
+    if "${data_raw}" == "" global data_raw "${data_root}/raw"
+    if "${data_clean}" == "" global data_clean "${data_root}/clean"
+    if "${data_final}" == "" global data_final "${data_root}/final"
+
+    global scripts "${project_path}/do_files"
+    global outputs "${project_path}/outputs"
+    global logs "${project_path}/logs"
+    global tables "${outputs}/tables"
+    global figures "${outputs}/figures"
+
+    // 7. Load functions
+    do "${scripts}/functions.do"
+
+    // 8. Validate paths
+    validate_paths
+
+    di "{hline 60}"
+    di "INITIALIZATION COMPLETED"
+    di "Project root: ${project_path}"
+    di "{hline 60}" _n
+}
+else {
+    di _n "Running via 00_run.do (initialization already complete)" _n
+}
+
 * %%
 // Start log file
 capture log close
