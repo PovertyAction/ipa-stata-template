@@ -11,7 +11,7 @@ dependencies = [
     "matplotlib>=3.10.8",
     "pandas>=2.0.0",
     "pathlib2>=2.3.0",
-    "nbstata>=0.8.3",
+    "nbstata>=0.8.5",
     "jupyterlab-stata-highlight2>=0.1.2",
     "ipykernel>=6.30.1",
     "jupyterlab-quarto>=0.3.5",
@@ -23,8 +23,8 @@ dependencies = [
 dev = [
     "codespell>=2.4.1",
     "pre-commit>=4.5.1",
-    "ruff>=0.14.11",
-    "sqlfluff>=3.5.0",
+    "ruff>=0.14.13",
+    "sqlfluff>=4.0.0",
 ]
 
 [tool.ruff]

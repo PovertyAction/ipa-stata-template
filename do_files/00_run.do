@@ -50,7 +50,24 @@ set seed 123456789
 // Uses setroot to find .here or .git marker from any directory
 // Install setroot first: ssc install setroot (or run setup.do)
 // Install setroot first: ssc install setroot (or run setup.do)
-setroot, verbose 
+capture setroot, verbose
+if _rc != 0 {
+    di as error _n(2) "{hline 80}"
+    di as error "ERROR: Could not find project root directory"
+    di as error "{hline 80}"
+    di as text _n "Current directory: " c(pwd)
+    di as text _n "Possible solutions:"
+    di as text "  1. In Stata, change to project directory first:"
+    di as text "     cd ~/code/ipa-stata-template"
+    di as text "     do do_files/00_run.do"
+    di as text _n "  2. Use the recommended workflow with just:"
+    di as text "     just stata-run              (from terminal in project directory)"
+    di as text "     just stata-script 01_data_cleaning"
+    di as text _n "  3. Ensure setroot package is installed:"
+    di as text "     ssc install setroot"
+    di as error _n "{hline 80}"
+    exit 601
+}
 global project_path "${root}"
 
 // Use ieboilstart strict to only allow commands being run from selected adopath
@@ -67,12 +84,42 @@ ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)
                             DEFINE PATHS
 ==============================================================================*/
 
-global data_raw "${project_path}/data/raw"
-global data_clean "${project_path}/data/clean"
-global data_final "${project_path}/data/final"
+// Code and output paths always relative to project root
+// Check for user-specific config file (gitignored)
+// This allows users to override data paths without modifying tracked files
+capture confirm file "${project_path}/config.do"
+if _rc == 0 {
+    di as text "Loading user-specific configuration from config.do"
+    do "${project_path}/config.do"
+}
+else {
+    di as text "No config.do found - using default paths"
+    di as text "To customize data paths, copy config.do.template to config.do"
+}
+
+// Set default data root if not defined in config.do
+// This allows code and data to be stored separately
+if "${data_root}" == "" {
+    global data_root "${project_path}/data"
+    di as text "Using default data location: ${data_root}"
+}
+else {
+    di as text "Using custom data location: ${data_root}"
+}
+
+// Define standard paths (use config.do values if set, otherwise use defaults)
+if "${data_raw}" == "" global data_raw "${data_root}/raw"
+if "${data_clean}" == "" global data_clean "${data_root}/clean"
+if "${data_final}" == "" global data_final "${data_root}/final"
+
+// Code and output paths always relative to project root
 global scripts "${project_path}/do_files"
 global outputs "${project_path}/outputs"
 global logs "${project_path}/logs"
+global tables "${outputs}/tables"
+global figures "${outputs}/figures"
+global tables "${outputs}/tables"
+global figures "${outputs}/figures"
 
 * %%
 /*==============================================================================
@@ -83,7 +130,9 @@ do "${scripts}/functions.do"
 
 // Validate project structure and dependencies
 validate_paths
-validate_pipeline
+validate_pipeline, ///
+    files("data/raw/sample_data.csv") ///
+    packages("estout outreg2 missings reghdfe coefplot")
 
 // Display system information
 di "Stata version: `c(stata_version)'"

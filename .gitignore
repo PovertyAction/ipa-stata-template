@@ -243,6 +243,9 @@ outputs/**/*.txt
 .env.local
 .env.production
 
+# User-specific Stata configuration (may contain local paths)
+config.do
+
 .sconsign.dblite
 *.typ
 

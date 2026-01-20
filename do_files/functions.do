@@ -222,15 +222,53 @@ program define validate_paths
     di "VALIDATING PROJECT STRUCTURE"
     di "{hline 60}"
 
-    // Required directories
-    local required_dirs "data/raw data/clean data/final outputs/tables outputs/figures logs"
+    // Validate data directories (may be outside project root)
+    // Process each directory individually to handle paths with spaces
+    local i = 1
+    foreach dir_global in data_raw data_clean data_final {
+        if `i' == 1 local label "raw data"
+        if `i' == 2 local label "clean data"
+        if `i' == 3 local label "final data"
 
-    foreach dir in `required_dirs' {
+        local dir "${`dir_global'}"
+
+        capture confirm file "`dir'"
+        if _rc != 0 {
+            di as error "Missing directory: `label' (`dir')"
+            di "Creating directory..."
+
+            // Handle cross-platform mkdir
+            if c(os) == "Windows" {
+                shell mkdir "`dir'"
+            }
+            else {
+                shell mkdir -p "`dir'"
+            }
+            di as result "Created: `label'"
+        }
+        else {
+            di as result "Exists: `label' (`dir')"
+        }
+
+        local ++i
+    }
+
+    // Validate output directories (always in project root)
+    local output_dirs "outputs/tables" "outputs/figures" "logs"
+
+    foreach dir in `output_dirs' {
         capture confirm file "${project_path}/`dir'"
         if _rc != 0 {
             di as error "Missing directory: `dir'"
             di "Creating directory..."
-            shell mkdir "${project_path}/`dir'"
+
+            // Handle cross-platform mkdir
+            if c(os) == "Windows" {
+                shell mkdir "${project_path}/`dir'"
+            }
+            else {
+                shell mkdir -p "${project_path}/`dir'"
+            }
             di as result "Created: `dir'"
         }
         else {
@@ -247,33 +285,45 @@ end
 
 // Function: validate_pipeline
 // Purpose: Check pipeline dependencies before running analysis
-// Usage: validate_pipeline
+// Usage: validate_pipeline [, files("file1" "file2" ...) packages("pkg1" "pkg2" ...)]
+// Example: validate_pipeline, files("data/raw/baseline.dta" "data/raw/endline.dta") packages("estout" "outreg2")
 capture program drop validate_pipeline
 program define validate_pipeline
+    syntax [, files(string) packages(string)]
 
     di _n(2) "{hline 60}"
     di "PIPELINE DEPENDENCY VALIDATION"
     di "{hline 60}"
 
-    // Check for required input files
-    local required_files "data/raw/sample_data.csv"
-
-    foreach file in `required_files' {
-        capture confirm file "${project_path}/`file'"
-        if _rc != 0 {
-            di as error "CRITICAL: Missing required file: `file'"
-            di as error "Pipeline cannot proceed"
-            exit 601
-        }
-        else {
-            di as result "Found: `file'"
+    // Check for required input files (if specified)
+    if "`files'" != "" {
+        di _n "Checking required files..."
+        foreach file in `files' {
+            capture confirm file "${project_path}/`file'"
+            if _rc != 0 {
+                di as error "CRITICAL: Missing required file: `file'"
+                di as error "Pipeline cannot proceed"
+                exit 601
+            }
+            else {
+                di as result "Found: `file'"
+            }
         }
     }
+    else {
+        di _n "No required files specified - skipping file validation"
+    }
 
-    // Check for required packages
-    local required_packages "estout outreg2 missings"
+    // Check for required packages (default to common IPA packages if not specified)
+    if "`packages'" == "" {
+        local packages "estout outreg2 missings"
+        di _n "Checking default packages: `packages'"
+    }
+    else {
+        di _n "Checking specified packages..."
+    }
 
-    foreach pkg in `required_packages' {
+    foreach pkg in `packages' {
         capture which `pkg'
         if _rc != 0 {
             di as error "WARNING: Package `pkg' not installed"

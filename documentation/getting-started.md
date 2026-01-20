@@ -44,7 +44,35 @@ Start with **Tier 1** (minimal) and add features as needed.
    # STATA_CMD='/usr/local/stata18/stata-se'
    ```
 
-3. **Run the pipeline**
+3. **Configure your data path** (Optional)
+
+   If your data is stored separately from your code (e.g., on a secure network drive):
+
+   ```bash
+   # Windows
+   copy config.do.template config.do
+
+   # macOS/Linux
+   cp config.do.template config.do
+   ```
+
+   Then edit `config.do` to set your data location:
+
+   ```stata
+   // Example: Network drive
+   global data_root "X:/SECURE_AREA_12345_project_name_country/data"
+
+   // Example: Dropbox
+   global data_root "D:/Dropbox/ProjectName/data"
+
+   // Example: Local documents
+   global data_root "C:/Users/YourName/Documents/Research/ProjectName/data"
+   ```
+
+   **Note:** `config.do` is gitignored and never committed to version control. If you
+   don't create it, the template defaults to using `data/` in the project root.
+
+4. **Run the pipeline**
 
    ```bash
    # Batch mode (recommended - creates log files)
@@ -54,7 +82,7 @@ Start with **Tier 1** (minimal) and add features as needed.
    do do_files/00_run.do
    ```
 
-4. **Check outputs**
+5. **Check outputs**
 
    - Tables: `outputs/tables/`
    - Figures: `outputs/figures/`
@@ -210,7 +238,20 @@ just preview-report # Preview in browser
 
 ### Add Your Data
 
+#### Option 1: Data in project directory (default)
+
 Place raw data in `data/raw/` and update the do-files to reference your files.
+
+If using this option, do not commit data files (especially large or sensitive ones) to GitHub.
+
+#### Option 2: Data stored separately (recommended for secure/network drives)
+
+1. Copy `config.do.template` to `config.do`
+2. Set `global data_root` to your data location
+3. Place raw data in `<your-data-path>/raw/`
+
+The template automatically uses your configured path while keeping your code repository
+clean and portable. The `config.do` file is gitignored to protect sensitive path information.
 
 ### Update Analysis Scripts
 
