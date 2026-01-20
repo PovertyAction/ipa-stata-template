@@ -118,8 +118,15 @@ global outputs "${project_path}/outputs"
 global logs "${project_path}/logs"
 global tables "${outputs}/tables"
 global figures "${outputs}/figures"
-global tables "${outputs}/tables"
-global figures "${outputs}/figures"
+
+* %%
+/*==============================================================================
+                            START LOG FILE
+==============================================================================*/
+
+// Open log file now that paths are defined
+capture log close
+log using "${logs}/00_run.log", replace
 
 * %%
 /*==============================================================================
@@ -272,3 +279,10 @@ di "  - outputs/tables/ (regression tables)"
 di "  - outputs/figures/ (figures)"
 di "  - logs/ (log files)"
 di "{hline 80}"
+
+// Close log file
+log close
+
+// Clean up: Remove automatic log file created by Stata batch mode
+// This removes the unwanted 00_run.log from the root directory
+capture erase "${project_path}/00_run.log"
