@@ -92,7 +92,7 @@ stata-do dofile:
 # Run traditional Stata master do-file (the main way to run your analysis)
 [windows]
 stata-run:
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "do_files/00_run.do"
+    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', 'do_files/00_run.do' -Wait -NoNewWindow
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [linux]

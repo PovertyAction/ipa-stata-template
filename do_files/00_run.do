@@ -29,10 +29,6 @@ References:
 
 ==============================================================================*/
 
-* %%
-// Set Stata version for reproducibility
-version 17
-
 // Clear memory and close any open files/logs
 clear all
 macro drop _all
@@ -46,23 +42,26 @@ set seed 123456789
 // Conservative maxvar - increase only if needed for genuinely wide datasets.
 // If you hit the limit, consider: (1) loading only needed columns with
 // `use var1 var2 using "data.dta"`, or (2) reshaping to long format first.
-set maxvar 5000
-set matsize 11000
-
-// Configure Stata settings for reproducibility
-set linesize 255
-set varabbrev off
-set type double
 
 /*==============================================================================
                             FIND PROJECT ROOT
 ==============================================================================*/
 
-* %%
 // Uses setroot to find .here or .git marker from any directory
 // Install setroot first: ssc install setroot (or run setup.do)
-setroot
-global project_path "$root"
+// Install setroot first: ssc install setroot (or run setup.do)
+setroot, verbose 
+global project_path "${root}"
+
+// Use ieboilstart strict to only allow commands being run from selected adopath
+ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)
+// ieboilstart modifies a lot of the settings below, might need to adjust settings individually
+//set maxvar 5000
+//set matsize 11000
+//set linesize 255
+//set varabbrev off
+//set type double
+
 
 /*==============================================================================
                             DEFINE PATHS
