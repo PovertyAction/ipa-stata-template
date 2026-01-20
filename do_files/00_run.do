@@ -112,9 +112,39 @@ if "${data_clean}" == "" global data_clean "${data_root}/clean"
 if "${data_final}" == "" global data_final "${data_root}/final"
 
 // Code and output paths always relative to project root
+// Check for user-specific config file (gitignored)
+// This allows users to override data paths without modifying tracked files
+capture confirm file "${project_path}/config.do"
+if _rc == 0 {
+    di as text "Loading user-specific configuration from config.do"
+    do "${project_path}/config.do"
+}
+else {
+    di as text "No config.do found - using default paths"
+    di as text "To customize data paths, copy config.do.template to config.do"
+}
+
+// Set default data root if not defined in config.do
+// This allows code and data to be stored separately
+if "${data_root}" == "" {
+    global data_root "${project_path}/data"
+    di as text "Using default data location: ${data_root}"
+}
+else {
+    di as text "Using custom data location: ${data_root}"
+}
+
+// Define standard paths (use config.do values if set, otherwise use defaults)
+if "${data_raw}" == "" global data_raw "${data_root}/raw"
+if "${data_clean}" == "" global data_clean "${data_root}/clean"
+if "${data_final}" == "" global data_final "${data_root}/final"
+
+// Code and output paths always relative to project root
 global scripts "${project_path}/do_files"
 global outputs "${project_path}/outputs"
 global logs "${project_path}/logs"
+global tables "${outputs}/tables"
+global figures "${outputs}/figures"
 global tables "${outputs}/tables"
 global figures "${outputs}/figures"
 
@@ -127,6 +157,9 @@ do "${scripts}/functions.do"
 
 // Validate project structure and dependencies
 validate_paths
+validate_pipeline, ///
+    files("data/raw/sample_data.csv") ///
+    packages("estout outreg2 missings reghdfe coefplot")
 validate_pipeline, ///
     files("data/raw/sample_data.csv") ///
     packages("estout outreg2 missings reghdfe coefplot")
