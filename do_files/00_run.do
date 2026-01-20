@@ -28,7 +28,7 @@ References:
 - DIME Analytics Coding Guide: https://worldbank.github.io/dime-data-handbook/coding.html
 
 ==============================================================================*/
-
+* %%
 // Clear memory and close any open files/logs
 clear all
 macro drop _all
@@ -42,7 +42,7 @@ set seed 123456789
 // Conservative maxvar - increase only if needed for genuinely wide datasets.
 // If you hit the limit, consider: (1) loading only needed columns with
 // `use var1 var2 using "data.dta"`, or (2) reshaping to long format first.
-
+* %%
 /*==============================================================================
                             FIND PROJECT ROOT
 ==============================================================================*/
@@ -79,7 +79,7 @@ ieboilstart, versionnumber(17.0) adopath("${project_path}/ado", strict)
 //set varabbrev off
 //set type double
 
-
+* %%
 /*==============================================================================
                             DEFINE PATHS
 ==============================================================================*/

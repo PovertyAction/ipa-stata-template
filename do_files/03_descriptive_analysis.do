@@ -20,7 +20,7 @@ Notes:       - Assumes globals are set by 00_run.do
 /*==============================================================================
                     STANDALONE INITIALIZATION
 ==============================================================================*/
-
+* %%
 // Check if already initialized by 00_run.do
 if "${project_path}" == "" {
 
