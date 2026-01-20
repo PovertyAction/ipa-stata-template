@@ -57,7 +57,7 @@ update-reqs:
 # create virtual environment
 venv:
     uv sync
-    uv run python -m nbstata.install --sys-prefix
+    uv run python -m nbstata.install --sys-prefix --conf-file
     uv run python -c "import re;from pathlib import Path;c=Path('.venv/etc/nbstata.conf');d=str(Path(r'{{ stata_cmd }}').parent);e='{{ stata_edition }}';t=re.sub(r'^stata_dir =.*$',lambda m:'stata_dir = '+d,c.read_text(),flags=re.MULTILINE);c.write_text(re.sub(r'^edition =.*$',lambda m:'edition = '+e,t,flags=re.MULTILINE))"
     uv tool install pre-commit
     uv run pre-commit install
