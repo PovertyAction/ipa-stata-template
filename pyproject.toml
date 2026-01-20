@@ -24,7 +24,7 @@ dev = [
     "codespell>=2.4.1",
     "pre-commit>=4.5.1",
     "ruff>=0.14.13",
-    "sqlfluff>=3.5.0",
+    "sqlfluff>=4.0.0",
 ]
 
 [tool.ruff]
