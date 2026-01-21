@@ -15,7 +15,21 @@ Start with **Tier 1** (minimal) and add features as needed.
 
 ## Tier 1: Minimal Setup (Git + Stata Only)
 
-**What you need:** Git, Stata 17+
+**What you need:** Git, Stata 17+, Just
+
+- Install Stata: [IPA Box link](https://ipastorage.app.box.com/folder/325607567529?s=ex2qvb00y6lukwo1x3rht0jkuxnbscj8)
+- [Install Git](https://git-scm.com/downloads) or `winget install --id Git.Git -e`
+- [Install Just](https://github.com/casey/just/releases) or `winget install --id Casey.Just -e`
+
+**Recommended:**
+
+- VS Code (or Postiron) for code editing: [VS Code](https://code.visualstudio.com/download) or `winget install --id Microsoft.VisualStudioCode -e`
+- VS Code extensions:
+    - [Jupyter Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
+    - [vscode-stata for running Stata code](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata)
+- GitHub Copilot (or Claude Code) for AI agent assistance with coding
+    - [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat)
+    - [Claude Code](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code)
 
 **What you get:** Reproducible analysis with version control
 
@@ -30,7 +44,13 @@ Start with **Tier 1** (minimal) and add features as needed.
 
 2. **Configure your Stata path**
 
-   Copy `.env-example` to `.env` and set your Stata executable:
+   Copy `.env-example` to `.env`:
+
+   ```bash
+   cp .env-example .env
+   ```
+
+   And set your Stata executable:
 
    ```bash
    # Windows
@@ -72,21 +92,40 @@ Start with **Tier 1** (minimal) and add features as needed.
    **Note:** `config.do` is gitignored and never committed to version control. If you
    don't create it, the template defaults to using `data/` in the project root.
 
-4. **Run the pipeline**
+4. **Set up coding environment** to enable Python to communicate with Stata
+
+   ```bash
+   just stata-setup
+   ```
+
+   This creates a Python virtual environment and installs required python and Stata packages.
+
+   - Python packages are saved in `.venv/`
+   - Stata packages (ado) are saved in `ado/`
+
+   Optional: check if the setup is successful
+
+   ```bash
+   just stata-check-installation
+   ```
+
+5. **Run the pipeline**
 
    ```bash
    # Batch mode (recommended - creates log files)
-   stata -e do do_files/00_run.do
+   just-do do_files/demo/stata-demo.do
 
-   # Or interactively in Stata
-   do do_files/00_run.do
+   # Or interactively in Stata (run from the root of this project, `ipa-stata-template/`)
+   do do_files/demo/stata-demo.do
    ```
 
-5. **Check outputs**
+6. **Check outputs**
 
    - Tables: `outputs/tables/`
    - Figures: `outputs/figures/`
    - Logs: `logs/`
+
+## Understanding the full template pipeline
 
 ### Understanding `00_run.do`
 

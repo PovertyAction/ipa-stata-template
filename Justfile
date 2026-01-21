@@ -75,7 +75,7 @@ stata-config:
 [windows]
 stata-do dofile:
     @echo "Running Stata do file..."
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "{{ dofile }}"
+    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', '{{ dofile }}' -Wait -NoNewWindow
 
 # Run an individual Stata do-file
 [linux]
@@ -110,19 +110,19 @@ stata-run:
 
 # Run one-time project setup (install setroot and packages)
 [windows]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
 # Run one-time project setup (install setroot and packages)
 [linux]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
 # Run one-time project setup (install setroot and packages)
 [macos]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
@@ -340,7 +340,7 @@ stata-analysis:
 stata-figures:
     uv run scons figures
 
-# Clean Stata outputs
+# Clean Stata outputs (preserves .gitkeep files)
 stata-clean:
     uv run scons -c
 
