@@ -1,50 +1,51 @@
-# Getting Started with the Stata Project Template
+# Comenzando con la Plantilla de Proyecto Stata
 
-This guide helps you set up and use this template at your preferred level of complexity.
-Start with **Tier 1** (minimal) and add features as needed.
+Fecha: 2026-10-21
+
+Comience con **Nivel 1** (mínimo) y agregue características según sea necesario.
 
 > [!WARNING]
-> NEVER COMMIT DATA FILES TO GITHUB.
+> NUNCA SUBA ARCHIVOS DE DATOS A GITHUB.
 >
-> NEVER USE AI ASSISTANTS WITH PERSONALLY IDENTIFIABLE DATA.
+> NUNCA USE ASISTENTES DE IA CON DATOS DE IDENTIFICACIÓN PERSONAL.
 >
-> YOU ARE REQUIRED TO REMOVE IDENTIFYING INFORMATION **BEFORE** CONNECTING AI
-> ASSISTANTS OR STORING IN ANY UNENCRYPTED LOCATION.
+> ESTÁ OBLIGADO A ELIMINAR LA INFORMACIÓN IDENTIFICABLE **ANTES** DE CONECTAR
+> ASISTENTES DE IA O ALMACENAR EN CUALQUIER UBICACIÓN NO ENCRIPTADA.
 
-## Which Tier Should You Use?
+## ¿Qué Nivel Debe Usar?
 
-| Tier | Time Investment | Best For                            | Key Benefit                          |
-|------|-----------------|-------------------------------------|--------------------------------------|
-| 1    | 15 min          | Getting started, small projects     | Version control + reproducibility    |
-| 2    | +5 min          | Regular use                         | Simple commands (no path typing)     |
-| 3    | +10 min         | Projects with long runtimes (>5min) | Only rebuild what changed            |
-| 4    | +15 min         | Full-time development               | IDE integration + quality checks     |
+| Nivel | Inversión de Tiempo | Mejor Para                                | Beneficio Clave                          |
+|-------|---------------------|-------------------------------------------|------------------------------------------|
+| 1     | 15 min              | Inicio, proyectos pequeños                | Control de versiones + reproducibilidad  |
+| 2     | +5 min              | Uso regular                               | Comandos simples (sin escribir rutas)    |
+| 3     | +10 min             | Proyectos con ejecuciones largas (>5min)  | Solo reconstruye lo que cambió           |
+| 4     | +15 min             | Desarrollo a tiempo completo              | Integración IDE + verificaciones calidad |
 
-## Project File Structure
+## Estructura de Archivos del Proyecto
 
 ```text
 ipa-stata-template/
 ├── data/
-│   ├── raw/          # Your raw data (never edit!)
-│   └── clean/        # Cleaned data (generated)
-├── do_files/         # Your Stata scripts
+│   ├── raw/          # Sus datos originales (¡nunca edite!)
+│   └── clean/        # Datos limpios (generados)
+├── do_files/         # Sus scripts de Stata
 ├── outputs/
-│   ├── tables/       # Generated tables
-│   └── figures/      # Generated figures
-├── logs/             # Execution logs
-└── ado/              # Local Stata packages
+│   ├── tables/       # Tablas generadas
+│   └── figures/      # Figuras generadas
+├── logs/             # Registros de ejecución
+└── ado/              # Paquetes locales de Stata
 ```
 
 ---
 
-## Tier 1: Minimal Setup (Git + Stata + Just)
+## Nivel 1: Configuración Mínima (Git + Stata + Just)
 
-**What you get:** Reproducible analysis with version control
+**Lo que obtiene:** Análisis reproducible con control de versiones
 
-### Installation Checklist (Do these in order)
+### Lista de Verificación de Instalación (Hágalas en orden)
 
-1. Install Stata 17+: [IPA Box link](https://ipastorage.app.box.com/folder/325607567529?s=ex2qvb00y6lukwo1x3rht0jkuxnbscj8)
-2. Install Git
+1. Instalar Stata 17+: [enlace IPA Box](https://ipastorage.app.box.com/folder/325607567529?s=ex2qvb00y6lukwo1x3rht0jkuxnbscj8)
+2. Instalar Git
 
    **Windows:**
 
@@ -58,10 +59,10 @@ ipa-stata-template/
    brew install git
    ```
 
-   **Linux or manual install:**
-   [Download from git-scm.com](https://git-scm.com/downloads)
+   **Linux o instalación manual:**
+   [Descargar desde git-scm.com](https://git-scm.com/downloads)
 
-3. Install Just
+3. Instalar Just
 
    **Windows:**
 
@@ -75,12 +76,12 @@ ipa-stata-template/
    brew install just
    ```
 
-   **Manual install:**
-   [Download from GitHub releases](https://github.com/casey/just/releases)
+   **Instalación manual:**
+   [Descargar desde versiones de GitHub](https://github.com/casey/just/releases)
 
-   > **Note:** After installing Git or Just, you may need to **restart your terminal** for the commands to be recognized.
+   > **Nota:** Después de instalar Git o Just, puede necesitar **reiniciar su terminal** para que los comandos sean reconocidos.
 
-4. (Recommended) Install VS Code
+4. (Recomendado) Instalar VS Code
 
    **Windows:**
 
@@ -89,25 +90,25 @@ ipa-stata-template/
    ```
 
    **macOS/Linux:**
-   [Download from code.visualstudio.com](https://code.visualstudio.com/download)
+   [Descargar desde code.visualstudio.com](https://code.visualstudio.com/download)
 
-5. (Recommended) Install VS Code extensions
-   - [Jupyter Extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
-   - [vscode-stata for running Stata code](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata)
-   - [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) or [Claude Code](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) for AI assistance
+5. (Recomendado) Instalar extensiones de VS Code
+   - [Extensión Jupyter para VS Code](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter)
+   - [vscode-stata para ejecutar código Stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata)
+   - [GitHub Copilot Chat](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat) o [Claude Code](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) para asistencia de IA
 
-### Setup Steps
+### Pasos de Configuración
 
-#### 1. Clone the repository
+#### 1. Clonar el repositorio
 
 ```bash
 git clone <your-repo-url>
 cd ipa-stata-template
 ```
 
-#### 2. Configure your Stata path
+#### 2. Configurar la ruta de Stata
 
-Copy the example environment file:
+Copie el archivo de entorno de ejemplo:
 
 **Windows:**
 
@@ -121,34 +122,34 @@ copy .env-example .env
 cp .env-example .env
 ```
 
-Open `.env` in a text editor and set your Stata executable path:
+Abra `.env` en un editor de texto y establezca la ruta del ejecutable de Stata:
 
-**Windows example:**
+**Ejemplo Windows:**
 
 ```bash
 STATA_CMD='C:\Program Files\Stata18\StataSE-64.exe'
 STATA_EDITION='se'
 ```
 
-**macOS example:**
+**Ejemplo macOS:**
 
 ```bash
 STATA_CMD='/Applications/Stata/StataSE.app/Contents/MacOS/StataSE'
 STATA_EDITION='se'
 ```
 
-**Linux example:**
+**Ejemplo Linux:**
 
 ```bash
 STATA_CMD='/usr/local/stata18/stata-se'
 STATA_EDITION='se'
 ```
 
-> **Tip:** If your Stata path contains spaces, keep the single quotes around the path.
+> **Consejo:** Si su ruta de Stata contiene espacios, mantenga las comillas simples alrededor de la ruta.
 
-#### 3. Configure your data path (Optional)
+#### 3. Configurar la ruta de datos (Opcional)
 
-If your data is stored separately from your code (e.g., on a secure network drive):
+Si sus datos están almacenados separadamente de su código (ej., en una unidad de red segura):
 
 **Windows:**
 
@@ -162,105 +163,105 @@ copy config.do.template config.do
 cp config.do.template config.do
 ```
 
-Then edit `config.do` to set your data location:
+Luego edite `config.do` para establecer la ubicación de sus datos:
 
 ```stata
-// Example: Network drive
+// Ejemplo: Unidad de red
 global data_root "X:/SECURE_AREA_12345_project_name_country/data"
 
-// Example: Dropbox
+// Ejemplo: Dropbox
 global data_root "D:/Dropbox/ProjectName/data"
 
-// Example: Local documents
+// Ejemplo: Documentos locales
 global data_root "C:/Users/YourName/Documents/Research/ProjectName/data"
 ```
 
-**Note:** `config.do` is gitignored and never committed to version control. If you
-don't create it, the template defaults to using `data/` in the project root.
+**Nota:** `config.do` está en gitignore y nunca se sube al control de versiones. Si no
+lo crea, la plantilla usa por defecto `data/` en la raíz del proyecto.
 
-#### 4. Set up coding environment
+#### 4. Configurar el entorno de codificación
 
-Run this command to set up the Python-Stata bridge:
+Ejecute este comando para configurar el puente Python-Stata:
 
 ```bash
 just stata-setup
 ```
 
-**What this does:**
+**Lo que hace esto:**
 
-- Creates a Python virtual environment in `.venv/` (takes ~2-3 minutes)
-- Installs pystatacons (enables Python to communicate with Stata)
-- Installs required Stata packages to `ado/`
+- Crea un entorno virtual de Python en `.venv/` (toma ~2-3 minutos)
+- Instala pystatacons (permite a Python comunicarse con Stata)
+- Instala paquetes requeridos de Stata en `ado/`
 
-**Optional:** Verify the setup was successful:
+**Opcional:** Verifique que la configuración fue exitosa:
 
 ```bash
 just stata-check-installation
 ```
 
-#### 5. Run the demo pipeline
+#### 5. Ejecutar el pipeline de demostración
 
-##### Option A: Batch mode (recommended)
+##### Opción A: Modo batch (recomendado)
 
-Batch mode runs Stata from the command line and automatically creates log files:
+El modo batch ejecuta Stata desde la línea de comandos y crea archivos de registro automáticamente:
 
 ```bash
 just stata-do demo/stata-demo
 ```
 
-> **What is batch mode?** Running Stata from the command line instead of the GUI. This creates automatic log files that are useful for debugging and working with AI assistants.
+> **¿Qué es el modo batch?** Ejecutar Stata desde la línea de comandos en lugar de la GUI. Esto crea archivos de registro automáticos que son útiles para depuración y trabajo con asistentes de IA.
 
-##### Option B: Interactive mode
+##### Opción B: Modo interactivo
 
-Open Stata GUI and run from the project root (`ipa-stata-template/`):
+Abra la GUI de Stata y ejecute desde la raíz del proyecto (`ipa-stata-template/`):
 
 ```stata
 do do_files/demo/stata-demo.do
 ```
 
-#### 6. Verify success
+#### 6. Verificar el éxito
 
-**Check for these signs of success:**
+**Busque estas señales de éxito:**
 
-- No error messages in the console
-- New files created in `outputs/tables/`
-- New files created in `outputs/figures/`
-- A log file in `logs/` ending with "end of do-file"
+- Sin mensajes de error en la consola
+- Nuevos archivos creados en `outputs/tables/`
+- Nuevos archivos creados en `outputs/figures/`
+- Un archivo de registro en `logs/` que termina con "end of do-file"
 
-**Check outputs:**
+**Verifique las salidas:**
 
-- Tables: `outputs/tables/`
-- Figures: `outputs/figures/`
-- Logs: `logs/`
+- Tablas: `outputs/tables/`
+- Figuras: `outputs/figures/`
+- Registros: `logs/`
 
-### Common Setup Issues
+### Problemas Comunes de Configuración
 
-**Problem:** `just: command not found` after installation
+**Problema:** `just: command not found` después de la instalación
 
-- **Solution:** Restart your terminal or command prompt
+- **Solución:** Reinicie su terminal o símbolo del sistema
 
-**Problem:** `Stata executable not found`
+**Problema:** `Stata executable not found`
 
-- **Solution:** Check that the path in `.env` exactly matches your Stata installation location. Use forward slashes (`/`) even on Windows.
+- **Solución:** Verifique que la ruta en `.env` coincida exactamente con la ubicación de su instalación de Stata. Use barras diagonales (`/`) incluso en Windows.
 
-**Problem:** Error about spaces in path
+**Problema:** Error sobre espacios en la ruta
 
-- **Solution:** Make sure paths with spaces are wrapped in single quotes in `.env`
+- **Solución:** Asegúrese de que las rutas con espacios estén envueltas en comillas simples en `.env`
 
-**Problem:** Python or virtual environment errors
+**Problema:** Errores de Python o entorno virtual
 
-- **Solution:** Make sure you ran `just stata-setup` from the project root directory
+- **Solución:** Asegúrese de que ejecutó `just stata-setup` desde el directorio raíz del proyecto
 
 ---
 
-## Understanding the Full Template Pipeline
+## Entendiendo el Pipeline Completo de la Plantilla
 
-### Understanding `00_run.do`
+### Entendiendo `00_run.do`
 
-The master do-file orchestrates your entire pipeline using control switches:
+El do-file maestro orquesta todo su pipeline usando interruptores de control:
 
 ```stata
-// Set to 0 to skip during development
+// Establecer a 0 para omitir durante el desarrollo
 local data_cleaning         = 1
 local data_preparation      = 1
 local descriptive_analysis  = 1
@@ -269,67 +270,67 @@ local robustness_checks     = 1
 local generate_figures      = 1
 ```
 
-This allows you to quickly iterate on specific parts without re-running everything.
+Esto le permite iterar rápidamente en partes específicas sin volver a ejecutar todo.
 
-### Why Use Batch Mode?
+### ¿Por Qué Usar el Modo Batch?
 
-Running Stata in batch mode (`stata -e` or via `just` commands) is recommended because:
+Ejecutar Stata en modo batch (`stata -e` o mediante comandos `just`) es recomendado porque:
 
-- Creates log files that AI assistants can read
-- Captures all output for debugging
-- More reproducible than interactive execution
+- Crea archivos de registro que los asistentes de IA pueden leer
+- Captura toda la salida para depuración
+- Más reproducible que la ejecución interactiva
 
 ---
 
-## Tier 2: Add Task Runner
+## Nivel 2: Agregar Ejecutor de Tareas
 
-**Already completed Tier 1?** Add convenient shortcut commands with these steps.
+**¿Ya completó el Nivel 1?** Agregue comandos de atajo convenientes con estos pasos.
 
-**What you get:** Simple commands instead of typing full paths
+**Lo que obtiene:** Comandos simples en lugar de escribir rutas completas
 
-> **Note:** Tier 1 already includes Just installation, so you can skip directly to using the commands.
+> **Nota:** El Nivel 1 ya incluye la instalación de Just, por lo que puede saltar directamente a usar los comandos.
 
-### Available Commands
+### Comandos Disponibles
 
 ```bash
-just stata-run      # Run the full pipeline (00_run.do)
-just stata-config   # Show Stata configuration
-just help           # See all available commands
+just stata-run      # Ejecutar el pipeline completo (00_run.do)
+just stata-config   # Mostrar configuración de Stata
+just help           # Ver todos los comandos disponibles
 ```
 
-### Common Commands
+### Comandos Comunes
 
 ```bash
-# Run individual scripts
+# Ejecutar scripts individuales
 just stata-script 01_data_cleaning
 
-# Check your Stata setup
+# Verificar su configuración de Stata
 just stata-check-installation
 
-# View system information
+# Ver información del sistema
 just system-info
 ```
 
-That's it! No additional installation needed.
+¡Eso es todo! No se necesita instalación adicional.
 
 ---
 
-## Tier 3: Add Dependency Tracking
+## Nivel 3: Agregar Seguimiento de Dependencias
 
-**Already using Just commands?** Add smart rebuilding for large projects.
+**¿Ya está usando comandos Just?** Agregue reconstrucción inteligente para proyectos grandes.
 
-**What you get:** Incremental builds - only rebuild what changed
+**Lo que obtiene:** Compilaciones incrementales - solo reconstruye lo que cambió
 
-> **Incremental builds:** Only re-run scripts whose inputs have changed, saving time on large projects.
+> **Compilaciones incrementales:** Solo volver a ejecutar scripts cuyos inputs han cambiado, ahorrando tiempo en proyectos grandes.
 
-### When to Use This Tier
+### Cuándo Usar Este Nivel
 
-Use dependency tracking if your full pipeline takes **more than 5 minutes** and you're frequently
-making changes to individual do-files. For most projects, Tier 1 or 2 is sufficient.
+Use seguimiento de dependencias si su pipeline completo toma **más de 5 minutos** y está frecuentemente
+haciendo cambios a do-files individuales. Para la mayoría de los proyectos, el Nivel 1 o 2 es suficiente.
 
-### Setup
+### Configuración
 
-Install `uv` (Python package manager):
+Instalar `uv` (gestor de paquetes Python):
 
 **Windows:**
 
@@ -343,120 +344,120 @@ winget install --id astral-sh.uv -e
 brew install uv
 ```
 
-**Manual install:**
-See [https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
+**Instalación manual:**
+Ver [https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
 
-Then sync the Python environment:
+Luego sincronice el entorno Python:
 
 ```bash
 uv sync
 ```
 
-### Use It
+### Úselo
 
 ```bash
-just stata-build    # Build with dependency tracking
-just stata-data     # Build only data pipeline
-just stata-analysis # Build only analysis
-just stata-clean    # Clean all outputs
+just stata-build    # Compilar con seguimiento de dependencias
+just stata-data     # Compilar solo pipeline de datos
+just stata-analysis # Compilar solo análisis
+just stata-clean    # Limpiar todas las salidas
 ```
 
-### How It Works
+### Cómo Funciona
 
-scons reads the `SConstruct` file which defines dependencies:
+scons lee el archivo `SConstruct` que define dependencias:
 
 ```python
-# When 01_data_cleaning.do changes, rebuild cleaned_data.dta
+# Cuando 01_data_cleaning.do cambia, reconstruir cleaned_data.dta
 data_clean = env.StataBuild(
     target='data/clean/cleaned_data.dta',
     source='do_files/01_data_cleaning.do'
 )
 ```
 
-If you modify `01_data_cleaning.do`, scons knows to re-run downstream scripts
-but not unrelated ones.
+Si modifica `01_data_cleaning.do`, scons sabe volver a ejecutar scripts downstream
+pero no los no relacionados.
 
 ---
 
-## Tier 4: Full Development Environment
+## Nivel 4: Entorno de Desarrollo Completo
 
-**Using dependency tracking?** Add IDE integration and automated quality checks.
+**¿Usando seguimiento de dependencias?** Agregue integración IDE y verificaciones de calidad automatizadas.
 
-**What you get:** Interactive Stata in VS Code, automatic linting, pre-commit hooks
+**Lo que obtiene:** Stata interactivo en VS Code, linting automático, hooks de pre-commit
 
-### Setup
+### Configuración
 
-Run the automated setup command:
+Ejecute el comando de configuración automatizado:
 
 ```bash
 just get-started
 ```
 
-This installs everything: `uv`, `git`, `quarto`, `markdownlint`, `nbstata`, Stata packages.
+Esto instala todo: `uv`, `git`, `quarto`, `markdownlint`, `nbstata`, paquetes Stata.
 
-### Features
+### Características
 
-#### VS Code Integration (nbstata)
+#### Integración VS Code (nbstata)
 
-Run Stata interactively in VS Code, similar to Ctrl+D workflow:
+Ejecute Stata interactivamente en VS Code, similar al flujo de trabajo Ctrl+D:
 
-1. Install the [vscode-stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata) extension
-2. Test with files in `do_files/demo/`
-3. Select the nbstata kernel at `.venv/Scripts/python.exe` (Windows) or `.venv/bin/python` (macOS/Linux)
+1. Instale la extensión [vscode-stata](https://marketplace.visualstudio.com/items?itemName=kylebutts.vscode-stata)
+2. Pruebe con archivos en `do_files/demo/`
+3. Seleccione el kernel nbstata en `.venv/Scripts/python.exe` (Windows) o `.venv/bin/python` (macOS/Linux)
 
-#### Code Quality
+#### Calidad del Código
 
 ```bash
-just lint-stata    # Check Stata code quality
-just lint-py       # Check Python code
-just fmt-markdown  # Format markdown files
+just lint-stata    # Verificar calidad del código Stata
+just lint-py       # Verificar código Python
+just fmt-markdown  # Formatear archivos markdown
 ```
 
-#### Report Generation
+#### Generación de Reportes
 
 ```bash
-just render-report  # Generate analysis report
-just preview-report # Preview in browser
+just render-report  # Generar reporte de análisis
+just preview-report # Vista previa en navegador
 ```
 
 ---
 
-## Customizing for Your Project
+## Personalizar para Su Proyecto
 
-### Add Your Data
+### Agregar Sus Datos
 
-#### Option 1: Data in project directory (default)
+#### Opción 1: Datos en el directorio del proyecto (predeterminado)
 
-Place raw data in `data/raw/` and update the do-files to reference your files.
+Coloque los datos originales en `data/raw/` y actualice los do-files para referenciar sus archivos.
 
-**Important:** Do not commit data files (especially large or sensitive ones) to GitHub.
+**Importante:** No suba archivos de datos (especialmente grandes o sensibles) a GitHub.
 
-#### Option 2: Data stored separately (recommended for secure/network drives)
+#### Opción 2: Datos almacenados separadamente (recomendado para unidades seguras/de red)
 
-1. Copy `config.do.template` to `config.do`
-2. Set `global data_root` to your data location
-3. Place raw data in `<your-data-path>/raw/`
+1. Copie `config.do.template` a `config.do`
+2. Establezca `global data_root` a la ubicación de sus datos
+3. Coloque los datos originales en `<su-ruta-de-datos>/raw/`
 
-The template automatically uses your configured path while keeping your code repository
-clean and portable. The `config.do` file is gitignored to protect sensitive path information.
+La plantilla usa automáticamente su ruta configurada manteniendo su repositorio de código
+limpio y portable. El archivo `config.do` está en gitignore para proteger información de ruta sensible.
 
-### Update Analysis Scripts
+### Actualizar Scripts de Análisis
 
-- **01_data_cleaning.do**: Modify cleaning steps for your data
-- **02_data_preparation.do**: Define your analysis sample
-- **03_descriptive_analysis.do**: Customize summary statistics
-- **04_main_analysis.do**: Add your regression specifications
-- **05_robustness_checks.do**: Define alternative specifications
-- **06_generate_figures.do**: Create visualizations
+- **01_data_cleaning.do**: Modificar pasos de limpieza para sus datos
+- **02_data_preparation.do**: Definir su muestra de análisis
+- **03_descriptive_analysis.do**: Personalizar estadísticas resumidas
+- **04_main_analysis.do**: Agregar sus especificaciones de regresión
+- **05_robustness_checks.do**: Definir especificaciones alternativas
+- **06_generate_figures.do**: Crear visualizaciones
 
-### IPA Visualizations (for IPA Staff)
+### Visualizaciones IPA (para Personal de IPA)
 
 ```stata
 net install github, from("https://haghish.github.io/github/")
 github install PovertyAction/ipaplots
 ```
 
-The template automatically uses IPA branding when `ipaplots` is available.
+La plantilla usa automáticamente la marca IPA cuando `ipaplots` está disponible.
 
 ---
 
