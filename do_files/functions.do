@@ -232,7 +232,8 @@ program define validate_paths
 
         local dir "${`dir_global'}"
 
-        if !direxists("`dir'") {
+        capture confirm file "`dir'/."
+        if _rc != 0 {
             di as error "Missing directory: `label' (`dir')"
             di "Creating directory..."
 
@@ -256,7 +257,8 @@ program define validate_paths
     local output_dirs outputs/tables outputs/figures logs
 
     foreach dir in `output_dirs' {
-        if !direxists("${project_path}/`dir'") {
+        capture confirm file "${project_path}/`dir'/."
+        if _rc != 0 {
             di as error "Missing directory: `dir'"
             di "Creating directory..."
 
