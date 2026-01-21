@@ -403,14 +403,14 @@ pre-commit-run:
 
 [windows]
 pre-install:
-    winget install Casey.Just astral-sh.uv Git.Git GitHub.cli Posit.Quarto OpenJS.NodeJS
+    winget install astral-sh.uv Git.Git GitHub.cli Posit.Quarto OpenJS.NodeJS
     npm install -g markdownlint-cli2
 
 [linux]
 pre-install:
-    brew install just uv gh markdownlint-cli2
+    brew install uv gh markdownlint-cli2
 
 [macos]
 pre-install:
-    brew install just uv gh markdownlint-cli2
+    brew install uv gh markdownlint-cli2
     brew install --cask quarto
