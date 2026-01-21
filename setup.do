@@ -14,6 +14,11 @@ Usage:
 version 17
 clear all
 
+* Start logging to logs/ directory
+local script_name = "setup"
+capture mkdir "logs"
+log using "logs/`script_name'.log", replace text name(`script_name')
+
 display as text "{hline 60}"
 display as text "PROJECT SETUP"
 display as text "{hline 60}"
@@ -63,3 +68,6 @@ display as text ""
 display as text "Or run a specific script:"
 display as text `"  do "${project_path}/do_files/00_run.do" 01_data_cleaning"'
 display as text "{hline 60}"
+
+* Close log
+log close `script_name'

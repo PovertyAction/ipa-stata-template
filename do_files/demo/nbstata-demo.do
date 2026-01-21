@@ -5,6 +5,11 @@
 * - nbstata python package
 * - VSCode with vscode-stata extension
 
+* Start logging
+local script_name "stata_demo"
+capture mkdir "../../logs"
+log using "../../logs/`script_name'.log", replace text name(`script_name')
+
 * %%
 sysuse auto, clear
 
@@ -56,3 +61,6 @@ etable, estimates(model1 model2) ///
     column(estimates) ///
     showstars showstarsnote ///
     title("Regression Results: Car Price Models")
+
+* Close log
+log close `script_name'

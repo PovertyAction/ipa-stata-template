@@ -57,7 +57,7 @@ update-reqs:
 # create virtual environment
 venv:
     uv sync
-    uv run python -m nbstata.install --sys-prefix
+    uv run python -m nbstata.install --sys-prefix --conf-file
     uv run python -c "import re;from pathlib import Path;c=Path('.venv/etc/nbstata.conf');d=str(Path(r'{{ stata_cmd }}').parent);e='{{ stata_edition }}';t=re.sub(r'^stata_dir =.*$',lambda m:'stata_dir = '+d,c.read_text(),flags=re.MULTILINE);c.write_text(re.sub(r'^edition =.*$',lambda m:'edition = '+e,t,flags=re.MULTILINE))"
     uv tool install pre-commit
     uv run pre-commit install
@@ -75,7 +75,7 @@ stata-config:
 [windows]
 stata-do dofile:
     @echo "Running Stata do file..."
-    @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "{{ dofile }}"
+    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', '{{ dofile }}' -Wait -NoNewWindow
 
 # Run an individual Stata do-file
 [linux]
@@ -110,19 +110,19 @@ stata-run:
 
 # Run one-time project setup (install setroot and packages)
 [windows]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     @& "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
 # Run one-time project setup (install setroot and packages)
 [linux]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
 # Run one-time project setup (install setroot and packages)
 [macos]
-stata-setup:
+stata-setup: venv
     @echo "Running one-time project setup..."
     "{{ stata_cmd }}" {{ stata_options }} {{ stata_mode }} do "setup.do"
 
@@ -340,7 +340,7 @@ stata-analysis:
 stata-figures:
     uv run scons figures
 
-# Clean Stata outputs
+# Clean Stata outputs (preserves .gitkeep files)
 stata-clean:
     uv run scons -c
 
@@ -403,14 +403,14 @@ pre-commit-run:
 
 [windows]
 pre-install:
-    winget install Casey.Just astral-sh.uv Git.Git GitHub.cli Posit.Quarto OpenJS.NodeJS
+    winget install astral-sh.uv Git.Git GitHub.cli Posit.Quarto OpenJS.NodeJS
     npm install -g markdownlint-cli2
 
 [linux]
 pre-install:
-    brew install just uv gh markdownlint-cli2
+    brew install uv gh markdownlint-cli2
 
 [macos]
 pre-install:
-    brew install just uv gh markdownlint-cli2
+    brew install uv gh markdownlint-cli2
     brew install --cask quarto

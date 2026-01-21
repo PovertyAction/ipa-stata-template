@@ -44,7 +44,7 @@ PATHS = {
 # Ensure output directories exist
 for path in PATHS.values():
     if not os.path.exists(path):
-        os.makedirs(name=path)
+        os.makedirs(path)
 
 # Set Stata PLUS directory to local ado folder for reproducibility
 env.AppendENVPath(name="STATA_PLUS", newpath=os.path.abspath(PATHS["ado"]))
@@ -154,9 +154,9 @@ Alias(
 # Default target when running 'scons' without arguments
 Default("all")
 
-# Clean target to remove all generated files
+# Clean target to remove all generated files while preserving .gitkeep
 if GetOption("clean"):
-    import shutil
+    import glob
 
     dirs_to_clean = [
         "data/clean",
@@ -166,6 +166,8 @@ if GetOption("clean"):
         "logs",
     ]
     for d in dirs_to_clean:
-        if os.path.exists(path=d):
-            shutil.rmtree(path=d)
-            os.makedirs(name=d)
+        if os.path.exists(d):
+            # Remove all files except .gitkeep
+            for item in glob.glob(os.path.join(d, "*")):
+                if os.path.isfile(item) and not item.endswith(".gitkeep"):
+                    os.remove(item)
