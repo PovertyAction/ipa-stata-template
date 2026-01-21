@@ -15,7 +15,7 @@ Comience con **Nivel 1** (mínimo) y agregue características según sea necesar
 ## ¿Qué Nivel Debe Usar?
 
 | Nivel | Inversión de Tiempo | Mejor Para                                | Beneficio Clave                          |
-|-------|---------------------|-------------------------------------------|------------------------------------------|
+| ------- | --------------------- | ------------------------------------------- | ------------------------------------------ |
 | 1     | 15 min              | Inicio, proyectos pequeños                | Control de versiones + reproducibilidad  |
 | 2     | +5 min              | Uso regular                               | Comandos simples (sin escribir rutas)    |
 | 3     | +10 min             | Proyectos con ejecuciones largas (>5min)  | Solo reconstruye lo que cambió           |
@@ -461,70 +461,70 @@ La plantilla usa automáticamente la marca IPA cuando `ipaplots` está disponibl
 
 ---
 
-## Best Practices
+## Mejores Prácticas
 
-### Data Management
+### Gestión de Datos
 
-- Never modify files in `data/raw/` (treat as read-only)
-- Use global macros for file paths
-- Use version control for code, not data files
+- Nunca modifique archivos en `data/raw/` (trátelos como solo lectura)
+- Use macros globales para rutas de archivos
+- Use control de versiones para código, no para archivos de datos
 
-### Code Organization
+### Organización del Código
 
-- Keep do-files focused on single tasks
-- Use descriptive variable names
-- Comment extensively
-- Include quality checks and validation
+- Mantenga los do-files enfocados en tareas únicas
+- Use nombres de variables descriptivos
+- Comente extensivamente
+- Incluya verificaciones de calidad y validación
 
-### Performance Tips
+### Consejos de Rendimiento
 
-Before increasing `maxvar`, consider:
+Antes de aumentar `maxvar`, considere:
 
-1. **Load only needed columns**: `use var1 var2 using "data.dta"`
-2. **Reshape to long format**: Wide loops are slow; long operations are fast
-3. **Modularize**: Clean one survey module at a time
+1. **Cargar solo columnas necesarias**: `use var1 var2 using "data.dta"`
+2. **Reformatear a formato largo**: Los bucles anchos son lentos; las operaciones largas son rápidas
+3. **Modularizar**: Limpiar un módulo de encuesta a la vez
 
 ---
 
-## Troubleshooting
+## Solución de Problemas
 
-### Stata cannot find do-files
+### Stata no puede encontrar do-files
 
-- Ensure you're running from the project root directory
-- Check file paths in `.env` match your Stata installation
+- Asegúrese de estar ejecutando desde el directorio raíz del proyecto
+- Verifique que las rutas de archivo en `.env` coincidan con su instalación de Stata
 
-### "Command just not found" or "Command scons not found"
+### "Command just not found" o "Command scons not found"
 
-- Restart your terminal after installation
-- Ensure you ran `uv sync` to create the Python environment (for scons)
-- Activate the environment manually if needed:
+- Reinicie su terminal después de la instalación
+- Asegúrese de que ejecutó `uv sync` para crear el entorno Python (para scons)
+- Active el entorno manualmente si es necesario:
     - Windows: `.venv/Scripts/activate`
     - macOS/Linux: `source .venv/bin/activate`
 
-### Path issues on Windows
+### Problemas de ruta en Windows
 
-- Use forward slashes in file paths (e.g., `C:/Program Files/Stata18/...`)
-- Quote paths with spaces in `.env` file
+- Use barras diagonales en rutas de archivo (ej., `C:/Program Files/Stata18/...`)
+- Cite rutas con espacios en el archivo `.env`
 
-### Python virtual environment errors
+### Errores de entorno virtual Python
 
-- Delete the `.venv/` folder and run `just stata-setup` again
-- Make sure you're running commands from the project root directory
+- Elimine la carpeta `.venv/` y ejecute `just stata-setup` nuevamente
+- Asegúrese de estar ejecutando comandos desde el directorio raíz del proyecto
 
-### Getting Help
+### Obtener Ayuda
 
-- Check log files in `logs/` for Stata errors
-- Review the [statacons documentation](https://bquistorff.github.io/statacons/)
-- See the README for additional resources
+- Revise archivos de registro en `logs/` para errores de Stata
+- Revise la [documentación de statacons](https://bquistorff.github.io/statacons/)
+- Vea el README para recursos adicionales
 
-## Glossary
+## Glosario
 
-**Batch mode**: Running Stata from the command line instead of the GUI, which creates automatic log files.
+**Modo batch**: Ejecutar Stata desde la línea de comandos en lugar de la GUI, lo que crea archivos de registro automáticos.
 
-**Dependency tracking**: A system that tracks which files depend on other files, so only necessary scripts are re-run when changes are made.
+**Seguimiento de dependencias**: Un sistema que rastrea qué archivos dependen de otros archivos, para que solo se vuelvan a ejecutar los scripts necesarios cuando se realizan cambios.
 
-**Incremental builds**: Only rebuilding outputs that have changed or depend on changed inputs, rather than rebuilding everything from scratch.
+**Compilaciones incrementales**: Solo reconstruir salidas que han cambiado o dependen de inputs cambiados, en lugar de reconstruir todo desde cero.
 
-**Virtual environment**: An isolated Python environment that keeps project dependencies separate from system-wide Python packages.
+**Entorno virtual**: Un entorno Python aislado que mantiene las dependencias del proyecto separadas de los paquetes Python del sistema.
 
-**Task runner**: A tool (like `just`) that provides shortcuts for commonly-used command sequences.
+**Ejecutor de tareas**: Una herramienta (como `just`) que proporciona atajos para secuencias de comandos de uso común.
