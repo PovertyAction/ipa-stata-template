@@ -36,7 +36,7 @@
 # ---
 
 # %% [markdown]
-# ## Section 1: Setup and Introduction (5 minutes)
+# ## Section 1: Setup and Introduction
 #
 # Data visualization helps us discover patterns, communicate findings, and quality-check
 # our data. The `seaborn.objects` interface uses a **grammar of graphics** approach -
@@ -50,6 +50,9 @@
 # - **Facets**: Small multiples for comparing subsets
 
 # %%
+# If using a uv virtual environment, ensure it's synced (`uv sync`) and activated
+# (`.venv\Scripts\activate` on Windows or `source .venv/bin/activate` on Mac/Linux)
+# before running this code.
 # Import libraries
 import numpy as np
 import pandas as pd
@@ -87,6 +90,11 @@ print(penguins.isnull().sum())
 # Create clean version without missing values
 penguins_clean = penguins.dropna()
 print(f"\nClean dataset: {len(penguins_clean)} rows")
+
+# %%
+# Review the dataset structure
+penguins_clean.describe(include="all").T
+
 
 # %% [markdown]
 # ---
@@ -355,7 +363,7 @@ multi_program_data = pd.DataFrame(
         title="Relationship Between Flipper Length and Body Mass in Penguins",
         x="Flipper Length (mm)",
         y="Body Mass (g)",
-        color="Species",
+        color="Penguin Species",
     )
 )
 
@@ -372,6 +380,7 @@ multi_program_data = pd.DataFrame(
     .label(title="Default Colors")
 )
 
+# %%
 # Colorblind-friendly palette
 (
     so.Plot(penguins_clean, x="bill_length_mm", y="bill_depth_mm", color="species")
@@ -634,14 +643,17 @@ multi_program_data = pd.DataFrame(
     .label(title="Default Theme")
 )
 
-# Apply a different theme globally
-sns.set_theme(style="whitegrid", palette="colorblind")
-
+# %%
+# Apply whitegrid theme using axes_style
 (
     so.Plot(penguins_clean, x="species", y="body_mass_g", color="species")
     .add(so.Bar())
+    .theme(sns.axes_style("whitegrid"))
+    .scale(color="colorblind")
     .label(title="Whitegrid Theme with Colorblind Palette")
 )
+
+# %%
 
 # Reset to default
 sns.set_theme()
@@ -649,6 +661,13 @@ sns.set_theme()
 # %% [markdown]
 # ### Available Themes
 #
+# For `seaborn.objects` plots, apply themes using `sns.axes_style()` with the `.theme()` method:
+#
+# ```python
+# .theme(sns.axes_style("whitegrid"))
+# ```
+#
+# **Available styles:**
 # - `"darkgrid"` (default): Gray background with white grid
 # - `"whitegrid"`: White background with gray grid
 # - `"dark"`: Gray background, no grid
@@ -658,6 +677,40 @@ sns.set_theme()
 # **For presentations**: Use `"whitegrid"` or `"white"`
 # **For papers**: Use `"white"` or `"ticks"`
 # **For exploratory analysis**: Use `"darkgrid"` (default)
+#
+# ### Comparing Different Themes
+#
+# Let's see how different themes look:
+
+# %%
+# White theme (clean, minimal)
+(
+    so.Plot(penguins_clean, x="species", y="body_mass_g", color="species")
+    .add(so.Bar())
+    .theme(sns.axes_style("white"))
+    .scale(color="colorblind")
+    .label(title="White Theme (Minimal)")
+)
+
+# %%
+# Ticks theme (white background with axis ticks)
+(
+    so.Plot(penguins_clean, x="species", y="body_mass_g", color="species")
+    .add(so.Bar())
+    .theme(sns.axes_style("ticks"))
+    .scale(color="colorblind")
+    .label(title="Ticks Theme (For Publications)")
+)
+
+# %%
+# Dark theme (dark background, no grid)
+(
+    so.Plot(penguins_clean, x="species", y="body_mass_g", color="species")
+    .add(so.Bar())
+    .theme(sns.axes_style("dark"))
+    .scale(color="colorblind")
+    .label(title="Dark Theme")
+)
 
 # %% [markdown]
 # ### Saving Plots

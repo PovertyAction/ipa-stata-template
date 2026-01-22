@@ -220,6 +220,8 @@ outputs/**/*.jpg
 outputs/**/*.jpeg
 outputs/**/*.tex
 outputs/**/*.txt
+outputs/**/*.csv
+outputs/**/*.md
 # tables/
 # figures/
 
