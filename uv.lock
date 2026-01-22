@@ -565,6 +565,12 @@ wheels = [
 ]
 
 [[package]]
+name = "gazpacho"
+version = "1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1d/65/3151b3837e9fa0fa535524c56e535f88910c10a3703487d9aead154c1339/gazpacho-1.1.tar.gz", hash = "sha256:1579c1be2de05b5ded0a97107b179d12491392fb095aeab185b283ea48cd7010", size = 7872, upload-time = "2020-10-09T12:50:18.025Z" }
+
+[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -633,6 +639,7 @@ name = "ipa-stata-template"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "gazpacho" },
     { name = "ipykernel" },
     { name = "jupyter" },
     { name = "jupyterlab-quarto" },
@@ -657,6 +664,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "gazpacho", specifier = ">=1.1" },
     { name = "ipykernel", specifier = ">=6.30.1" },
     { name = "jupyter", specifier = ">=1.0.0" },
     { name = "jupyterlab-quarto", specifier = ">=0.3.5" },
