@@ -1337,7 +1337,7 @@ wheels = [
 
 [[package]]
 name = "nbstata"
-version = "0.8.5"
+version = "0.8.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -1351,9 +1351,9 @@ dependencies = [
     { name = "pandas" },
     { name = "pygments" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e5/85/0d6744c791a0101e703e0ff5678d10781fae792d14df447ad5169e6a0c31/nbstata-0.8.5.tar.gz", hash = "sha256:abac3dda90f4ce98cf9f8002cb8402a36e1e1a066e40dc81c22c4f251078b42c", size = 187310, upload-time = "2026-01-16T23:04:32.388Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/74/3d0891cb8ad2ed975ff11e9c644d23617553d5e714ab96fa73d449b3d362/nbstata-0.8.6.tar.gz", hash = "sha256:32c02e8c62dd7e640ff347e4e68b10d8b8bd41ce182cd84617ebc5ca12869ee5", size = 188223, upload-time = "2026-01-22T22:56:51.741Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ec/2a/170947a8e6894623449428cf1fbab8c13226707f7b5bc63ca5fe5c07456c/nbstata-0.8.5-py3-none-any.whl", hash = "sha256:a60eae64d83b752352f4d6f97904837fb9c0c018be3148a5145db0397addaa26", size = 126004, upload-time = "2026-01-16T23:04:30.829Z" },
+    { url = "https://files.pythonhosted.org/packages/82/74/fb1eaf11d6879e5548af504b966771721381c939d62b03210f3931dc5a9b/nbstata-0.8.6-py3-none-any.whl", hash = "sha256:99ed2b0207cd976ef2a798799013687e3af8d879505164d74892684276e62c91", size = 126300, upload-time = "2026-01-22T22:56:50.278Z" },
 ]
 
 [[package]]
