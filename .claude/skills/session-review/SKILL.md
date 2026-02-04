@@ -9,7 +9,7 @@ Review this session to identify high-value learnings worth persisting. Focus on 
 
 ## 1. Project Instructions Updates
 
-Scan the session for insights that would help future Claude sessions in this project. Only add items that are **genuinely high-value** - things that:
+Scan the session and commits on this branch for insights that would help future Claude sessions in this project. Only add items that are **genuinely high-value** - things that:
 - Took significant effort to discover
 - Would save time in future sessions
 - Are non-obvious from the codebase alone
