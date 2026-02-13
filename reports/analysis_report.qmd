@@ -256,9 +256,10 @@ def latex_table_to_html(tex_content):
         if 'begin{tabular}' in row or 'end{tabular}' in row:
             continue
         
-        # Check for rules
-        if '\\toprule' in row or '\\midrule' in row or '\\bottomrule' in row:
-            continue
+        # Remove LaTeX rules from the row but keep processing it
+        row = re.sub(r'\\toprule\s*', '', row)
+        row = re.sub(r'\\midrule\s*', '', row)
+        row = re.sub(r'\\bottomrule\s*', '', row)
             
         # Clean up the row
         row = re.sub(r'\\multicolumn\{(\d+)\}\{[^}]*\}\{([^}]*)\}', r'<COLSPAN\1>\2</COLSPAN\1>', row)
@@ -333,9 +334,14 @@ def latex_table_to_markdown(tex_content):
     # Parse rows and cells
     table_data = []
     for row in rows:
-        # Skip tabular begin/end and rules
-        if any(x in row for x in ['begin{tabular}', 'end{tabular}', '\\toprule', '\\midrule', '\\bottomrule']):
+        # Skip tabular begin/end
+        if 'begin{tabular}' in row or 'end{tabular}' in row:
             continue
+        
+        # Remove LaTeX rules from the row but keep processing it
+        row = re.sub(r'\\toprule\s*', '', row)
+        row = re.sub(r'\\midrule\s*', '', row)
+        row = re.sub(r'\\bottomrule\s*', '', row)
         
         # Handle multicolumn
         row = re.sub(r'\\multicolumn\{(\d+)\}\{[^}]*\}\{([^}]*)\}', r'\2', row)
@@ -415,6 +421,16 @@ def display_table_conditional(table_path, caption="", label=""):
         return markdown_table
 ```
 
+::: {.content-visible when-format="docx"}
+```{=openxml}
+<w:p>
+  <w:r>
+    <w:br w:type="page"/>
+  </w:r>
+</w:p>
+```
+:::
+
 # Executive Summary
 
 This report presents the results of our data analysis using the IPA Stata Template, which integrates best practices from IPA's Data Cleaning Guide, Data Carpentry Stata Economics curriculum, and modern reproducible research workflows. The analysis pipeline combines traditional econometric methods with state-of-the-art reproducibility tools including statacons for dependency management, ipaplots for IPA-branded visualizations, and Python/Jupyter integration for dynamic report generation.
@@ -426,7 +442,9 @@ This report presents the results of our data analysis using the IPA Stata Templa
 - **Lifecycle Patterns**: Quadratic age-income relationship demonstrates classic human capital accumulation and depreciation patterns
 - **Methodological Excellence**: Comprehensive robustness testing and automated reproducible workflow ensures research transparency and reliability
 
----
+```{=html}
+<hr>
+```
 
 # Introduction
 
@@ -440,13 +458,17 @@ This analysis demonstrates the implementation of reproducible research practices
 
 The template ensures that all results can be reproduced from raw data through a single command, meeting the highest standards for research transparency and reproducibility.
 
----
+```{=html}
+<hr>
+```
 
 # Data collection
 
 Data collection was conducted to gather the information required for the analysis and evaluation of the program. This process included the implementation of structured instruments such as surveys and/or administrative data extraction, targeting the relevant study population during the specified fieldwork period. Data were collected following standardized protocols to ensure consistency across respondents and locations, with quality control measures in place such as enumerator training, supervision, and routine data checks. Any challenges encountered during fieldwork, including non-response or logistical constraints, were documented and addressed to maintain the reliability of the final dataset.
 
----
+```{=html}
+<hr>
+```
 
 # Data and Methodology
 
@@ -469,7 +491,6 @@ output_status = check_outputs()
 tables_exist = (tables_path / "descriptive_stats.tex").exists()
 figures_exist = (figures_path / "figure1_income_distribution.pdf").exists()
 
-print(f"Tables exist: {tables_exist}, Figures exist: {figures_exist}")
 ```
 
 The analysis sample consists of 30 observations after applying data quality filters and sample restrictions. The following table presents descriptive statistics for key variables in our analysis:
@@ -557,7 +578,9 @@ Our empirical approach follows standard practices in development economics resea
 - **Robustness Checks**: Alternative specifications and sensitivity analysis
 - **Visualization**: Publication-quality figures using IPA branding standards
 
----
+```{=html}
+<hr>
+```
 
 # Results
 
@@ -856,7 +879,9 @@ This analysis opens several avenues for future research:
 - **Policy Evaluation**: Experimental or quasi-experimental evaluation of education interventions
 - **Intersectionality**: Examining how gender effects vary by other demographic characteristics
 
----
+```{=html}
+<hr>
+```
 
 # Conclusion
 
@@ -887,7 +912,9 @@ The reproducible workflow implemented in this project establishes a new standard
 
 This approach ensures that all results can be verified, critiqued, and extended by future researchers, contributing to the cumulative progress of social science research and meeting the highest standards for research integrity and reproducibility.
 
----
+```{=html}
+<hr>
+```
 
 # Technical Appendix
 
