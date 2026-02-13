@@ -46,35 +46,80 @@ def prepend_cover_page(cover_path, report_path, output_path):
         report_path: Path to generated report DOCX (with title removed)
         output_path: Path for final output DOCX
     """
+    print(f"📄 Loading cover page: {cover_path.name}")
+    print(f"📊 Loading report: {report_path.name}")
+    
+    # Try using docxcompose for proper image/relation handling
+    try:
+        from docxcompose.composer import Composer
+        
+        print("🔧 Using docxcompose for proper image handling...")
+        
+        # Load cover as base document
+        cover_doc = Document(str(cover_path))
+        
+        # Load report and remove title section
+        report_doc = Document(str(report_path))
+        print("🗑️  Removing auto-generated title section...")
+        report_doc = remove_title_section(report_doc, num_elements=4)
+        
+        # Save modified report to temp file
+        temp_report = output_path.parent / "temp_report.docx"
+        report_doc.save(str(temp_report))
+        
+        # Use Composer to merge documents properly
+        composer = Composer(cover_doc)
+        
+        # Reload the modified report
+        report_doc_clean = Document(str(temp_report))
+        
+        # Append report to cover with proper section break
+        composer.append(report_doc_clean, remove_property_fields=False)
+        
+        # Save final document
+        composer.save(str(output_path))
+        
+        # Clean up temp file
+        temp_report.unlink()
+        
+        print(f"✅ Final report saved: {output_path}")
+        print(f"   Open with: {output_path}")
+        return
+        
+    except ImportError:
+        print("⚠️  docxcompose not found, using fallback method...")
+        print("   Note: Images may not display correctly.")
+        print("   Install for better results: uv add docxcompose")
+    
+    # Fallback method (original code, but images may not work)
     from docx.oxml import OxmlElement
     from docx.oxml.ns import qn
     
-    print(f"📄 Loading cover page: {cover_path.name}")
     cover_doc = Document(str(cover_path))
-    
-    print(f"📊 Loading report: {report_path.name}")
     report_doc = Document(str(report_path))
     
-    # Remove title section from report (first 4-5 paragraphs typically)
     print("🗑️  Removing auto-generated title section...")
     report_doc = remove_title_section(report_doc, num_elements=4)
     
-    # Create new document starting with cover
-    print("📑 Merging documents...")
+    print("📑 Merging documents (fallback method)...")
     final_doc = Document(str(cover_path))
     
-    # Add section break after cover page
-    last_paragraph = final_doc.paragraphs[-1]
-    run = last_paragraph.add_run()
+    # Add a new paragraph with section break after all cover content
+    section_break_paragraph = final_doc.add_paragraph()
     
-    # Add page break
-    run.add_break()
+    pPr = section_break_paragraph._element.get_or_add_pPr()
+    sectPr = OxmlElement('w:sectPr')
+    
+    type_element = OxmlElement('w:type')
+    type_element.set(qn('w:val'), 'nextPage')
+    sectPr.append(type_element)
+    
+    pPr.append(sectPr)
     
     # Add all content from report
     for element in report_doc.element.body:
         final_doc.element.body.append(element)
     
-    # Save final document
     final_doc.save(str(output_path))
     print(f"✅ Final report saved: {output_path}")
     print(f"   Open with: {output_path}")
