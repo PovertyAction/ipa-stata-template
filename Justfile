@@ -225,9 +225,21 @@ render-pdf path:
     @echo "Rendering analysis report as PDF..."
     quarto render {{ path }} --to typst
 
+# Render report as DOCX (Word)
+render-docx path:
+    @echo "Rendering analysis report as DOCX..."
+    quarto render {{ path }} --to docx
+    @echo "Adding custom cover page..."
+    uv run python reports/merge_cover_page.py
+
 # Preview analysis report
 preview-report path:
     quarto preview {{ path }}
+
+# Convert PDF figures to PNG for DOCX compatibility
+convert-figures:
+    @echo "Converting PDF figures to PNG..."
+    uv run python reports/convert_figures.py
 
 # ==============================================================================
 # CODE QUALITY & FORMATTING

@@ -5,12 +5,27 @@ author:
   - name: "[Author Name]"
     affiliation: "Innovations for Poverty Action"
 date: today
+# 
+# DOCX OUTPUT WITH CUSTOM COVER PAGE:
+#   To use a custom cover page instead of the auto-generated title:
+#   1. Modify your cover page in: reports/cover_page.docx
+#   2. Render with: just render-docx reports/analysis_report.qmd
+#   3. Find output: reports/analysis_report_final.docx
+#   
+#
 format:
   html: # docs: https://quarto.org/docs/output-formats/html-basics.html
     theme: cosmo
     toc: true
     toc-depth: 2
     number-sections: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
+  docx: # docs: https://quarto.org/docs/output-formats/ms-word.html
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    reference-doc: custom-reference.docx
     fig-cap-location: bottom
     tbl-cap-location: top
   typst: # docs: https://quarto.org/docs/output-formats/typst.html
@@ -46,11 +61,11 @@ from datetime import datetime
 from pathlib import Path
 
 # Define paths to outputs (using pathlib for cross-platform compatibility)
-project_root = Path.cwd()
-outputs_path = project_root / "outputs"
-tables_path = outputs_path / "tables"
-figures_path = outputs_path / "figures"
-logs_path = project_root / "analysis" / "logs"
+project_root = Path(os.getcwd()).parent
+outputs_path = project_root / 'outputs'
+tables_path = outputs_path / 'tables'
+figures_path = outputs_path / 'figures'
+logs_path = project_root / 'analysis' / 'logs'
 
 def include_latex_table(file_path, caption="", label=""):
     """
@@ -109,6 +124,295 @@ def check_outputs():
 def check_file_exists(file_path):
     """Simple helper to check if a file exists"""
     return Path(file_path).exists()
+
+
+# QUESTION: Is it necessary for our outputs to be in PDF format? rendering in docx would be easier if we use PNG as the output format.
+
+def convert_pdf_to_png(pdf_path, dpi=300):
+    """
+    Convert PDF to PNG for DOCX compatibility
+    
+    Args:
+        pdf_path (Path): Path to PDF file
+        dpi (int): Resolution for PNG conversion
+        
+    Returns:
+        Path: Path to PNG file or None if conversion fails
+    """
+    pdf_path = Path(pdf_path)
+    png_path = pdf_path.with_suffix('.png')
+    
+    # If PNG already exists and is newer than PDF, skip conversion
+    if png_path.exists() and png_path.stat().st_mtime > pdf_path.stat().st_mtime:
+        return png_path
+    
+    # Try PyMuPDF first (no external dependencies)
+    try:
+        import fitz  # PyMuPDF
+        
+        doc = fitz.open(str(pdf_path))
+        page = doc[0]
+        zoom = dpi / 72
+        mat = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=mat)
+        pix.save(str(png_path))
+        doc.close()
+        
+        return png_path
+    except ImportError:
+        pass
+    except Exception as e:
+        print(f"⚠️ PyMuPDF conversion failed: {e}")
+    
+    # Fallback to pdf2image
+    try:
+        from pdf2image import convert_from_path
+        images = convert_from_path(str(pdf_path), dpi=dpi, first_page=1, last_page=1)
+        if images:
+            images[0].save(str(png_path), 'PNG')
+            return png_path
+    except ImportError:
+        print("⚠️ Neither pymupdf nor pdf2image installed")
+        print("   Run: just convert-figures")
+        return None
+    except Exception as e:
+        print(f"⚠️ PDF conversion failed: {e}")
+        print("   Run: just convert-figures")
+        return None
+    
+    return None
+
+
+def display_figure_conditional(figure_name, alt_text, label):
+    """
+    Display figure that works for HTML (PDF) and DOCX (PNG)
+    
+    Args:
+        figure_name (str): Name of the figure file (without extension)
+        alt_text (str): Alternative text for the image
+        label (str): Label for cross-referencing
+        
+    Returns:
+        str: Markdown for the figure
+    """
+    pdf_path = figures_path / f"{figure_name}.pdf"
+    png_path = figures_path / f"{figure_name}.png"
+    
+    if not pdf_path.exists():
+        return f"⚠️ **Figure not available.** Run `just stata-figures` to generate."
+    
+    # Try to convert PDF to PNG if PNG doesn't exist
+    if not png_path.exists():
+        converted = convert_pdf_to_png(pdf_path)
+        if converted:
+            png_path = converted
+    
+    # For HTML/PDF: use PDF for better quality
+    # For DOCX: use PNG for compatibility
+    # Use relative path from reports/ directory
+    if png_path.exists():
+        return f"![{alt_text}](../outputs/figures/{figure_name}.png){{{label}}}"
+    else:
+        # Fallback to PDF and show warning for DOCX users
+        return f"![{alt_text}](../outputs/figures/{figure_name}.pdf){{{label}}}\n\n*Note: If image doesn't display in Word, run PNG conversion.*"
+
+def latex_table_to_html(tex_content):
+    """
+    Convert a LaTeX table to HTML for display in HTML output
+    
+    Args:
+        tex_content (str): LaTeX table content
+        
+    Returns:
+        str: HTML table
+    """
+    # Extract table content between tabular tags
+    tabular_match = re.search(r'\\begin\{tabular\}.*?\\end\{tabular\}', tex_content, re.DOTALL)
+    if not tabular_match:
+        return "<pre>" + tex_content + "</pre>"
+    
+    tabular = tabular_match.group(0)
+    
+    # Extract caption if present
+    caption_match = re.search(r'\\caption\{(.*?)\}', tex_content)
+    caption = caption_match.group(1) if caption_match else ""
+    
+    # Start HTML table
+    html = '<div style="overflow-x: auto;">\n'
+    if caption:
+        html += f'<p style="text-align: center; font-weight: bold; margin-bottom: 10px;">{caption}</p>\n'
+    
+    html += '<table style="margin: 0 auto; border-collapse: collapse; font-size: 0.9em;">\n'
+    
+    # Extract column alignment
+    col_spec = re.search(r'\\begin\{tabular\}\{(.*?)\}', tabular)
+    
+    # Split into rows
+    rows = re.split(r'\\\\', tabular)
+    
+    in_header = True
+    for row in rows:
+        # Skip tabular begin/end
+        if 'begin{tabular}' in row or 'end{tabular}' in row:
+            continue
+        
+        # Check for rules
+        if '\\toprule' in row or '\\midrule' in row or '\\bottomrule' in row:
+            continue
+            
+        # Clean up the row
+        row = re.sub(r'\\multicolumn\{(\d+)\}\{[^}]*\}\{([^}]*)\}', r'<COLSPAN\1>\2</COLSPAN\1>', row)
+        
+        # Split into cells
+        cells = [cell.strip() for cell in row.split('&')]
+        
+        if not any(cell for cell in cells):
+            continue
+        
+        # Determine if this is a header row
+        is_header = in_header and ('mean' in row or 'Full Sample' in row or 'multicolumn' in row)
+        tag = 'th' if is_header else 'td'
+        
+        html += '  <tr>\n'
+        for cell in cells:
+            # Handle colspan
+            colspan_match = re.search(r'<COLSPAN(\d+)>(.*?)</COLSPAN\1>', cell)
+            if colspan_match:
+                span = colspan_match.group(1)
+                content = colspan_match.group(2)
+                html += f'    <{tag} colspan="{span}" style="text-align: center; padding: 8px; border-bottom: 1px solid #ddd;">{content}</{tag}>\n'
+            else:
+                align = "left" if cells.index(cell) == 0 else "center"
+                html += f'    <{tag} style="text-align: {align}; padding: 8px; border-bottom: 1px solid #ddd;">{cell}</{tag}>\n'
+        
+        html += '  </tr>\n'
+        
+        if is_header:
+            in_header = False
+    
+    html += '</table>\n'
+    
+    # Add footnote if present
+    footnote_match = re.search(r'\\footnotesize\s+(.*?)\}', tex_content)
+    if footnote_match:
+        footnote = footnote_match.group(1)
+        html += f'<p style="font-size: 0.8em; font-style: italic; margin-top: 10px; max-width: 800px; margin-left: auto; margin-right: auto;">{footnote}</p>\n'
+    
+    html += '</div>\n'
+    
+    return html
+
+def latex_table_to_markdown(tex_content):
+    """
+    Convert a LaTeX table to Markdown for DOCX/PDF conversion
+    
+    Args:
+        tex_content (str): LaTeX table content
+        
+    Returns:
+        str: Markdown table
+    """
+    # Extract table content between tabular tags
+    tabular_match = re.search(r'\\begin\{tabular\}.*?\\end\{tabular\}', tex_content, re.DOTALL)
+    if not tabular_match:
+        return tex_content
+    
+    tabular = tabular_match.group(0)
+    
+    # Extract caption if present
+    caption_match = re.search(r'\\caption\{(.*?)\}', tex_content)
+    caption = caption_match.group(1) if caption_match else ""
+    
+    # Extract footnote if present
+    footnote_match = re.search(r'\\footnotesize\s+(.*?)\}', tex_content)
+    footnote = footnote_match.group(1) if footnote_match else ""
+    
+    # Split into rows
+    rows = re.split(r'\\\\', tabular)
+    
+    # Parse rows and cells
+    table_data = []
+    for row in rows:
+        # Skip tabular begin/end and rules
+        if any(x in row for x in ['begin{tabular}', 'end{tabular}', '\\toprule', '\\midrule', '\\bottomrule']):
+            continue
+        
+        # Handle multicolumn
+        row = re.sub(r'\\multicolumn\{(\d+)\}\{[^}]*\}\{([^}]*)\}', r'\2', row)
+        
+        # Split into cells
+        cells = [cell.strip() for cell in row.split('&')]
+        
+        # Skip empty rows
+        if not any(cell for cell in cells):
+            continue
+        
+        table_data.append(cells)
+    
+    if not table_data:
+        return "No table data found"
+    
+    # Build markdown table
+    md = ""
+    if caption:
+        md += f"\n**{caption}**\n\n"
+    
+    # Find maximum number of columns
+    max_cols = max(len(row) for row in table_data)
+    
+    # Header row (usually first row with content)
+    if table_data:
+        header = table_data[0]
+        # Pad with empty cells if needed
+        header = header + [''] * (max_cols - len(header))
+        md += '| ' + ' | '.join(header) + ' |\n'
+        md += '| ' + ' | '.join(['---'] * max_cols) + ' |\n'
+        
+        # Data rows
+        for row in table_data[1:]:
+            # Pad with empty cells if needed
+            row = row + [''] * (max_cols - len(row))
+            md += '| ' + ' | '.join(row) + ' |\n'
+    
+    if footnote:
+        md += f"\n*{footnote}*\n"
+    
+    return md
+
+def display_table_conditional(table_path, caption="", label=""):
+    """
+    Display a table that works for both HTML and PDF output
+    
+    Args:
+        table_path (str): Path to the LaTeX table file
+        caption (str): Table caption (for HTML)
+        label (str): Table label (for PDF)
+        
+    Returns:
+        str: Markdown/HTML content for the table
+    """
+    table_path = Path(table_path)
+    
+    if not table_path.exists():
+        return f"**Table not found:** {table_path}"
+    
+    with open(table_path, 'r', encoding='utf-8') as f:
+        tex_content = f.read()
+    
+    # For HTML output, use HTML tables (better styling)
+    # For DOCX, use markdown tables (better compatibility)
+    # Check if we're in a Quarto context and try to detect format
+    try:
+        # Try to use Quarto metadata to detect format
+        import IPython
+        display = IPython.display
+        # For now, return markdown which works for both
+        markdown_table = latex_table_to_markdown(tex_content)
+        return markdown_table
+    except:
+        # Fallback to markdown
+        markdown_table = latex_table_to_markdown(tex_content)
+        return markdown_table
 ```
 
 # Executive Summary
@@ -138,6 +442,12 @@ The template ensures that all results can be reproduced from raw data through a 
 
 ---
 
+# Data collection
+
+Data collection was conducted to gather the information required for the analysis and evaluation of the program. This process included the implementation of structured instruments such as surveys and/or administrative data extraction, targeting the relevant study population during the specified fieldwork period. Data were collected following standardized protocols to ensure consistency across respondents and locations, with quality control measures in place such as enumerator training, supervision, and routine data checks. Any challenges encountered during fieldwork, including non-response or logistical constraints, were documented and addressed to maintain the reliability of the final dataset.
+
+---
+
 # Data and Methodology
 
 ## Data Sources
@@ -156,13 +466,31 @@ Our analysis uses [describe your data sources here]. The data processing pipelin
 #| output: asis
 
 output_status = check_outputs()
+tables_exist = (tables_path / "descriptive_stats.tex").exists()
+figures_exist = (figures_path / "figure1_income_distribution.pdf").exists()
+
+print(f"Tables exist: {tables_exist}, Figures exist: {figures_exist}")
 ```
 
 The analysis sample consists of 30 observations after applying data quality filters and sample restrictions. The following table presents descriptive statistics for key variables in our analysis:
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "descriptive_stats.tex",
+    caption="Descriptive statistics for the full analysis sample"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/descriptive_stats.tex}
 ```
+:::
 
 : Descriptive statistics for the full analysis sample {#tbl-descriptive-stats}
 
@@ -172,9 +500,23 @@ The analysis sample consists of 30 observations after applying data quality filt
 
 To understand potential differences in our key variables by gender, the following table presents summary statistics separately for male and female respondents:
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "descriptive_by_gender.tex",
+    caption="Descriptive statistics by gender"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/descriptive_by_gender.tex}
 ```
+:::
 
 : Descriptive statistics by gender {#tbl-descriptive-gender}
 
@@ -184,9 +526,23 @@ To understand potential differences in our key variables by gender, the followin
 
 The following correlation matrix shows the relationships between our main analysis variables, providing insight into potential multicollinearity before proceeding to multivariate analysis:
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "correlations.tex",
+    caption="Correlation matrix for main analysis variables"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/correlations.tex}
 ```
+:::
 
 : Correlation matrix for main analysis variables {#tbl-correlations}
 
@@ -213,15 +569,14 @@ Our empirical approach follows standard practices in development economics resea
 
 ```{python}
 #| label: fig-income-distribution
-#| fig-cap: "Distribution of Log Income by Gender"
+#| output: asis
 
-figure_path = figures_path / "figure1_income_distribution.pdf"
-
-if figure_path.exists():
-    # For PDF files in Quarto, we can reference them directly
-    print(f"![Distribution of Log Income by Gender]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "figure1_income_distribution",
+    "Distribution of Log Income by Gender",
+    "#fig-income-distribution"
+)
+print(figure_md)
 ```
 
 *Figure 1: Histogram showing the distribution of log income separately for male and female respondents. The overlapping distributions allow for visual comparison of income patterns by gender, revealing the empirical basis for our regression analysis.*
@@ -232,9 +587,23 @@ The income distribution reveals relatively similar patterns between genders, wit
 
 The following table presents our comprehensive regression analysis examining the relationship between log income and key demographic variables. We present three progressive model specifications to demonstrate robustness and provide insights into different aspects of the income-generating process.
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "main_results.tex",
+    caption="Main regression results showing three model specifications"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/main_results.tex}
 ```
+:::
 
 : Main regression results showing three model specifications {#tbl-main-results}
 
@@ -260,14 +629,14 @@ The following table presents our comprehensive regression analysis examining the
 
 ```{python}
 #| label: fig-coefficients
-#| fig-cap: "Regression Coefficients with Confidence Intervals"
+#| output: asis
 
-figure_path = figures_path / "figure2_coefficients.pdf"
-
-if figure_path.exists():
-    print(f"![Regression Coefficients with Confidence Intervals]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "figure2_coefficients",
+    "Regression Coefficients with Confidence Intervals",
+    "#fig-coefficients"
+)
+print(figure_md)
 ```
 
 *Figure 2: Coefficient plot showing estimated effects and 95% confidence intervals for key variables across different model specifications. This visualization facilitates comparison of effect sizes and statistical significance.*
@@ -280,9 +649,23 @@ To ensure the reliability of our findings, we conducted extensive robustness che
 
 The following table presents results using different functional form assumptions, including linear specifications, semi-log models, and flexible age specifications.
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "robustness_functional_forms.tex",
+    caption="Robustness checks using alternative functional forms"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/robustness_functional_forms.tex}
 ```
+:::
 
 : Robustness checks using alternative functional forms {#tbl-robustness-functional}
 
@@ -292,9 +675,23 @@ The following table presents results using different functional form assumptions
 
 To examine whether our results hold across the income distribution, we estimated quantile regressions at the 25th, 50th, and 75th percentiles:
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "robustness_quantile.tex",
+    caption="Quantile regression results across income distribution"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/robustness_quantile.tex}
 ```
+:::
 
 : Quantile regression results across income distribution {#tbl-robustness-quantile}
 
@@ -304,9 +701,23 @@ To examine whether our results hold across the income distribution, we estimated
 
 The following table examines whether our main findings hold when estimated separately for different demographic groups:
 
-```{latex}
+::: {.content-visible unless-format="pdf"}
+```{python}
+#| output: asis
+
+html_output = display_table_conditional(
+    tables_path / "robustness_subsamples.tex",
+    caption="Subsample analysis by demographic groups"
+)
+print(html_output)
+```
+:::
+
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \input{outputs/tables/robustness_subsamples.tex}
 ```
+:::
 
 : Subsample analysis by demographic groups {#tbl-robustness-subsamples}
 
@@ -329,14 +740,14 @@ To validate our model assumptions, we examine residual patterns and distribution
 
 ```{python}
 #| label: fig-residuals
-#| fig-cap: "Residuals vs Fitted Values Diagnostic Plot"
+#| output: asis
 
-figure_path = figures_path / "figure3_residuals_fitted.pdf"
-
-if figure_path.exists():
-    print(f"![Residuals vs Fitted Values Diagnostic Plot]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "figure3_residuals_fitted",
+    "Residuals vs Fitted Values Diagnostic Plot",
+    "#fig-residuals"
+)
+print(figure_md)
 ```
 
 *Figure 3: Residuals plotted against fitted values with lowess smoother (red line). The relatively flat red line around zero suggests that our linear model specification is appropriate and there are no systematic patterns in the residuals.*
@@ -345,14 +756,14 @@ else:
 
 ```{python}
 #| label: fig-qq-plot
-#| fig-cap: "Q-Q Plot for Residual Normality"
+#| output: asis
 
-figure_path = figures_path / "figure3_qq_plot.pdf"
-
-if figure_path.exists():
-    print(f"![Q-Q Plot for Residual Normality]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "figure3_qq_plot",
+    "Q-Q Plot for Residual Normality",
+    "#fig-qq-plot"
+)
+print(figure_md)
 ```
 
 *Figure 4: Quantile-quantile plot comparing residual distribution to theoretical normal distribution. Points following the diagonal line indicate normally distributed residuals, supporting the validity of our statistical inference.*
@@ -361,14 +772,14 @@ else:
 
 ```{python}
 #| label: fig-stability
-#| fig-cap: "Coefficient Stability Across Specifications"
+#| output: asis
 
-figure_path = figures_path / "figure4_coefficient_stability.pdf"
-
-if figure_path.exists():
-    print(f"![Coefficient Stability Across Specifications]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "figure4_coefficient_stability",
+    "Coefficient Stability Across Specifications",
+    "#fig-stability"
+)
+print(figure_md)
 ```
 
 *Figure 5: Visualization showing how key coefficients change across different model specifications and robustness checks. Stability across specifications increases confidence in our findings.*
@@ -377,14 +788,14 @@ else:
 
 ```{python}
 #| label: fig-combined-summary
-#| fig-cap: "Combined Analysis Summary"
+#| output: asis
 
-figure_path = figures_path / "combined_summary.pdf"
-
-if figure_path.exists():
-    print(f"![Combined Analysis Summary]({figure_path})")
-else:
-    print("Figure not available. Run 'just stata-figures' to generate.")
+figure_md = display_figure_conditional(
+    "combined_summary",
+    "Combined Analysis Summary",
+    "#fig-combined-summary"
+)
+print(figure_md)
 ```
 
 *Figure 6: Comprehensive summary visualization combining key results from descriptive analysis, main regressions, and robustness checks. This multi-panel figure provides a complete overview of our empirical findings.*
