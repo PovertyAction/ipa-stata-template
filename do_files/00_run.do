@@ -126,7 +126,7 @@ global figures "${outputs}/figures"
 
 // Open log file now that paths are defined
 capture log close
-log using "${logs}/00_run.log", replace
+log using "${logs}/00_run.log", replace name(master)
 
 * %%
 /*==============================================================================
@@ -281,7 +281,7 @@ di "  - logs/ (log files)"
 di "{hline 80}"
 
 // Close log file
-log close
+log close master
 
 // Clean up: Remove automatic log file created by Stata batch mode
 // This removes the unwanted 00_run.log from the root directory
