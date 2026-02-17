@@ -96,7 +96,8 @@ log using "${logs}/01_data_cleaning.log", replace
 ==============================================================================*/
 
 // Load raw data using global path
-import delimited "${data_raw}/sample_data.csv", clear
+*import delimited "${data_raw}/sample_data.csv", clear // Will stop dataflow since duplicates are included in sample data for testing
+import delimited "${data_raw}/sample_data_no_duplicates.csv", clear // Use this line instead if you want to test with clean data without duplicates
 
 // Assert basic data structure expectations
 assert _N > 0

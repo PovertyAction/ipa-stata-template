@@ -92,7 +92,7 @@ stata-do dofile:
 # Run traditional Stata master do-file (the main way to run your analysis)
 [windows]
 stata-run:
-    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', 'do_files/00_run.do' -Wait -NoNewWindow
+    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', 'do_files/00_run.do' -Wait -NoNewWindow -PassThru ; $log = Get-Content 00_run.log -Tail 40 ; $log ; if ($p.ExitCode -ne 0) { exit $p.ExitCode } ; if ($log -match '^\s*r\(\d+\);') { exit 1 }
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [linux]
