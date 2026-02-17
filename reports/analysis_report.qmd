@@ -10,7 +10,7 @@ date: today
 #   To use a custom cover page instead of the auto-generated title:
 #   1. Modify your cover page in: reports/cover_page.docx
 #   2. Render with: just render-docx reports/analysis_report.qmd
-#   3. Find output: reports/analysis_report_final.docx
+#   3. Find output: reports/analysis_report.docx
 #   
 #
 format:
@@ -22,6 +22,7 @@ format:
     fig-cap-location: bottom
     tbl-cap-location: top
   docx: # docs: https://quarto.org/docs/output-formats/ms-word.html
+    output-file: "analysis_report_raw.docx"
     toc: true
     toc-depth: 2
     number-sections: true

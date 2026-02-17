@@ -96,7 +96,7 @@ log using "${logs}/01_data_cleaning.log", replace
 ==============================================================================*/
 
 // Load raw data using global path
-import delimited "${data_raw}/sample_data_no_duplicates.csv", clear
+import delimited "${data_raw}/sample_data.csv", clear
 
 // Assert basic data structure expectations
 assert _N > 0
@@ -264,8 +264,10 @@ capture {
 capture {
     // Use naming convention and assert reasonable ranges
     assert income >= 0 if !missing(income)
-    cap assert income < 1000000 if !missing(income)  // Reasonable upper bound
+    assert income < 1000000 if !missing(income)  // Reasonable upper bound
+}
 
+capture {
     summarize income, detail
     local p99 = r(p99)
     local p1 = r(p1)

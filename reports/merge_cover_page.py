@@ -132,8 +132,8 @@ def main():
     reports_dir = project_root / 'reports'
     
     cover_path = reports_dir / 'cover_page.docx'
-    report_path = reports_dir / 'analysis_report.docx'
-    output_path = reports_dir / 'analysis_report_final.docx'
+    report_path = reports_dir / 'analysis_report_raw.docx'
+    output_path = reports_dir / 'analysis_report.docx'
     
     # Allow command line override
     if len(sys.argv) == 4:
