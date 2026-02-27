@@ -92,7 +92,7 @@ stata-do dofile:
 # Run traditional Stata master do-file (the main way to run your analysis)
 [windows]
 stata-run:
-    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', 'do_files/00_run.do' -Wait -NoNewWindow
+    @Start-Process -FilePath "{{ stata_cmd }}" -ArgumentList '{{ stata_mode }}', 'do', 'do_files/00_run.do' -Wait -NoNewWindow -PassThru ; $log = Get-Content 00_run.log -Tail 40 ; $log ; if ($p.ExitCode -ne 0) { exit $p.ExitCode } ; if ($log -match '^\s*r\(\d+\);') { exit 1 }
 
 # Run traditional Stata master do-file (the main way to run your analysis)
 [linux]
@@ -225,9 +225,21 @@ render-pdf path:
     @echo "Rendering analysis report as PDF..."
     quarto render {{ path }} --to typst
 
+# Render report as DOCX (Word)
+render-docx path:
+    @echo "Rendering analysis report as DOCX..."
+    quarto render {{ path }} --to docx
+    @echo "Adding custom cover page..."
+    uv run python reports/merge_cover_page.py
+
 # Preview analysis report
 preview-report path:
     quarto preview {{ path }}
+
+# Convert PDF figures to PNG for DOCX compatibility
+convert-figures:
+    @echo "Converting PDF figures to PNG..."
+    uv run python reports/convert_figures.py
 
 # ==============================================================================
 # CODE QUALITY & FORMATTING

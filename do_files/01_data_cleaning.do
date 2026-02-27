@@ -96,7 +96,8 @@ log using "${logs}/01_data_cleaning.log", replace
 ==============================================================================*/
 
 // Load raw data using global path
-import delimited "${data_raw}/sample_data.csv", clear
+*import delimited "${data_raw}/sample_data.csv", clear // Will stop dataflow since duplicates are included in sample data for testing
+import delimited "${data_raw}/sample_data_no_duplicates.csv", clear // Use this line instead if you want to test with clean data without duplicates
 
 // Assert basic data structure expectations
 assert _N > 0
@@ -265,7 +266,9 @@ capture {
     // Use naming convention and assert reasonable ranges
     assert income >= 0 if !missing(income)
     assert income < 1000000 if !missing(income)  // Reasonable upper bound
+}
 
+capture {
     summarize income, detail
     local p99 = r(p99)
     local p1 = r(p1)
@@ -361,11 +364,12 @@ di "{hline 60}"
                             SAVE CLEANED DATA
 ==============================================================================*/
 
+// Sort by ID for consistency
+sort id
+
 // Add data signature for integrity checking
 datasignature set, reset
 
-// Sort by ID for consistency
-sort id
 
 // Save cleaned dataset using global path
 save "${data_clean}/cleaned_data.dta", replace
