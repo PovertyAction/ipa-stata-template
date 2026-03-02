@@ -468,7 +468,7 @@ wheels = [
 
 [[package]]
 name = "docxcompose"
-version = "2.0.1"
+version = "2.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
@@ -476,9 +476,9 @@ dependencies = [
     { name = "python-docx" },
     { name = "six" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/43/e506b12f7e7f8629cedc04ffe7f75b3e97e278a0557c1153cfd2f7671c56/docxcompose-2.0.1.tar.gz", hash = "sha256:649ba37655985c093159fe899a519eee5e31bc64344610ac1a1e2d719ec41d2a", size = 17899, upload-time = "2026-02-10T11:38:13.126Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cd/c9/8e50cc5c0cf8725b9542aed3e69e6ccae63623c01a5caa5431fbe8820486/docxcompose-2.0.2.tar.gz", hash = "sha256:3799c2a1e581765bd94b97fe5f88c28cf6b3ffbe13b8a35b46f42eabd7318e96", size = 17896, upload-time = "2026-02-17T08:28:58.619Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8e/ad/4c07f0da82b5c3a3d2666c7a334418fb8425b54e5eef4f3abc2eb2951457/docxcompose-2.0.1-py3-none-any.whl", hash = "sha256:4b77b265ba9a7d53b4932d92c0ca116839b3d57eeea97c39c8da1ba90e9af810", size = 21622, upload-time = "2026-02-10T11:38:14.121Z" },
+    { url = "https://files.pythonhosted.org/packages/83/ee/14a9732d148319e28e54fea2fa7acdb30c321e5e5c2f8ac2904b106cb952/docxcompose-2.0.2-py3-none-any.whl", hash = "sha256:e7e45cdadbde01181d4479c8cf08c3a148729abe7fe9b774cc08c20bcc0afde9", size = 21619, upload-time = "2026-02-17T08:28:59.505Z" },
 ]
 
 [[package]]
