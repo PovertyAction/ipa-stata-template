@@ -80,5 +80,5 @@ docstring-code-line-length = 88
 
 [tool.codespell]
 builtin = "clear,rare,informal,usage,code,names"
-ignore-words-list = "jupyter,ipa,master,missings,hist,claus"
+ignore-words-list = "jupyter,ipa,master,missings,hist,claus,ttest"
 skip = "uv.lock"
