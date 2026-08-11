@@ -30,7 +30,7 @@ If you want to use this template for your own project:
 
 > [!TIP]
 > If you are new to this repository, start here but be sure to read the full README
-> as well as the [Getting Started Guide](./documentation/getting-started.md).
+> as well as the [Getting Started Guide](./docs/getting-started.md).
 
 Get started with just **Git** and **Stata** - no additional tools required.
 
@@ -201,7 +201,7 @@ After setup, these globals are available in all scripts:
 ## Project Structure
 
 ```text
-├── README.md                           # Important information about the project. Keep this updated, provide additional documentation as needed in `/documentation`.
+├── README.md                           # Important information about the project. Keep this updated, provide additional documentation as needed in `/docs`.
 ├── .here                               # Project root marker (for setroot)
 ├── .env                                # Stata configuration (gitignored) (copy from .env-example)
 ├── config.do.template                  # Template for user-specific data paths
@@ -231,8 +231,7 @@ After setup, these globals are available in all scripts:
 │   └── tables/                         # Regression tables (.tex, .md files)
 ├── logs/                               # Log files from Stata runs (should be gitignored)
 ├── reports/                            # Generate reports (e.g., Quarto, LaTeX)
-├── src/                                # Additional scripts (e.g., Python for data processing)
-└── documentation/                      # Project documentation
+└── docs/                               # Project documentation
 ```
 
 ### Understanding `00_run.do`
